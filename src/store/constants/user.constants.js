@@ -1,0 +1,7 @@
+const userConstants = {
+    GETALL_POSTS_REQUEST: 'GETALL_POSTS_REQUEST',
+    GETALL_POSTS_SUCCESS: 'GETALL_POSTS_SUCCESS',
+    GETALL_POSTS_FAILURE: 'GETALL_POSTS_FAILURE',
+};
+
+export default userConstants;

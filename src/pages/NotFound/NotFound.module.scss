@@ -1,0 +1,10 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/animations";
+///@import "../../global_styles/fonts";
+
+.topWrapper {
+  border: 1px dotted coral;
+  padding: 20px;
+  background-color: $yelly;
+}

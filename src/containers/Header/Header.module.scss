@@ -1,0 +1,11 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/animations";
+///@import "../../utils/global_styles/fonts";
+
+.headerWrapper {
+  width: 100%;
+  color: $greyLight;
+
+  border: 1px dotted lightblue;
+}

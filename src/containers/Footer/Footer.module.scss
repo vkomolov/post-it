@@ -1,0 +1,30 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/animations";
+///@import "../../global_styles/fonts";
+
+.footerWrapper {
+  width: 100%;
+  border: 1px dotted coral;
+
+  .blocksWrapper {
+    @include flex-box($flex-box-row-between...);
+    border: 1px dotted coral;
+
+    .footerBlock {
+      width: 200px;
+      height: 200px;
+      padding: 5px;
+      margin: 10px;
+      border: 1px dotted coral;
+    }
+  }
+
+  .footerTale {
+    @include flex-box($flex-box-row-between...);
+
+    .socialLinksWrappper {
+      @include flex-box($flex-box-row-center...);
+    }
+  }
+}

@@ -1,0 +1,13 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+
+.pageWrapper {
+  position: relative;
+  max-width: $maxWidth;
+  color: $greyDark;
+  border: 1px solid red;
+  margin: 40px auto;
+  padding: 10px;
+
+  @include flex-box($flex-box-row-center...);
+}
