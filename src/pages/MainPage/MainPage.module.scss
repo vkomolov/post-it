@@ -4,8 +4,48 @@
 @import "../../utils/global_styles/animations";
 ///@import "../../global_styles/fonts";
 
-.topWrapper {
-  border: 1px dotted coral;
+.contentWrapper {
   padding: 20px;
-  background-color: $yelly;
+  //background-color: $foxyLight;
+
+  @include flex-box($flex-box-row-center...);
+}
+
+.asideButton {
+  font-family: "StardosStencil-Regular", sans-serif;
+  background-color: $violet;
+  color: $white;
+  @extend %button;
+  @include init-font(18px, 700);
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.8em;
+  }
+}
+
+.postsHeading {
+  font-family: "StardosStencil-Regular", sans-serif;
+  padding: 5px;
+  text-align: center;
+  letter-spacing: 3px;
+
+  @include init-font(26px, 700);
+  @include text-shadow(2px, 3px);
+  color: $violet;
+}
+
+.postList {
+  position: relative;
+  overflow-y: scroll;
+  min-width: 140px;
+  height: 700px;
+  border: 5px solid $foxy;
+  border-radius: 7px;
+  padding: 20px;
+  margin: 30px auto;
+  background-color: $white;
+
+  @include flex-box($flex-box-col-center...);
+  align-items: flex-start;
+  flex-flow: column nowrap;
 }

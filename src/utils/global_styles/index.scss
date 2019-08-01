@@ -28,6 +28,7 @@ body:before {
 
 #root {
   max-width: $maxWidth;
+  //min-height: 100vh;
   background-color: $white;
   margin: 0 auto;
   padding: 20px;

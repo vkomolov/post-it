@@ -1,17 +1,25 @@
 import React from 'react';
 
-//containers
+//components
 import Header from '../Header';
 import Footer from '../Footer';
 
-//css
+//styles
 import styles from './PageTemplate.module.scss';
 
 const PageTemplate = ({ children }) => {
     return (
-        <div className={styles.pageWrapper}>
+        <div className={ styles.pageWrapper }>
             <Header />
-            {children}
+            {/*<main className={ styles.main }>
+                <div className={styles.aside}>
+                    <div className={styles.aside__button}>Sort by Title</div>
+                </div>
+                <div className={styles.content}>
+                    { children }
+                </div>
+            </main>*/}
+            { children }
             <Footer />
         </div>
     );

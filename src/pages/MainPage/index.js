@@ -1,7 +1,12 @@
 ///node_modules
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 ///components
+import Post from '../../components/Post';
+import Aside from '../../components/Aside';
+import Content from '../../components/Content';
+
 ///pages
 import PageTemplate from '../../containers/PageTemplate';
 import { mapStateToProps, mapActionsToProps } from './MainPage.redux';
@@ -11,24 +16,27 @@ import funcs from '../../utils/funcsCollection';
 import styles from './MainPage.module.scss';
 
 class MainPage extends Component {
-    constructor(props) {
+/*    constructor(props) {
         super(props);
-        this.apiSource = 'https://bloggy-api.herokuapp.com/posts'
-        //this.state = this.props.posts;
-        //this.loaded = this.state.loaded;
-        //this.error = this.state.error;
-    }
+    }*/
 
     componentDidMount() {
         if(!this.loaded && !this.error) {
-            const params = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
+            this.getAllPosts();
+        }
+    }
 
-            funcs.initFetch(this.apiSource, params)
+    getAllPosts() {
+        const getAllUrl = 'https://bloggy-api.herokuapp.com/posts';
+        const params = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        if (this.props.gotSuccess && this.props.gotFailure) {
+            funcs.initFetch(getAllUrl, params)
                 .then(data => {
                     setTimeout(() => this.props.gotSuccess( data ), 1000);
                 })
@@ -36,6 +44,8 @@ class MainPage extends Component {
                     console.error(error);
                     this.props.gotFailure(error)
                 })
+        } else {
+            throw new Error('no actions connected');
         }
     }
 
@@ -43,26 +53,32 @@ class MainPage extends Component {
         const state = this.props.posts;
         let innData = [];
         if (state.data && state.data.length){
+            log(true);
             innData = [...state.data].map(el => {
                 return (
-                    <div key={el.id}>
-                        <h3>{el.title}</h3>
-                        <p>{el.body}</p>
-                    </div>
+                    <Post key={el.id} data={el}/>
                 );
             });
         }
         const body = (
-            <div className={styles.topWrapper}
-            >
-                <span>MAIN PAGE</span>
-                <div>{ innData }</div>
+            <div className={styles.contentWrapper}>
+                <Aside>
+                    <div className={styles.asideButton}>Sort by Title</div>
+                </Aside>
+                <Content>
+                    <h2 className={styles.postsHeading}>POST LIST</h2>
+                    <div className={styles.postList}>{ innData }</div>
+                </Content>
+{/*                <div className={styles.content}>
+                    <h2 className={styles.postsHeading}>POST LIST</h2>
+                    <div className={styles.postList}>{ innData }</div>
+                </div>*/}
             </div>
         );
 
         return (
             <PageTemplate>
-                {body}
+                { body }
             </PageTemplate>
         );
     }

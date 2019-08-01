@@ -1,0 +1,11 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/extends";
+@import "../../utils/global_styles/animations";
+///@import "../../global_styles/fonts";
+
+.wrapper {
+  flex-basis: 450px;
+  flex-grow: 1;
+  padding: 10px;
+}

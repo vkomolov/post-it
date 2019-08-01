@@ -1,0 +1,37 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/extends";
+@import "../../utils/global_styles/animations";
+///@import "../../global_styles/fonts";
+
+.postWrapper {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  cursor: pointer;
+  @include transition();
+
+  &:hover {
+    background-color: $foxyLighter;
+    @include box-shadow(4px, 4px);
+  }
+
+  &:active {
+    @include box-shadow(2px, 2px);
+    background-color: $yellyLight;
+  }
+}
+
+.heading {
+  padding: 5px;
+  color: $foxy;
+  @include init-font(24px, 700);
+  @include text-shadow(2px, 2px);
+}
+
+.postBody {
+  padding: 5px;
+  color: $greyDark;
+  border: 1px solid green;
+  @include init-font(18px, 400);
+}

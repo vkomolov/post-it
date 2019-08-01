@@ -4,20 +4,23 @@
 ///////EXTENDS///////
 
 %button {
-  min-width: 50px;
+  font-size: 1em;
+  min-width: 3em;
   border: none;
-  padding: 5px;
+  padding: 0.3em 0.8em;
   @include box-shadow(2px, 3px);
-  transition: all .5s ease-in-out;
+  @include transition();
   cursor: pointer;
 
+
+
   &:hover {
-    transform: scale(1.1);
+    transform: translateY(-2px);
     @include box-shadow(3px, 5px);
   }
 
   &:active {
     transform: scale(1);
-    @include box-shadow(2px, 3px);
+    @include box-shadow(1px, 3px);
   }
 }

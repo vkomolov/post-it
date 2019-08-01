@@ -1,0 +1,13 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/extends";
+@import "../../utils/global_styles/animations";
+///@import "../../global_styles/fonts";
+
+.wrapper {
+  min-width: 140px;
+  padding: 10px;
+  border: 1px solid red;
+
+  @include flex-box($flex-box-row-center...);
+}

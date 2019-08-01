@@ -1,13 +1,41 @@
 @import "../../utils/global_styles/variables";
 @import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/extends";
 
 .pageWrapper {
   position: relative;
-  max-width: $maxWidth;
   color: $greyDark;
-  border: 1px solid red;
-  margin: 40px auto;
-  padding: 10px;
-
-  @include flex-box($flex-box-row-center...);
+  border: 1px dotted red;
+  padding: 40px 10px;
 }
+
+/*.main {
+  @include flex-box($flex-box-row-center...);
+  background: $foxyLighter;
+
+  .aside {
+    min-width: 140px;
+    padding: 10px;
+    border: 1px solid red;
+
+    @include flex-box($flex-box-row-center...);
+
+
+    &__button {
+      font-family: "StardosStencil-Regular", sans-serif;
+      background-color: $violet;
+      color: $white;
+      @extend %button;
+      @include init-font(18px, 700);
+
+      @media screen and (max-width: 768px) {
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  .content {
+    flex-basis: 450px;
+    flex-grow: 1;
+  }
+}*/
