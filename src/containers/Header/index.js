@@ -5,11 +5,14 @@ import styles from './Header.module.scss';
 
 const Header = () => {
     return (
-        <div className={styles.headerWrapper}>
-            <header>
-            Header
-            </header>
-        </div>
+        <header className={styles.headerWrapper}>
+            <div className={styles.headingWrapper}>
+                <span className={styles.heading}>Edit Posts</span>
+            </div>
+            <div className={styles.headerMain}>
+                HEADER MAIN BLOCK
+            </div>
+        </header>
     );
 };
 

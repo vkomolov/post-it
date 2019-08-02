@@ -1,11 +1,12 @@
 import userConstants from '../constants/user.constants';
 //import { alertActions } from './alert.actions';
 
-export const userActions = {
+const userActions = {
     getAllPosts,
     gotSuccess,
     gotFailure
 };
+export default userActions;
 
     function getAllPosts() {
         return {

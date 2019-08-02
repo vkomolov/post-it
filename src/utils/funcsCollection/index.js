@@ -79,7 +79,6 @@ function initFetch( source, params ) {
     }
 
     function handle( response ) {
-        console.log(response.headers.get("Content-Type"));
         if ( response.headers.get("Content-Type").includes('application/json') ) {
             return response.json();
         } else if ( response.headers.get("Content-Type").includes('text/html') ) {

@@ -1,10 +1,10 @@
 import userActions from '../../store/actions/user.actions';
 
-export const mapStateToProps = (state) => {
+export const mapStateToProps = ( state ) => {
     return { posts: state.posts }
 };
 
-export const mapActionsToProps = (dispatch) => {
+export const mapActionsToProps = ( dispatch ) => {
     return {
         gotSuccess: (data) => {
             dispatch(userActions.gotSuccess(data))

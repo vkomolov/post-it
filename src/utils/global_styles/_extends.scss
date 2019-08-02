@@ -4,15 +4,12 @@
 ///////EXTENDS///////
 
 %button {
-  font-size: 1em;
   min-width: 3em;
   border: none;
   padding: 0.3em 0.8em;
   @include box-shadow(2px, 3px);
   @include transition();
   cursor: pointer;
-
-
 
   &:hover {
     transform: translateY(-2px);

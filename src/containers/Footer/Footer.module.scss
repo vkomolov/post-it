@@ -4,18 +4,23 @@
 ///@import "../../global_styles/fonts";
 
 .footerWrapper {
+  font-size: 1rem;
   width: 100%;
   border: 1px dotted coral;
 
+  @media screen and (max-width: 768px) {
+    font-size: 0.9em;
+  }
+
   .blocksWrapper {
-    @include flex-box($flex-box-row-between...);
+    @include flex-box($flex-box-row-center...);
     border: 1px dotted coral;
 
     .footerBlock {
-      width: 200px;
-      height: 200px;
-      padding: 5px;
-      margin: 10px;
+      width: 6.25em;
+      height: 6.25em;
+      padding: 0.3px;
+      margin: 0.6em 1.25em;
       border: 1px dotted coral;
     }
   }

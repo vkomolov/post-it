@@ -4,8 +4,27 @@
 ///@import "../../utils/global_styles/fonts";
 
 .headerWrapper {
-  width: 100%;
-  color: $greyLight;
-
   border: 1px dotted lightblue;
+  @include flex-box($flex-box-row-between...);
+}
+
+.headingWrapper {
+  font-family: "StardosStencil-Regular", sans-serif;
+  font-size: 1rem;
+
+  .heading {
+    color: $foxy;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    @include init-font(44px, 700);
+    @include text-shadow(2px, 3px);
+  }
+}
+
+.headerMain {
+  flex-grow: 1;
+  padding: 20px;
+  min-height: 70px;
+  text-align: center;
+  border: 1px dotted green;
 }

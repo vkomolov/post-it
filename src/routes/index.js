@@ -1,5 +1,5 @@
 import MainPage from "../pages/MainPage/";
-import SecondPage from "../pages/SecondPage";
+import PostPage from "../pages/PostPage";
 import NotFound from "../pages/NotFound";
 
 export default [
@@ -10,10 +10,9 @@ export default [
       name: 'MainPage'
     },
     {
-      path: "/secondPage",
-      exact: false,
-      component: SecondPage,
-      name: 'SecondPage'
+      path: "/posts",
+      component: PostPage,
+      name: 'PostsPage'
     },
     {
       component: NotFound ,
