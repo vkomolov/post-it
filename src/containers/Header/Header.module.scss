@@ -5,7 +5,7 @@
 
 .headerWrapper {
   border: 1px dotted lightblue;
-  @include flex-box($flex-box-row-between...);
+  @include flex-box($flex-box-row-center...);
 }
 
 .headingWrapper {

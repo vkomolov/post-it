@@ -9,8 +9,23 @@ export default function PostDetail({ data }) {
 
     return (
         <div className={styles.postWrapper}>
-            <h3 className={styles.heading}>{ title }</h3>
-            <p className={styles.postBody}>{ body }</p>
+            <h3 className={styles.headingTitle}>Post Title</h3>
+            <hr className={styles.hr}/>
+            <textarea name="postHeader"
+                      className={ styles.textAreaHeader }
+                      defaultValue={ title }
+            />
+            <h3 className={styles.headingTitle}>Post Content</h3>
+            <hr className={styles.hr}/>
+            <textarea name="postBody"
+                      className={ styles.textAreaBody }
+                      defaultValue={ body }
+            />
         </div>
     );
+}
+
+/////dev
+function log(it) {
+    console.log(it);
 }

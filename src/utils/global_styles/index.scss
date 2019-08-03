@@ -7,6 +7,7 @@
 
 body {
   font-family: "HelveticaNeue", sans-serif;
+  color: $greyNorm;
   background-color: $greyLightest;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -33,5 +34,23 @@ body:before {
   margin: 0 auto;
   padding: 20px;
 }
+
+/************OPTION****************/
+.flex-box {
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+}
+
+.flex-box.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-box.around {
+  justify-content: space-around;
+  align-items: center;
+}
+
 
 

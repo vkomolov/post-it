@@ -5,9 +5,13 @@
 ///@import "../../global_styles/fonts";
 
 .wrapper {
-  min-width: 140px;
-  padding: 10px;
+  max-width: 11em;
+  padding: 0.5em;
   border: 1px solid red;
 
   @include flex-box($flex-box-row-center...);
+
+  @media screen and (max-width: 768px) {
+    max-width: 100%;
+  }
 }

@@ -50,7 +50,15 @@ $flex-box-col-center: column, center, center;
   }
 }
 
+@mixin text-area() {
+  outline: none;
+  resize: none;
+  -moz-appearance: none;
+  border: 1px solid #999; // deleting the outline in FireFox
+}
+
 @mixin scroll-init($width, $thumbColor, $trackColor) {
+  position: relative;
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;

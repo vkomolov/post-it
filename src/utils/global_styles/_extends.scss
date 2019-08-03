@@ -4,9 +4,10 @@
 ///////EXTENDS///////
 
 %button {
-  min-width: 3em;
+  display: inline-block;
+  text-align: center;
   border: none;
-  padding: 0.3em 0.8em;
+  padding: 0.3em 0.5em;
   @include box-shadow(2px, 3px);
   @include transition();
   cursor: pointer;

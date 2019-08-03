@@ -1,7 +1,7 @@
 import funcs from "../funcsCollection";
 
 const userService  = {
-    fetchAll
+    fetchAll,
 };
 export default userService;
 

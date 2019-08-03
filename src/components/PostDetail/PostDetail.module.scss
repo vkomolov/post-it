@@ -6,33 +6,69 @@
 
 .postWrapper {
   width: 100%;
-  padding: 10px;
+  //padding: 10px;
   margin: 0.5em 0;
   cursor: pointer;
   @include transition();
+}
+
+.headingTitle {
+  color: $violet;
+  font: {
+    family: "StardosStencil-Regular", sans-serif;
+    size: 1.2em;
+    weight: 700;
+  }
+  letter-spacing: 0.05em;
+  padding: 0.4em;
+  @include text-shadow(1px, 2px);
+}
+
+.textArea {
+  display: block;
+  user-select: contain;
+  outline: none;
+  width: 100%;
+  padding: 0.3em;
+  margin: 0.3em auto;
 
   &:hover {
     background-color: $foxyLighter;
     @include box-shadow(4px, 4px);
   }
 
-  &:active {
+  &:focus {
     @include box-shadow(2px, 2px);
     background-color: $yellyLight;
   }
+
+  @include scroll-init(5px, $blueDark, $foxyGrey);
 }
 
-.heading {
-  padding: 5px;
+.textAreaHeader {
+  composes: textArea;
+  height: 2em;
+  font: {
+    family: "StardosStencil-Regular", sans-serif;
+    weight: 700;
+    size: 2em;
+  }
   color: $foxy;
-  font-size: 2em;
-  font-weight: 700;
   @include text-shadow(2px, 2px);
 }
 
-.postBody {
-  font-size: 1.1em;
-  padding: 5px;
-  color: $greyDark;
-  border: 1px solid green;
+.textAreaBody {
+  composes: textArea;
+  height: 10em;
+  font: {
+    family: "HelveticaNeue", sans-serif;
+    weight: 400;
+    size: 1.3em;
+  }
+}
+
+.hr {
+  height: 3px;
+  background-color: $violet;
+  margin-bottom: 1em;
 }

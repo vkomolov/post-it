@@ -19,12 +19,11 @@ import styles from './PostPage.module.scss';
 class PostPage extends Component {
     constructor(props) {
         super(props);
-        this.propState = props.posts; //for componentDidMount
         this.history = props.history;
     }
 
     componentDidMount() {
-        if ( !this.propState.loaded && !this.propState.error ) {
+        if ( !this.props.posts.loaded && !this.props.posts.error ) {
             log('getAllPosts... from componentDidMount');
             userService.fetchAll
             (
@@ -32,6 +31,36 @@ class PostPage extends Component {
                 this.props.gotSuccess,
                 this.props.gotFailure
             );
+        }
+    }
+
+    handleClick({ target }) {
+        const dataSet = target.dataset.value;
+        if( dataSet ) {
+            const datasetObj = {
+                backToList: () => {
+                    this.history.push('/');
+                },
+                createComment: () => {
+                    log('createComment');
+                },
+                savePost: () => {
+                    log('savePost');
+                },
+                undoUpdate: () => {
+                    log('undoUpdate');
+                },
+                deletePost: () => {
+                    log('deletePost');
+                },
+            };
+            if (dataSet in datasetObj) {
+                datasetObj[dataSet]();
+            } else {
+                throw new Error('no match of dataSet.value');
+            }
+        } else {
+            throw new Error('no dataSet.value found in the button');
         }
     }
 
@@ -51,17 +80,52 @@ class PostPage extends Component {
         }
 
         const body = (
-            <div className={styles.contentWrapper}>
-                <Aside>
-                    <div className={styles.asideButton}>SAVE</div>
-                    <div className={styles.asideButton}>UNDO</div>
-                </Aside>
-                <Content>
+            <div className={styles.totalWrapper}>
+                <div className={styles.flexBoxCenter}>
+                    <div className={styles.backButton}
+                         data-value="backToList"
+                         onClick={(e) => this.handleClick(e)}
+                    >
+                        BACK TO LIST
+                </div>
                     <h2 className={styles.postsHeading}>
                         POST DETAIL id: { id }
                     </h2>
-                    { innData.length && <PostDetail data={innData[0]}/> }
-                </Content>
+                </div>
+                <div className={styles.contentWrapper}>
+                    <Aside>
+                        <div className={styles.flexBoxCenter}>
+                            <div className={styles.createButton}
+                                 data-value="createComment"
+                                 onClick={(e) => this.handleClick(e)}
+                            >
+                                NEW COMMENT</div>
+                            <div className={styles.createButton}
+                                 data-value="savePost"
+                                 onClick={(e) => this.handleClick(e)}
+                            >
+                                SAVE POST
+                            </div>
+                        </div>
+                        <div className={styles.flexBoxCenter}>
+                            <div className={styles.asideButton}
+                                 data-value="undoUpdate"
+                                 onClick={(e) => this.handleClick(e)}
+                            >
+                                UNDO
+                            </div>
+                            <div className={styles.deleteButton}
+                                 data-value="deletePost"
+                                 onClick={(e) => this.handleClick(e)}
+                            >
+                                DELETE POST
+                            </div>
+                        </div>
+                    </Aside>
+                    <Content>
+                        { innData.length && <PostDetail data={innData[0]}/> }
+                    </Content>
+                </div>
             </div>
         );
 

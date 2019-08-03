@@ -4,40 +4,61 @@
 @import "../../utils/global_styles/animations";
 ///@import "../../global_styles/fonts";
 
-.contentWrapper {
+.totalWrapper {
   font-size: 1rem;
   padding: 1.25em;
-  //background-color: $foxyLight;
-
-  @include flex-box($flex-box-row-center...);
 
   @media screen and (max-width: 768px) {
     font-size: 0.9em;
   }
 }
 
-.asideButton {
-  font-family: "StardosStencil-Regular", sans-serif;
-  background-color: $violet;
-  color: $white;
-  @extend %button;
-  font-weight: 700;
+.flexBoxCenter {
+  @include flex-box($flex-box-row-center...);
+
+  .postsHeading {
+    flex-grow: 1;
+    font: {
+      family: "StardosStencil-Regular", sans-serif;
+      weight: 700;
+    }
+
+    padding: 5px 10px;
+    text-align: center;
+    letter-spacing: 3px;
+
+    @include text-shadow(2px, 3px);
+    color: $violet;
+  }
 }
 
-.postsHeading {
-  font: {
-    family: "StardosStencil-Regular", sans-serif;
-    weight: 700;
-  }
-  //font-family: "StardosStencil-Regular", sans-serif;
-  //font-weight: 700;
-  padding: 5px;
-  text-align: center;
-  letter-spacing: 3px;
+.contentWrapper {
+  @include flex-box($flex-box-row-center...);
+}
 
+.asideButton {
+  @extend %button;
 
-  @include text-shadow(2px, 3px);
+  font-family: "StardosStencil-Regular", sans-serif;
+  background-color: $violetLight;
+  color: $white;
+  font-weight: 700;
+  width: 9em;
+  margin: 0.5em;
+}
+
+.backButton {
+  composes: asideButton;
+  background-color: $greyLighter;
   color: $violet;
+}
+.deleteButton {
+  composes: asideButton;
+  background-color: $reddy;
+}
+.createButton {
+  composes: asideButton;
+  background-color: $green;
 }
 
 .postList {
