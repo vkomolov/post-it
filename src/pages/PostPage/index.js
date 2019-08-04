@@ -12,6 +12,7 @@ import PostDetail from '../../components/PostDetail';
 import PageTemplate from '../../containers/PageTemplate';
 import { mapStateToProps, mapActionsToProps } from './PostPage.redux';
 import userService from '../../utils/userService';
+import funcs from '../../utils/funcsCollection';
 
 ///styles
 import styles from './PostPage.module.scss';
@@ -20,6 +21,10 @@ class PostPage extends Component {
     constructor(props) {
         super(props);
         this.history = props.history;
+        this.state = {
+            prevData: {},
+            postData: {}
+        }
     }
 
     componentDidMount() {
@@ -31,6 +36,8 @@ class PostPage extends Component {
                 this.props.gotSuccess,
                 this.props.gotFailure
             );
+        } else {
+            console.log('passing didMount...');
         }
     }
 
@@ -47,7 +54,7 @@ class PostPage extends Component {
                 savePost: () => {
                     log('savePost');
                 },
-                undoUpdate: () => {
+                undo: () => {
                     log('undoUpdate');
                 },
                 deletePost: () => {
@@ -64,19 +71,45 @@ class PostPage extends Component {
         }
     }
 
+    getId( pathName ) {
+        if( matchPath ) {
+            let matchedPars = matchPath(pathName, {
+                path: '/posts/:id',
+            });
+            return matchedPars.params.id;
+        } else {
+            throw new Error('no matchPath module found...');
+        }
+    }
+
+    getPostById( id, postArr ) {
+        let innData = [];
+        if (id !== 'default') {
+            innData = postArr.filter(el => {
+                return el.id === +id;
+            });
+            /**returning the copy of the Post
+             * */
+            return ( innData.length ) ? { ...innData[0] } : {}
+
+        } else {
+            return {};
+        }
+    }
+
     render() {
         const stateProps = this.props.posts; //can will be re-rendered
+
         let pathName = this.history.location.pathname;
-        let matchedPars = matchPath(pathName, {
-            path: '/posts/:id',
-        });
-        const id = matchedPars.params.id;
-        let innData = [];
+        const id = this.getId( pathName ); //getting id from the pathName
+        let innPost = {};
 
         if ( id.length && stateProps.data.length ) {
-            innData = [...stateProps.data].filter(el => {
-                return el.id === parseInt(id);
-            });
+            /**taking the copy of the Post by id from the state data
+             * */
+            innPost = this.getPostById(id, stateProps.data);
+            /**innPost State receives the Post by id if they are not equal
+             * */
         }
 
         const body = (
@@ -87,7 +120,7 @@ class PostPage extends Component {
                          onClick={(e) => this.handleClick(e)}
                     >
                         BACK TO LIST
-                </div>
+                    </div>
                     <h2 className={styles.postsHeading}>
                         POST DETAIL id: { id }
                     </h2>
@@ -109,7 +142,7 @@ class PostPage extends Component {
                         </div>
                         <div className={styles.flexBoxCenter}>
                             <div className={styles.asideButton}
-                                 data-value="undoUpdate"
+                                 data-value="undo"
                                  onClick={(e) => this.handleClick(e)}
                             >
                                 UNDO
@@ -123,7 +156,7 @@ class PostPage extends Component {
                         </div>
                     </Aside>
                     <Content>
-                        { innData.length && <PostDetail data={innData[0]}/> }
+                        { Object.keys(innPost).length && <PostDetail data={innPost}/> }
                     </Content>
                 </div>
             </div>

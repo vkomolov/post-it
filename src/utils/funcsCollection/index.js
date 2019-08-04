@@ -1,9 +1,14 @@
+import axios from 'axios';
+
+
 const funcs = {
     dateFormat,
     numFormat,
     deepClone,
     initFetch,
-    equalCols
+    initAxios,
+    equalCols,
+    deepEqual
 };
 export default funcs;
 
@@ -89,6 +94,20 @@ function initFetch( source, params ) {
         }
     }
 }
+/**catch will be taken outer
+ * */
+function initAxios( source, params ) {
+    if ( source ) {
+        return axios( source, params ).then( handle )
+    } throw new Error("no source given to args");
+
+    function handle( response ) {
+        //console.log('handling response...');
+        //console.log(response);
+
+        return response;
+    }
+}
 
 /**@description it receives the data and update it with the creation Date
  * and sets the localStorage;
@@ -116,4 +135,10 @@ function equalCols(colsArr) {   //for making DOM blocks` height to be equal. Put
     for (let i = 0; i < colsArr.length; i++) {
         colsArr[i].style.height = highestCal + "px";
     }
+}
+
+/**@description it evaluates two objects to be the same in values
+ * */
+function deepEqual (obj1, obj2){
+    return JSON.stringify(obj1)===JSON.stringify(obj2);
 }

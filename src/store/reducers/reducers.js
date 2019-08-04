@@ -1,13 +1,10 @@
 //import alertConstants from "../../utils/constants/alert.constants";
 
 import userConstants from "../constants/user.constants";
+import { initialPost, initialPostState } from "../../utils/userService/initialData";
 
-const initialPostState = {
-    loaded: false,
-    error: false,
-    data: {}
-};
-
+/**@description Reducer which keeps the state, fetched from API
+ * */
 export function posts(innState = initialPostState, {type, data}) {
     const state = {...innState};
     const typeObj = {
@@ -22,7 +19,7 @@ export function posts(innState = initialPostState, {type, data}) {
             return {
                 loaded: true,
                 error: false,
-                data: data
+                data
             };
         },
         [userConstants.GETALL_POSTS_FAILURE]: () => {
@@ -36,3 +33,35 @@ export function posts(innState = initialPostState, {type, data}) {
 
     return (type in typeObj) ? typeObj[type]() : state;
 }
+
+/*/!**@description PostReducer
+ * *!/
+export function postClone(innState = initialPost, {type, payload}) {
+    const state = {...innState};
+
+    const typeObj = {
+        [userConstants.PUT_DATA]: () => {
+            let prevState = {...state.data};
+            return {
+                ...state,
+                prevState,
+                data: {
+                    ...payload
+                }
+            };
+        },
+        [userConstants.GET_PREVIOUS]: () => {
+            const prevState = { ...state.prevState };
+            return {
+                ...state,
+                data: {
+                    ...prevState
+                }
+            };
+        },
+    };
+
+    return (type in typeObj) ? typeObj[type]() : state;
+}*/
+
+

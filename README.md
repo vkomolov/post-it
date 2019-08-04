@@ -33,7 +33,7 @@ then render the list of the fetched posts;
     - PostPage takes 'pathMatch.params' from the url and looks for the same id
     in the state of the posts;
     if the Posts State doesn`t find the id, taken from 'pathMatch.params',
-    then to puth the history to the Main Page;
+    then to push the history to the Main Page;
     - PostPage has the Navlink to the MainPage with the list of all posts;
     - PostPage has delete, save and undo interfaces;
       - When the Post is deleted, then to fetch DEL to the API, 

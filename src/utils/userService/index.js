@@ -5,6 +5,9 @@ const userService  = {
 };
 export default userService;
 
+/**@description it packs axios or fetch realization.
+ *
+ * */
 function fetchAll(source, actionSuccess, actionError) {
     const params = {
         method: 'GET',
@@ -13,12 +16,25 @@ function fetchAll(source, actionSuccess, actionError) {
         }
     };
 
-    funcs.initFetch(source, params)
+    ////SWITCHING TO AXIOS
+    funcs.initAxios(source, params)
+        .then(objData => {
+            const { data } = objData;
+            setTimeout(() => actionSuccess( data ), 1000);
+        })
+        .catch(error => {
+            console.error(error);
+            actionError(error)
+        });
+
+    ////SWITCHING TO FETCH
+
+    /*funcs.initFetch(source, params)
         .then(data => {
             setTimeout(() => actionSuccess( data ), 1000);
         })
         .catch(error => {
             console.error(error);
             actionError(error)
-        })
+        })*/
 }
