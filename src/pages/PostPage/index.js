@@ -131,6 +131,11 @@ class PostPage extends Component {
         //carring will put the default className
         let activateClass = funcs.activateClassName(postData.isUpdate, styles.activeButton);
 
+        let innId = `${innPost.id}`; //to get the length of id;
+        let showId = (innId.length > 8)
+            ? innId.slice(0, 8).concat('...')
+            : innId;
+
         const body = (
             <div className={styles.totalWrapper}>
                 <div className={styles.flexBoxCenter}>
@@ -141,7 +146,7 @@ class PostPage extends Component {
                         BACK TO LIST
                     </div>
                     <h2 className={styles.postsHeading}>
-                        POST DETAIL id: { innPost.id }
+                        POST DETAIL id: { showId }
                     </h2>
                 </div>
                 <div className={styles.contentWrapper}>
