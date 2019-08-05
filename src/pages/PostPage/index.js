@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { matchPath } from 'react-router-dom';
+import { v4 } from 'uuid';
 
 ///components
 import Aside from '../../components/Aside';
@@ -94,16 +95,21 @@ class PostPage extends Component {
             post = userService.initDefaultPars();
         }
 
-        if (Object.keys(post).length) {
-            if (!post.createDate) {
-                post.createDate = new Date();
-            }
-            if (post.id === 'default') {
-                log('catching default id');
-            }
-        }
+        return this.preparePost( post );
+    }
 
-        return post;
+    preparePost( post ) {
+        if (Object.keys(post).length) {
+            let innPost = userService.initDefaultPars( post );
+            if (!innPost.createDate) {
+                innPost.createDate = new Date().toDateString();
+            }
+            if (innPost.id === 'default') {
+                innPost.id = v4();
+            }
+
+            return innPost;
+        }
     }
 
     render() {
@@ -124,7 +130,6 @@ class PostPage extends Component {
 
         //carring will put the default className
         let activateClass = funcs.activateClassName(postData.isUpdate, styles.activeButton);
-
 
         const body = (
             <div className={styles.totalWrapper}>

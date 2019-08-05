@@ -15,7 +15,6 @@ class PostDetail extends Component {
     constructor(props) {
         super(props);
         this.propsData = props.data;
-        //this.initialData = {};
     }
 
     componentDidMount() {

@@ -13,15 +13,16 @@ const funcs = {
 };
 export default funcs;
 
-/**@description: Converts the Date format to yyyy-mm-dd String
- * @param: {date} Date in Date format
- * @param: {delimeter} Delimeter '-' for joining in String
- * @return: String with the delimeter
+/**@description Converts the Date format to yyyy-mm-dd String
+ * @param {string} date to localString
+ * @param {string} delimeter '-' for joining in String
+ * @return {string} String of Date with the delimeter
  * */
 function dateFormat(date, delimeter) {
-    let month = ("0" + (date.getMonth() + 1)).slice(-2); //if 2 digits then without 0
-    let day = ("0" + date.getDate()).slice(-2);
-    return [date.getFullYear(), month, day].join(delimeter);
+    let innDate = new Date(date);
+    let month = ("0" + (innDate.getMonth() + 1)).slice(-2); //if 2 digits then without 0
+    let day = ("0" + innDate.getDate()).slice(-2);
+    return [innDate.getFullYear(), month, day].join(delimeter);
 }
 
 /**@description: Rounds the Number to the necessary precision
