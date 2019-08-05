@@ -19,13 +19,13 @@ class MainPage extends Component {
     constructor(props) {
         super(props);
         this.propState = this.props.posts; //for componentDidMount
+        this.history = this.props.history;
     }
 
     componentDidMount() {
         if(!this.propState.loaded && !this.propState.error) {
             log('getAllPosts...');
-            userService.fetchAll
-            (
+            userService.fetchAll(
                 'https://bloggy-api.herokuapp.com/posts',
                 this.props.gotSuccess,
                 this.props.gotFailure
@@ -33,7 +33,13 @@ class MainPage extends Component {
         }
     }
 
+    createPost() {
+        this.history.push('/posts/default');
+    }
+
     render() {
+        log('rendering MainPage...');
+
         const state = this.props.posts; //will be re-rendered
         let innData = [];
 
@@ -47,6 +53,11 @@ class MainPage extends Component {
         const body = (
             <div className={styles.contentWrapper}>
                 <Aside>
+                    <div className={styles.asideButton}
+                         onClick={() => this.createPost()}
+                    >
+                        Create Post
+                    </div>
                     <div className={styles.asideButton}>Sort by Title</div>
                 </Aside>
                 <Content>

@@ -4,7 +4,8 @@ import userConstants from '../constants/user.constants';
 const userActions = {
     getAllPosts,
     gotSuccess,
-    gotFailure
+    gotFailure,
+    putData
 };
 export default userActions;
 
@@ -27,3 +28,16 @@ export default userActions;
             error
         }
     }
+
+    function putData( data ) {
+        return {
+            type: userConstants.PUT_DATA,
+            data
+        }
+    }
+
+/*    function getPrev() {
+        return {
+            type: userConstants.GET_PREVIOUS
+        }
+    }*/

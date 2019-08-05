@@ -8,7 +8,8 @@ const funcs = {
     initFetch,
     initAxios,
     equalCols,
-    deepEqual
+    deepEqual,
+    activateClassName
 };
 export default funcs;
 
@@ -141,4 +142,11 @@ function equalCols(colsArr) {   //for making DOM blocks` height to be equal. Put
  * */
 function deepEqual (obj1, obj2){
     return JSON.stringify(obj1)===JSON.stringify(obj2);
+}
+
+/**@description giving condition to return activeClassName (using carring)
+ * */
+function activateClassName ( condition, activeClassName, className ) {
+    console.log(className);
+    return ( className ) => ( condition ) ? activeClassName : className;
 }

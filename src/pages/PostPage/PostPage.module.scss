@@ -47,6 +47,11 @@
   margin: 0.5em;
 }
 
+.activeButton {
+  color: $foxy;
+  @include text-shadow(0, 3px, $foxyLight);
+}
+
 .backButton {
   composes: asideButton;
   background-color: $greyLighter;

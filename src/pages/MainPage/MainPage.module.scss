@@ -17,11 +17,14 @@
 }
 
 .asideButton {
+  @extend %button;
+
   font-family: "StardosStencil-Regular", sans-serif;
   background-color: $violet;
   color: $white;
-  @extend %button;
+  width: 7em;
   font-weight: 700;
+  margin: 0.5em;
 }
 
 .postsHeading {
@@ -30,9 +33,9 @@
     weight: 700;
   }
 
-  padding: 5px;
+  padding: 0.3em;
   text-align: center;
-  letter-spacing: 3px;
+  letter-spacing: 0.1em;
 
   @include text-shadow(2px, 3px);
   color: $violet;

@@ -34,34 +34,36 @@ export function posts(innState = initialPostState, {type, data}) {
     return (type in typeObj) ? typeObj[type]() : state;
 }
 
-/*/!**@description PostReducer
- * *!/
-export function postClone(innState = initialPost, {type, payload}) {
+/**@description PostReducer
+ * */
+export function postData(innState = initialPost, {type, payload}) {
     const state = {...innState};
 
     const typeObj = {
         [userConstants.PUT_DATA]: () => {
-            let prevState = {...state.data};
+/*            if (JSON.stringify(state.prevState) !== JSON.stringify(payload.prevState)) {
+                state.prevState = {...payload.prevState};
+            }*/
             return {
                 ...state,
-                prevState,
+                isUpdate: true,
                 data: {
                     ...payload
                 }
             };
         },
         [userConstants.GET_PREVIOUS]: () => {
-            const prevState = { ...state.prevState };
             return {
                 ...state,
+                isUpdate: false,
                 data: {
-                    ...prevState
+                    ...state.prevState
                 }
             };
         },
     };
 
     return (type in typeObj) ? typeObj[type]() : state;
-}*/
+}
 
 

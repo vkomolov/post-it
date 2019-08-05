@@ -35,6 +35,7 @@ function Post({data, history}) {
 export default withRouter(Post);
 
 /////dev
+/*
 function log(it) {
     console.log(it);
-}
+}*/

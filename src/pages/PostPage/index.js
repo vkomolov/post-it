@@ -14,6 +14,7 @@ import { mapStateToProps, mapActionsToProps } from './PostPage.redux';
 import userService from '../../utils/userService';
 import funcs from '../../utils/funcsCollection';
 
+
 ///styles
 import styles from './PostPage.module.scss';
 
@@ -21,23 +22,18 @@ class PostPage extends Component {
     constructor(props) {
         super(props);
         this.history = props.history;
-        this.state = {
-            prevData: {},
-            postData: {}
-        }
     }
 
     componentDidMount() {
         if ( !this.props.posts.loaded && !this.props.posts.error ) {
             log('getAllPosts... from componentDidMount');
-            userService.fetchAll
-            (
+            userService.fetchAll(
                 'https://bloggy-api.herokuapp.com/posts',
                 this.props.gotSuccess,
                 this.props.gotFailure
             );
         } else {
-            console.log('passing didMount...');
+            console.log('passing PostPage didMount...');
         }
     }
 
@@ -84,33 +80,51 @@ class PostPage extends Component {
 
     getPostById( id, postArr ) {
         let innData = [];
+        let post = {};
+
         if (id !== 'default') {
             innData = postArr.filter(el => {
                 return el.id === +id;
             });
             /**returning the copy of the Post
              * */
-            return ( innData.length ) ? { ...innData[0] } : {}
+            post = ( innData.length ) ? { ...innData[0] } : {};
 
         } else {
-            return {};
+            post = userService.initDefaultPars();
         }
+
+        if (Object.keys(post).length) {
+            if (!post.createDate) {
+                post.createDate = new Date();
+            }
+            if (post.id === 'default') {
+                log('catching default id');
+            }
+        }
+
+        return post;
     }
 
     render() {
+        log('rendering PostPage...');
         const stateProps = this.props.posts; //can will be re-rendered
+        const postData = this.props.postData; //reducer
 
         let pathName = this.history.location.pathname;
         const id = this.getId( pathName ); //getting id from the pathName
-        let innPost = {};
+        let innPost = {}; //will be original Post by id from the state.data
+
 
         if ( id.length && stateProps.data.length ) {
             /**taking the copy of the Post by id from the state data
              * */
             innPost = this.getPostById(id, stateProps.data);
-            /**innPost State receives the Post by id if they are not equal
-             * */
         }
+
+        //carring will put the default className
+        let activateClass = funcs.activateClassName(postData.isUpdate, styles.activeButton);
+
 
         const body = (
             <div className={styles.totalWrapper}>
@@ -122,7 +136,7 @@ class PostPage extends Component {
                         BACK TO LIST
                     </div>
                     <h2 className={styles.postsHeading}>
-                        POST DETAIL id: { id }
+                        POST DETAIL id: { innPost.id }
                     </h2>
                 </div>
                 <div className={styles.contentWrapper}>
@@ -133,7 +147,7 @@ class PostPage extends Component {
                                  onClick={(e) => this.handleClick(e)}
                             >
                                 NEW COMMENT</div>
-                            <div className={styles.createButton}
+                            <div className={ activateClass(styles.createButton) }
                                  data-value="savePost"
                                  onClick={(e) => this.handleClick(e)}
                             >
@@ -141,7 +155,7 @@ class PostPage extends Component {
                             </div>
                         </div>
                         <div className={styles.flexBoxCenter}>
-                            <div className={styles.asideButton}
+                            <div className={ activateClass(styles.asideButton) }
                                  data-value="undo"
                                  onClick={(e) => this.handleClick(e)}
                             >
@@ -156,7 +170,10 @@ class PostPage extends Component {
                         </div>
                     </Aside>
                     <Content>
-                        { Object.keys(innPost).length && <PostDetail data={innPost}/> }
+                        {
+                            Object.keys( innPost ).length
+                            && <PostDetail data={ innPost }/>
+                        }
                     </Content>
                 </div>
             </div>
