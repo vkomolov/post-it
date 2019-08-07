@@ -11,14 +11,6 @@ const PageTemplate = ({ children }) => {
     return (
         <div className={ styles.pageWrapper }>
             <Header />
-            {/*<main className={ styles.main }>
-                <div className={styles.aside}>
-                    <div className={styles.aside__button}>Sort by Title</div>
-                </div>
-                <div className={styles.content}>
-                    { children }
-                </div>
-            </main>*/}
             { children }
             <Footer />
         </div>

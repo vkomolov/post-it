@@ -148,5 +148,5 @@ function deepEqual (obj1, obj2){
 /**@description giving condition to return activeClassName (using carring)
  * */
 function activateClassName ( condition, activeClassName, className ) {
-    return ( className ) => ( condition ) ? activeClassName : className;
+    return ( className ) => ( condition ) ? `${className} ${activeClassName}` : className;
 }

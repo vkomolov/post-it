@@ -36,19 +36,16 @@ export function posts(innState = initialPostState, {type, data}) {
 
 /**@description PostReducer
  * */
-export function postData(innState = initialPost, {type, payload}) {
+export function postData(innState = initialPost, {type, data}) {
     const state = {...innState};
 
     const typeObj = {
         [userConstants.PUT_DATA]: () => {
-/*            if (JSON.stringify(state.prevState) !== JSON.stringify(payload.prevState)) {
-                state.prevState = {...payload.prevState};
-            }*/
             return {
                 ...state,
                 isUpdate: true,
                 data: {
-                    ...payload
+                    ...data
                 }
             };
         },
@@ -57,7 +54,7 @@ export function postData(innState = initialPost, {type, payload}) {
                 ...state,
                 isUpdate: false,
                 data: {
-                    ...state.prevState
+
                 }
             };
         },

@@ -1,0 +1,35 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/extends";
+@import "../../utils/global_styles/animations";
+///@import "../../global_styles/fonts";
+
+.sortButton {
+  @extend %asideButton;
+  background-color: $violetLight;
+}
+
+.createButton {
+  @extend %asideButton;
+  background-color: $green;
+}
+
+.backButton {
+  @extend %asideButton;
+  background-color: $greyNorm;
+}
+
+.deleteButton {
+  @extend %asideButton;
+  background-color: $reddy;
+}
+
+.undoButton {
+  @extend %asideButton;
+  background-color: $violetLight;
+}
+
+.activeButton {
+  @include text-shadow(0, 10px, $white);
+  animation: popup .7s ease-in-out infinite;
+}

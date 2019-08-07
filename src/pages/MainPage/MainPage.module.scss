@@ -4,55 +4,27 @@
 @import "../../utils/global_styles/animations";
 ///@import "../../global_styles/fonts";
 
-.contentWrapper {
-  font-size: 1rem;
-  padding: 1.25em;
-  //background-color: $foxyLight;
+.topWrapper {
+  @extend %topWrapper;
 
-  @include flex-box($flex-box-row-center...);
+  .asideBar {
+    @extend %asideBar;
+  }
 
-  @media screen and (max-width: 768px) {
-    font-size: 0.9em;
+  .contentBar {
+    @extend %contentBar;
   }
 }
 
-.asideButton {
-  @extend %button;
-
-  font-family: "StardosStencil-Regular", sans-serif;
-  background-color: $violet;
-  color: $white;
-  width: 7em;
-  font-weight: 700;
-  margin: 0.5em;
+.postHeadingBlock {
+  @extend %postHeadingBlock;
 }
 
-.postsHeading {
-  font: {
-    family: "StardosStencil-Regular", sans-serif;
-    weight: 700;
-  }
-
-  padding: 0.3em;
-  text-align: center;
-  letter-spacing: 0.1em;
-
-  @include text-shadow(2px, 3px);
-  color: $violet;
+.heading {
+  @extend %heading;
+  flex-grow: 1;
 }
 
-.postList {
-  position: relative;
-  min-width: 140px;
-  height: 700px;
-  border: 5px solid $foxy;
-  border-radius: 1.2em;
-  padding: 1.25em;
-  margin: 1.3em auto;
-  background-color: $white;
-
-  @include flex-box($flex-box-col-center...);
-  align-items: flex-start;
-  flex-flow: column nowrap;
-  @include scroll-init(5px, $blueDark, $foxyGrey);
+.fixedContainer {
+  @extend %fixedScrolledContainer;
 }

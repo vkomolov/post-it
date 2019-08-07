@@ -5,12 +5,11 @@ import { matchPath } from 'react-router-dom';
 import { v4 } from 'uuid';
 
 ///components
-import Aside from '../../components/Aside';
-import Content from '../../components/Content';
 import PostDetail from '../../components/PostDetail';
-
-///components
+import Button from '../../components/Button';
+import LoadingAlert from '../../components/LoadingAlert';
 import PageTemplate from '../../containers/PageTemplate';
+
 import { mapStateToProps, mapActionsToProps } from './PostPage.redux';
 import userService from '../../utils/userService';
 import funcs from '../../utils/funcsCollection';
@@ -23,6 +22,7 @@ class PostPage extends Component {
     constructor(props) {
         super(props);
         this.history = props.history;
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -128,63 +128,59 @@ class PostPage extends Component {
             innPost = this.getPostById(id, stateProps.data);
         }
 
-        //carring will put the default className
-        let activateClass = funcs.activateClassName(postData.isUpdate, styles.activeButton);
-
         let innId = `${innPost.id}`; //to get the length of id;
         let showId = (innId.length > 8)
             ? innId.slice(0, 8).concat('...')
             : innId;
 
         const body = (
-            <div className={styles.totalWrapper}>
-                <div className={styles.flexBoxCenter}>
-                    <div className={styles.backButton}
-                         data-value="backToList"
-                         onClick={(e) => this.handleClick(e)}
+            <div className={styles.topWrapper}>
+                <div className={styles.postHeadingBlock}>
+                    <Button dataValue='backToList'
+                            handle={ this.handleClick }
                     >
-                        BACK TO LIST
-                    </div>
-                    <h2 className={styles.postsHeading}>
+                        Back to list
+                    </Button>
+                    <h2 className={styles.heading}>
                         POST DETAIL id: { showId }
                     </h2>
                 </div>
-                <div className={styles.contentWrapper}>
-                    <Aside>
-                        <div className={styles.flexBoxCenter}>
-                            <div className={styles.createButton}
-                                 data-value="createComment"
-                                 onClick={(e) => this.handleClick(e)}
-                            >
-                                NEW COMMENT</div>
-                            <div className={ activateClass(styles.createButton) }
-                                 data-value="savePost"
-                                 onClick={(e) => this.handleClick(e)}
-                            >
-                                SAVE POST
-                            </div>
-                        </div>
-                        <div className={styles.flexBoxCenter}>
-                            <div className={ activateClass(styles.asideButton) }
-                                 data-value="undo"
-                                 onClick={(e) => this.handleClick(e)}
-                            >
-                                UNDO
-                            </div>
-                            <div className={styles.deleteButton}
-                                 data-value="deletePost"
-                                 onClick={(e) => this.handleClick(e)}
-                            >
-                                DELETE POST
-                            </div>
-                        </div>
-                    </Aside>
-                    <Content>
+                <div className={styles.asideBar}>
+                    <div className={styles.flexBoxCenter}>
+                        <Button dataValue='createComment'
+                                handle={ this.handleClick }
+                        >
+                            New Comment
+                        </Button>
+                        <Button dataValue='savePost'
+                                handle={ this.handleClick }
+                                active={ postData.isUpdate }
+                        >
+                            Save Post
+                        </Button>
+                    </div>
+                    <div className={styles.flexBoxCenter}>
+                        <Button dataValue='undo'
+                                handle={ this.handleClick }
+                                active={ postData.isUpdate }
+                        >
+                            Undo
+                        </Button>
+                        <Button dataValue='deletePost'
+                                handle={ this.handleClick }
+                        >
+                            Delete Post
+                        </Button>
+                    </div>
+                </div>
+                <div className={styles.contentBar}>
+                    <div className={styles.fixedContainer}>
                         {
-                            Object.keys( innPost ).length
-                            && <PostDetail data={ innPost }/>
+                            (Object.keys( innPost ).length)
+                                ? <PostDetail data={ innPost } />
+                                : <LoadingAlert />
                         }
-                    </Content>
+                    </div>
                 </div>
             </div>
         );

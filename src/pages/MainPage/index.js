@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 
 ///components
 import Post from '../../components/Post';
-import Aside from '../../components/Aside';
-import Content from '../../components/Content';
+import Button from '../../components/Button';
+import LoadingAlert from '../../components/LoadingAlert';
 import userService from '../../utils/userService';
 
-///pages
 import PageTemplate from '../../containers/PageTemplate';
 import { mapStateToProps, mapActionsToProps } from './MainPage.redux';
 
@@ -20,6 +19,7 @@ class MainPage extends Component {
         super(props);
         this.propState = this.props.posts; //for componentDidMount
         this.history = this.props.history;
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -33,8 +33,16 @@ class MainPage extends Component {
         }
     }
 
-    createPost() {
-        this.history.push('/posts/default');
+    handleClick({ target }) {
+        const dataValue = target.dataset.value;
+        const funcObj = {
+            createPost: () => this.history.push('/posts/default'),
+            sortByTitle: () => console.log('sortByTitle'),
+            sortByDate: () => console.log('sortByDate'),
+        };
+        if (dataValue && dataValue in funcObj) {
+            funcObj[dataValue]();
+        }
     }
 
     render() {
@@ -51,19 +59,32 @@ class MainPage extends Component {
             });
         }
         const body = (
-            <div className={styles.contentWrapper}>
-                <Aside>
-                    <div className={styles.asideButton}
-                         onClick={() => this.createPost()}
+            <div className={styles.topWrapper}>
+                <div className={styles.postHeadingBlock}>
+                    <Button dataValue='createPost'
+                            handle={ this.handleClick }
                     >
                         Create Post
+                    </Button>
+                    <h2 className={styles.heading}>POST LIST</h2>
+                </div>
+                <div className={styles.asideBar}>
+                    <Button dataValue='sortByTitle'
+                            handle={ this.handleClick }
+                    >
+                        Sort by Title
+                    </Button>
+                    <Button dataValue='sortByDate'
+                            handle={ this.handleClick }
+                    >
+                        Sort by Date
+                    </Button>
+                </div>
+                <div className={styles.contentBar}>
+                    <div className={styles.fixedContainer}>
+                        { ( state.loaded ) ? innData : <LoadingAlert /> }
                     </div>
-                    <div className={styles.asideButton}>Sort by Title</div>
-                </Aside>
-                <Content>
-                    <h2 className={styles.postsHeading}>POST LIST</h2>
-                    <div className={styles.postList}>{ innData }</div>
-                </Content>
+                </div>
             </div>
         );
 
