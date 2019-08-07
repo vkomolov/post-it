@@ -26,6 +26,9 @@ class PostPage extends Component {
     }
 
     componentDidMount() {
+        /**Fetching all Posts from API, if the Page was reached without
+         * the Main Page (by inputting the url path)
+         * */
         if ( !this.props.posts.loaded && !this.props.posts.error ) {
             log('getAllPosts... from componentDidMount');
             userService.fetchAll(
@@ -36,6 +39,7 @@ class PostPage extends Component {
         } else {
             console.log('passing PostPage didMount...');
         }
+        //проверка акшенов
     }
 
     handleClick({ target }) {
@@ -43,6 +47,7 @@ class PostPage extends Component {
         if( dataSet ) {
             const datasetObj = {
                 backToList: () => {
+                    this.props.getDefault();
                     this.history.push('/');
                 },
                 createComment: () => {
@@ -52,6 +57,7 @@ class PostPage extends Component {
                     log('savePost');
                 },
                 undo: () => {
+                    this.props.getDefault();
                     log('undoUpdate');
                 },
                 deletePost: () => {
@@ -92,12 +98,14 @@ class PostPage extends Component {
             post = ( innData.length ) ? { ...innData[0] } : {};
 
         } else {
-            post = userService.initDefaultPars();
+            post = userService.initDefaultPars(); //for new post
         }
 
         return this.preparePost( post );
     }
 
+    /**@description adding additional properties to the fetched Post
+     * */
     preparePost( post ) {
         if (Object.keys(post).length) {
             let innPost = userService.initDefaultPars( post );
@@ -121,17 +129,11 @@ class PostPage extends Component {
         const id = this.getId( pathName ); //getting id from the pathName
         let innPost = {}; //will be original Post by id from the state.data
 
-
         if ( id.length && stateProps.data.length ) {
             /**taking the copy of the Post by id from the state data
              * */
             innPost = this.getPostById(id, stateProps.data);
         }
-
-        let innId = `${innPost.id}`; //to get the length of id;
-        let showId = (innId.length > 8)
-            ? innId.slice(0, 8).concat('...')
-            : innId;
 
         const body = (
             <div className={styles.topWrapper}>
@@ -142,7 +144,8 @@ class PostPage extends Component {
                         Back to list
                     </Button>
                     <h2 className={styles.heading}>
-                        POST DETAIL id: { showId }
+                       {/* POST DETAIL id: { showId }*/}
+                        POST DETAIL
                     </h2>
                 </div>
                 <div className={styles.asideBar}>

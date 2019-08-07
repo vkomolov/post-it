@@ -49,13 +49,10 @@ export function postData(innState = initialPost, {type, data}) {
                 }
             };
         },
-        [userConstants.GET_PREVIOUS]: () => {
+        [userConstants.GET_DEFAULT]: () => {
             return {
                 ...state,
                 isUpdate: false,
-                data: {
-
-                }
             };
         },
     };

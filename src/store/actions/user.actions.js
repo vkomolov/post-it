@@ -5,7 +5,8 @@ const userActions = {
     getAllPosts,
     gotSuccess,
     gotFailure,
-    putData
+    putData,
+    getDefault
 };
 export default userActions;
 
@@ -36,8 +37,8 @@ export default userActions;
         }
     }
 
-/*    function getPrev() {
+    function getDefault() {
         return {
-            type: userConstants.GET_PREVIOUS
+            type: userConstants.GET_DEFAULT
         }
-    }*/
+    }
