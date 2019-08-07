@@ -1,0 +1,58 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/extends";
+@import "../../utils/global_styles/animations";
+///@import "../../global_styles/fonts";
+
+.textArea {
+  display: block;
+  user-select: contain;
+  outline: none;
+  width: 100%;
+  padding: 0.3em;
+  margin: 0.3em auto;
+
+  &:hover {
+    background-color: $foxyLighter;
+    @include box-shadow(4px, 4px);
+  }
+
+  &:focus {
+    @include box-shadow(2px, 2px);
+    background-color: $yellyLight;
+  }
+
+  @include scroll-init(5px, $blueDark, $foxyGrey);
+}
+
+.textAreaHeader {
+  composes: textArea;
+  height: 2em;
+  font: {
+    family: "StardosStencil-Regular", sans-serif;
+    weight: 700;
+    size: 2em;
+  }
+  color: $foxy;
+  @include text-shadow(2px, 2px);
+}
+
+.textAreaBody {
+  composes: textArea;
+  height: 10em;
+  font: {
+    family: "HelveticaNeue", sans-serif;
+    weight: 400;
+    size: 1.3em;
+  }
+}
+
+.textAreaComment {
+  composes: textArea;
+  height: 10em;
+  font: {
+    family: "HelveticaNeue", sans-serif;
+    weight: 400;
+    size: 1.3em;
+  }
+}

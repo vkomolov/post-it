@@ -4,7 +4,10 @@ const userConstants = {
     GETALL_POSTS_FAILURE: 'GETALL_POSTS_FAILURE',
 
     PUT_DATA: 'POST_PUT_DATA',
-    GET_DEFAULT: 'POST_GET_DEFAULT'
+    GET_DEFAULT: 'POST_GET_DEFAULT',
+
+    ALERT: 'USER_ALERT',
+    CONFIRM: 'USER_ALERT_CONFIRM'
 };
 
 export default userConstants;

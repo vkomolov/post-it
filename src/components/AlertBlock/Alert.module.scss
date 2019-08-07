@@ -1,0 +1,25 @@
+@import "../../utils/global_styles/variables";
+@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/extends";
+@import "../../utils/global_styles/animations";
+///@import "../../global_styles/fonts";
+
+.topWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: lightgreen;
+
+  @include flex-box($flex-box-row-center...);
+
+  .alertBlock {
+    padding: 0.5em;
+    border: 1px solid red;
+    border-radius: 1em;
+    width: 10em;
+    height: 10em;
+    background-color: $foxy;
+  }
+}

@@ -2,6 +2,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+///components
+import TextArea from '../../components/TextArea';
+
 import userActions from '../../store/actions/user.actions';
 import userService from '../../utils/userService';
 import funcs from '../../utils/funcsCollection';
@@ -14,6 +17,10 @@ import styles from './PostDetail.module.scss';
 class PostDetail extends Component {
     constructor(props) {
         super(props);
+        this.handleText = this.handleText.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+        this.handleKey = this.handleKey.bind(this);
+
         this.propsData = props.data;
         this.activeData = {};
     }
@@ -25,8 +32,6 @@ class PostDetail extends Component {
     handleText({ target }) {
         let str = target.value;
         let dataset = target.dataset.value;
-        log('using textarea: ' + dataset);
-
         let updatedData = {};
 
         if (dataset in this.activeData) {
@@ -35,16 +40,12 @@ class PostDetail extends Component {
                     ...this.activeData,
                     [dataset]: str,
                 };
-                //log('updatedData');
-                //log(updatedData);
-                //log('defaultData');
-                //log(this.propsData);
+
                 /**@description dispatching the updated Data, setting
                  * isUpdate: true
                  * */
                 this.props.putData( updatedData );
             }
-
         } else {
             throw new Error(`no dataset ${dataset} in the Data`);
         }
@@ -54,8 +55,6 @@ class PostDetail extends Component {
         let str = target.value.trim();
         let dataset = target.dataset.value;
         if (dataset in this.propsData) {
-            console.log('blur by :' + target.dataset.value);
-
             target.value = (str.length) ? str : this.propsData[dataset];
         } else {
             throw new Error(`no dataset ${dataset} in the Data`);
@@ -71,6 +70,11 @@ class PostDetail extends Component {
 
     render() {
         log('rendering PostDetail');
+        const cbArr = {
+            handleText: this.handleText,
+            handleBlur: this.handleBlur,
+            handleKey: this.handleKey
+        };
 
         const postState = this.props.postData;
         const activeState = postState.isUpdate
@@ -78,21 +82,16 @@ class PostDetail extends Component {
             : this.propsData;
         this.activeData = {...activeState};
 
-        //log('active State');
-        //log(activeState);
-
         let commentsArr = [];
+
         if (activeState.comments && activeState.comments.length) {
-            commentsArr = activeState.comments.map(el => (
-                <div key={el.id}>
+            commentsArr = activeState.comments.map( el => (
+                <div key={ el.id }>
                     <hr className={styles.hr}/>
-                    <textarea name={el.id}
-                              value={el.body}
-                              className={ styles.textAreaBody }
-                              data-value="comments"
-                              onChange={(e) => this.handleText(e)}
-                              onBlur={(e) => this.handleBlur(e)}
-                              onKeyPress={(e) => this.handleKey(e)}
+
+                    <TextArea dataValue="comments"
+                              cbArr={ cbArr }
+                              text={ el.body }
                     />
                 </div>
             ));
@@ -113,23 +112,17 @@ class PostDetail extends Component {
                     </span>
                 </h4>
                 <hr className={styles.hr}/>
-                <textarea name="postHeader"
-                          className={ styles.textAreaHeader }
-                          value={ activeState.title }
-                          data-value="title"
-                          onChange={(e) => this.handleText(e)}
-                          onBlur={(e) => this.handleBlur(e)}
-                          onKeyPress={(e) => this.handleKey(e)}
+
+                <TextArea dataValue="title"
+                          cbArr={ cbArr }
+                          text={ activeState.title }
                 />
                 <h3 className={styles.headingTitle}>Post Content</h3>
                 <hr className={styles.hr}/>
-                <textarea name="postBody"
-                          className={ styles.textAreaBody }
-                          value={ activeState.body }
-                          data-value="body"
-                          onChange={(e) => this.handleText(e)}
-                          onBlur={(e) => this.handleBlur(e)}
-                          onKeyPress={(e) => this.handleKey(e)}
+
+                <TextArea dataValue="body"
+                          cbArr={ cbArr }
+                          text={ activeState.body }
                 />
                 <h3 className={styles.headingTitle}>Post Comments</h3>
                 <hr className={styles.hr}/>

@@ -1,7 +1,11 @@
 //import alertConstants from "../../utils/constants/alert.constants";
 
 import userConstants from "../constants/user.constants";
-import { initialPost, initialPostState } from "../../utils/userService/initialData";
+import {
+    initialPost,
+    initialPostState,
+    initialAlertState
+    } from "../../utils/userService/initialData";
 
 /**@description Reducer which keeps the state, fetched from API
  * */
@@ -53,6 +57,36 @@ export function postData(innState = initialPost, {type, data}) {
             return {
                 ...state,
                 isUpdate: false,
+            };
+        },
+    };
+
+    return (type in typeObj) ? typeObj[type]() : state;
+}
+
+/**@description AlertReducer
+ * */
+export function alertData(innState = initialAlertState, {type, data}) {
+    const state = {...innState};
+    const typeObj = {
+        [userConstants.ALERT]: () => {
+            return {
+                ...state,
+                toAlert: true,
+                alertWhat: data.what,
+                toConfirm: false,
+                confirmWhat: null,
+                message: data.message,
+            };
+        },
+        [userConstants.CONFIRM]: () => {
+            return {
+                ...state,
+                toAlert: false,
+                alertWhat: null,
+                toConfirm: true,
+                confirmWhat: data.what,
+                message: data.message,
             };
         },
     };
