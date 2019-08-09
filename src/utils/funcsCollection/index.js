@@ -104,9 +104,6 @@ function initAxios( source, params ) {
     } throw new Error("no source given to args");
 
     function handle( response ) {
-        //console.log('handling response...');
-        //console.log(response);
-
         return response;
     }
 }

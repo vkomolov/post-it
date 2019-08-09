@@ -11,6 +11,7 @@
   width: 100%;
   padding: 0.3em;
   margin: 0.3em auto;
+  @include transition();
 
   &:hover {
     background-color: $foxyLighter;

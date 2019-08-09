@@ -3,13 +3,13 @@
 import userConstants from "../constants/user.constants";
 import {
     initialPost,
-    initialPostState,
+    initialPostsState,
     initialAlertState
     } from "../../utils/userService/initialData";
 
 /**@description Reducer which keeps the state, fetched from API
  * */
-export function posts(innState = initialPostState, {type, data}) {
+export function posts(innState = initialPostsState, {type, data}) {
     const state = {...innState};
     const typeObj = {
         [userConstants.GETALL_POSTS_REQUEST]: () => {

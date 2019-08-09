@@ -3,7 +3,7 @@ import { defaultPost } from "../../utils/userService/initialData";
 
 const userService  = {
     fetchAll,
-    initDefaultPars
+    addDefaultPars
 };
 export default userService;
 
@@ -41,9 +41,9 @@ function fetchAll(source, actionSuccess, actionError) {
         })*/
 }
 
-/**@description it add additional properties to the data
+/**@description it add additional properties of defaultData to the data
  * */
-function initDefaultPars( data={}, defaultData=defaultPost) {
+function addDefaultPars( data={}, defaultData=defaultPost) {
     return {
         ...defaultData,
         ...data,

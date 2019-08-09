@@ -22,6 +22,8 @@ class PostPage extends Component {
     constructor(props) {
         super(props);
         this.history = props.history;
+        this.stateProps = {};
+        this.postData = {};
         this.handleClick = this.handleClick.bind(this);
     }
 
@@ -74,66 +76,39 @@ class PostPage extends Component {
         }
     }
 
-    getId( pathName ) {
-        if( matchPath ) {
-            let matchedPars = matchPath(pathName, {
-                path: '/posts/:id',
-            });
-            return matchedPars.params.id;
-        } else {
-            throw new Error('no matchPath module found...');
-        }
-    }
+    initPost() {
+        let pathName = this.history.location.pathname;
+        let id = PostPage.getId(pathName);
+        let innPost = {};
 
-    getPostById( id, postArr ) {
-        let innData = [];
-        let post = {};
-
-        if (id !== 'default') {
-            innData = postArr.filter(el => {
-                return el.id === +id;
-            });
-            /**returning the copy of the Post
-             * */
-            post = ( innData.length ) ? { ...innData[0] } : {};
-
-        } else {
-            post = userService.initDefaultPars(); //for new post
-        }
-
-        return this.preparePost( post );
-    }
-
-    /**@description adding additional properties to the fetched Post
-     * */
-    preparePost( post ) {
-        if (Object.keys(post).length) {
-            let innPost = userService.initDefaultPars( post );
-            if (!innPost.createDate) {
-                innPost.createDate = new Date().toDateString();
+        if ( id ) {
+            if ( this.stateProps.data.length ) {
+                if (id !== 'default') {
+                    innPost = PostPage.getPostById(id, this.stateProps.data);
+                    if (Object.keys(innPost).length) {
+                        return PostPage.preparePost(innPost);
+                    } else {
+                        //TO DO ALERT no id found in posts state
+                        this.history.push('/');
+                    }
+                } else {
+                    return PostPage.preparePost(innPost);
+                }
+            } else {
+                return innPost; //returning empty object;
             }
-            if (innPost.id === 'default') {
-                innPost.id = v4();
-            }
-
-            return innPost;
+        } else {
+            //TO DO ALERT
+            this.history.push('/');
         }
     }
 
     render() {
         log('rendering PostPage...');
-        const stateProps = this.props.posts; //can will be re-rendered
-        const postData = this.props.postData; //reducer
+        this.stateProps = this.props.posts; //can will be re-rendered
+        this.postData = this.props.postData; //reducer
 
-        let pathName = this.history.location.pathname;
-        const id = this.getId( pathName ); //getting id from the pathName
-        let innPost = {}; //will be original Post by id from the state.data
-
-        if ( id.length && stateProps.data.length ) {
-            /**taking the copy of the Post by id from the state data
-             * */
-            innPost = this.getPostById(id, stateProps.data);
-        }
+        let innPost = this.initPost();
 
         const body = (
             <div className={styles.topWrapper}>
@@ -144,7 +119,6 @@ class PostPage extends Component {
                         Back to list
                     </Button>
                     <h2 className={styles.heading}>
-                       {/* POST DETAIL id: { showId }*/}
                         POST DETAIL
                     </h2>
                 </div>
@@ -157,7 +131,7 @@ class PostPage extends Component {
                         </Button>
                         <Button dataValue='savePost'
                                 handle={ this.handleClick }
-                                active={ postData.isUpdate }
+                                active={ this.postData.isUpdate }
                         >
                             Save Post
                         </Button>
@@ -165,7 +139,7 @@ class PostPage extends Component {
                     <div className={styles.flexBoxCenter}>
                         <Button dataValue='undo'
                                 handle={ this.handleClick }
-                                active={ postData.isUpdate }
+                                active={ this.postData.isUpdate }
                         >
                             Undo
                         </Button>
@@ -191,6 +165,46 @@ class PostPage extends Component {
         return <PageTemplate>{ body }</PageTemplate>
     }
 }
+
+PostPage.getId = function( pathName ) {
+    if( matchPath ) {
+        let matchedPars = matchPath(pathName, {
+            path: '/posts/:id',
+        });
+        return matchedPars.params.id;
+    } else {
+        throw new Error('no matchPath module found...');
+    }
+};
+
+PostPage.getPostById = function( id, postArr ) {
+    const innData = postArr.filter(el => {
+        return el.id === +id;
+    });
+    /**returning the copy of the Post
+     * */
+    return ( innData.length ) ? { ...innData[0] } : {};
+};
+
+/**@description adding additional properties to the fetched Post
+ * */
+PostPage.preparePost = function( post={} ) {
+    let innPost = userService.addDefaultPars( post );
+
+    if (!innPost.createDate) {
+        innPost.createDate = new Date().toDateString();
+    }
+
+    if (innPost.id === 'default') {
+        if ( v4 ) {
+            innPost.id = v4();
+        } else {
+            throw new Error('no uuid v4 module found');
+        }
+    }
+
+    return innPost;
+};
 
 export default connect(mapStateToProps, mapActionsToProps)(PostPage);
 

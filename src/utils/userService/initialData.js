@@ -14,7 +14,7 @@ export const defaultPost = {
     createDate: ''
 };
 
-export const initialPostState = {
+export const initialPostsState = {
     loaded: false,
     error: false,
     data: {}
