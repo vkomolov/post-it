@@ -5,18 +5,17 @@ import { withRouter } from 'react-router';
 ///styles
 import styles from './Post.module.scss';
 
-function Post({data, history}) {
+function Post({ data, history }) {
     const { title, id } = data;
     const maxLength = 200;
-    const { push } = history;
 
     const body = (data.body.length > maxLength)
-        ? data.body.slice(maxLength) + '...'
+        ? data.body.slice(0, maxLength) + '...'
         : data.body;
 
     const getTo = ( id ) => {
-        if ( push ) {
-            push(`/posts/${ id }`);
+        if ( history.push ) {
+            history.push(`/posts/${ id }`);
         } else {
             throw new Error('no Router in context');
         }
@@ -35,7 +34,6 @@ function Post({data, history}) {
 export default withRouter(Post);
 
 /////dev
-/*
-function log(it) {
+/*function log(it) {
     console.log(it);
 }*/

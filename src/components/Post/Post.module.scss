@@ -6,9 +6,10 @@
 
 .postWrapper {
   width: 100%;
-  padding: 10px;
+  padding: 0.7em;
   margin: 0.5em 0;
   cursor: pointer;
+  border: 2px solid $foxyLight;
   @include transition();
 
   &:hover {
@@ -34,5 +35,4 @@
   font-size: 1.1em;
   padding: 5px;
   color: $greyDark;
-  border: 1px solid green;
 }

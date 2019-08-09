@@ -17,7 +17,9 @@ import styles from './MainPage.module.scss';
 class MainPage extends Component {
     constructor(props) {
         super(props);
-        this.propState = this.props.posts; //for componentDidMount
+        this.propState = {};
+        this.innData = []; //received array of posts from Receiver 'posts'
+        this.sortBy = 'title';
         this.history = this.props.history;
         this.handleClick = this.handleClick.bind(this);
     }
@@ -37,27 +39,51 @@ class MainPage extends Component {
         const dataValue = target.dataset.value;
         const funcObj = {
             createPost: () => this.history.push('/posts/default'),
-            sortByTitle: () => console.log('sortByTitle'),
-            sortByDate: () => console.log('sortByDate'),
+            sortByTitle: () => this.sortBy = 'title',
+            sortByDate: () => this.sortBy = 'date',
         };
         if (dataValue && dataValue in funcObj) {
             funcObj[dataValue]();
+        } else {
+            throw new Error('no data-value found or incorrect');
+        }
+    }
+
+    initPosts() {
+        const compare = (a, b) => {
+            if (this.sortBy === 'title') {
+                if (a.title > b.title) {
+                    return 1
+                }
+                if (a.title < b.title) {
+                    return -1;
+                }
+                return 0;
+            }
+            if (this.sortBy === 'date') {
+                const aDate = (a.date) ? Date.parse(a.date) : new Date();
+                const bDate = (b.date) ? Date.parse(b.date) : new Date();
+
+                return aDate - bDate;
+            }
+        };
+
+        if ( this.propState.data.length ){
+            const sortedArr = [...this.propState.data].sort(compare);
+            this.innData = sortedArr.map(el => {
+                return (
+                    <Post key={ el.id } data={ el } />
+                );
+            });
         }
     }
 
     render() {
         log('rendering MainPage...');
 
-        const state = this.props.posts; //will be re-rendered
-        let innData = [];
+        this.propState = this.props.posts; //will be re-rendered
+        this.initPosts();
 
-        if (state.data && state.data.length){
-            innData = [...state.data].map(el => {
-                return (
-                    <Post key={el.id} data={el} />
-                );
-            });
-        }
         const body = (
             <div className={styles.topWrapper}>
                 <div className={styles.postHeadingBlock}>
@@ -82,7 +108,10 @@ class MainPage extends Component {
                 </div>
                 <div className={styles.contentBar}>
                     <div className={styles.fixedContainer}>
-                        { ( state.loaded ) ? innData : <LoadingAlert /> }
+                        { ( this.innData.length )
+                            ? this.innData
+                            : <LoadingAlert />
+                        }
                     </div>
                 </div>
             </div>

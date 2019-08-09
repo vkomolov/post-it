@@ -17,12 +17,12 @@ import styles from './PostDetail.module.scss';
 class PostDetail extends Component {
     constructor(props) {
         super(props);
+        this.propsData = props.data;
+        this.activeData = {};
+
         this.handleText = this.handleText.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
         this.handleKey = this.handleKey.bind(this);
-
-        this.propsData = props.data;
-        this.activeData = {};
     }
 
     componentDidMount() {
@@ -84,7 +84,7 @@ class PostDetail extends Component {
 
         let commentsArr = [];
 
-        if (activeState.comments && activeState.comments.length) {
+        if ( activeState.comments.length ) {
             commentsArr = activeState.comments.map( el => (
                 <div key={ el.id }>
                     <hr className={styles.hr}/>
@@ -105,12 +105,12 @@ class PostDetail extends Component {
         return (
             <div className={styles.postWrapper}>
                 <h3 className={styles.headingId}>Post ID: { showId }</h3>
-                <h3 className={styles.headingTitle}>Post Title</h3>
                 <h4 className={styles.subHeading}>Creation Date:
                     <span className={styles.dateIndicate}>
                         { activeState.createDate }
                     </span>
                 </h4>
+                <h3 className={styles.headingTitle}>Post Title</h3>
                 <hr className={styles.hr}/>
 
                 <TextArea dataValue="title"

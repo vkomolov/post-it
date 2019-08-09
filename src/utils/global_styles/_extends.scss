@@ -29,7 +29,7 @@
 %contentBar {
   flex-basis: 450px;
   flex-grow: 1;
-  padding: 0.6em;
+  padding: 1.25em 0.6em;
   margin: 0 1.25em;
 }
 
@@ -37,11 +37,6 @@
   position: relative;
   min-width: 140px;
   height: 700px;
-  border: 5px solid $foxy;
-  border-radius: 1.2em;
-  padding: 1.25em;
-  margin: 1.3em auto;
-  background-color: $white;
 
   @include flex-box($flex-box-col-center...);
   align-items: flex-start;
