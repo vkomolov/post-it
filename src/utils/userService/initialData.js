@@ -3,6 +3,20 @@ export const initialPost = {
     data: {}
 };
 
+export const initialPostsState = {
+    loaded: false,
+    error: false,
+    data: []
+};
+
+export const initialAlertState = {
+    toAlert: false,
+    alertWhat: null,
+    toConfirm: false,
+    confirmWhat: null,
+    message: '',
+};
+
 export const defaultPost = {
     id: 'default',
     title: 'Initial Title',
@@ -14,16 +28,8 @@ export const defaultPost = {
     createDate: ''
 };
 
-export const initialPostsState = {
-    loaded: false,
-    error: false,
-    data: {}
-};
-
-export const initialAlertState = {
-    toAlert: false,
-    alertWhat: null,
-    toConfirm: false,
-    confirmWhat: null,
-    message: '',
+export const defaultComment = {
+    id: 'default',
+    body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+    createDate: ''
 };

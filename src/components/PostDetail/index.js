@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 ///components
 import TextArea from '../../components/TextArea';
+import { defaultComment } from '../../utils/userService/initialData';
 
 import userActions from '../../store/actions/user.actions';
 import userService from '../../utils/userService';
@@ -29,23 +30,52 @@ class PostDetail extends Component {
         log('PostDetail did mount..');
     }
 
+    handleClose({ target }) {
+        let dataset = target.dataset.value;
+        log(dataset);
+        let updatedData = {};
+
+        if (dataset === 'comments') {
+            updatedData = {
+                ...this.activeData,
+                [dataset]: this.activeData[dataset].filter(el => {
+                    return el.id !== target.id;
+                })
+            };
+        }
+        if (Object.keys(updatedData).length) {
+            this.props.putData(updatedData);
+        }
+    }
+
     handleText({ target }) {
         let str = target.value;
         let dataset = target.dataset.value;
         let updatedData = {};
 
         if (dataset in this.activeData) {
-            if (str !== this.activeData[dataset]) {
+            if (dataset !== 'comments') {
                 updatedData = {
                     ...this.activeData,
                     [dataset]: str,
                 };
-
-                /**@description dispatching the updated Data, setting
-                 * isUpdate: true
-                 * */
-                this.props.putData( updatedData );
+            } else {
+                updatedData = {
+                    ...this.activeData,
+                    [dataset]: this.activeData[dataset].map(el => {
+                        if ( el.id === target.id ) {
+                            el.body = str;
+                        }
+                        return el;
+                    })
+                };
             }
+
+            /**@description dispatching the updated Data, setting
+             * isUpdate: true
+             * */
+            this.props.putData( updatedData );
+
         } else {
             throw new Error(`no dataset ${dataset} in the Data`);
         }
@@ -54,8 +84,56 @@ class PostDetail extends Component {
     handleBlur({ target }) {
         let str = target.value.trim();
         let dataset = target.dataset.value;
-        if (dataset in this.propsData) {
-            target.value = (str.length) ? str : this.propsData[dataset];
+        let updatedData = {};
+
+        if (dataset in this.activeData) {
+            if (dataset !== 'comments') {
+                if (str !== target.value || !str.length) {
+                    target.value = ( str.length )
+                        ? str
+                        : this.propsData[dataset];
+
+                    updatedData = {
+                        ...this.activeData,
+                        [dataset]: target.value,
+                    };
+                }
+
+            } else {
+                const index = this.propsData[dataset].findIndex(el => {
+                    return el.id === target.id;
+                });
+                if (str !== target.value || !str.length) {
+                    if (str.length) {
+                        target.value = str;
+                    } else {
+                        if( this.propsData[dataset][index]
+                            && this.propsData[dataset][index].body ) {
+                            target.value = this.propsData[dataset][index].body;
+                        } else {
+                            target.value = defaultComment.body;
+                        }
+                    }
+
+                    updatedData = {
+                        ...this.activeData,
+                        [dataset]: this.activeData[dataset].map(el => {
+                            if ( el.id === target.id ) {
+                                el.body = target.value;
+                            }
+                            return el;
+                        })
+                    };
+                }
+            }
+
+            /**@description dispatching the updated Data, setting
+             * isUpdate: true
+             * */
+            if (Object.keys(updatedData).length) {
+                this.props.putData( updatedData );
+            }
+
         } else {
             throw new Error(`no dataset ${dataset} in the Data`);
         }
@@ -77,27 +155,38 @@ class PostDetail extends Component {
         };
 
         const postState = this.props.postData;
-        const activeState = postState.isUpdate
+        this.activeData = postState.isUpdate
             ? postState.data
             : this.propsData;
-        this.activeData = {...activeState};
 
         let commentsArr = [];
 
-        if ( activeState.comments.length ) {
-            commentsArr = activeState.comments.map( el => (
+        if ( this.activeData.comments.length ) {
+            commentsArr = this.activeData.comments.map( el => (
                 <div key={ el.id }>
-                    <hr className={styles.hr}/>
-
-                    <TextArea dataValue="comments"
-                              cbArr={ cbArr }
-                              text={ el.body }
-                    />
+                    <h4 className={styles.subHeading}>Creation Date:
+                        <span className={styles.dateIndicate}>
+                            { el.createDate }
+                        </span>
+                    </h4>
+                    <div className={styles.textAreaWrapper}>
+                        <div className={styles.closeBttn}
+                             data-value='comments'
+                             id={el.id}
+                             onClick={(e) => this.handleClose(e)}>
+                            X
+                        </div>
+                        <TextArea dataValue="comments"
+                                  id={ el.id }
+                                  cbArr={ cbArr }
+                                  text={ el.body }
+                        />
+                    </div>
                 </div>
             ));
         }
 
-        let innId = activeState.id; //to get the length of id;
+        let innId = this.activeData.id; //to get the length of id;
         let showId = (innId.length > 8)
             ? innId.slice(0, 8).concat('...')
             : innId;
@@ -107,7 +196,7 @@ class PostDetail extends Component {
                 <h3 className={styles.headingId}>Post ID: { showId }</h3>
                 <h4 className={styles.subHeading}>Creation Date:
                     <span className={styles.dateIndicate}>
-                        { activeState.createDate }
+                        { this.activeData.createDate }
                     </span>
                 </h4>
                 <h3 className={styles.headingTitle}>Post Title</h3>
@@ -115,14 +204,14 @@ class PostDetail extends Component {
 
                 <TextArea dataValue="title"
                           cbArr={ cbArr }
-                          text={ activeState.title }
+                          text={ this.activeData.title }
                 />
                 <h3 className={styles.headingTitle}>Post Content</h3>
                 <hr className={styles.hr}/>
 
                 <TextArea dataValue="body"
                           cbArr={ cbArr }
-                          text={ activeState.body }
+                          text={ this.activeData.body }
                 />
                 <h3 className={styles.headingTitle}>Post Comments</h3>
                 <hr className={styles.hr}/>

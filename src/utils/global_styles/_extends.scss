@@ -38,9 +38,9 @@
   min-width: 140px;
   height: 700px;
 
-  @include flex-box($flex-box-col-center...);
+/*  @include flex-box($flex-box-col-center...);
   align-items: flex-start;
-  flex-flow: column nowrap;
+  flex-flow: column nowrap;*/
   @include scroll-init(5px, $blueDark, $foxyGrey);
 }
 

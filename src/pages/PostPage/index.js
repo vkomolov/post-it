@@ -10,8 +10,9 @@ import Button from '../../components/Button';
 import LoadingAlert from '../../components/LoadingAlert';
 import PageTemplate from '../../containers/PageTemplate';
 
-import { mapStateToProps, mapActionsToProps } from './PostPage.redux';
 import userService from '../../utils/userService';
+import { defaultComment } from '../../utils/userService/initialData';
+import { mapStateToProps, mapActionsToProps } from './PostPage.redux';
 import funcs from '../../utils/funcsCollection';
 
 
@@ -24,6 +25,7 @@ class PostPage extends Component {
         this.history = props.history;
         this.stateProps = {};
         this.postData = {};
+        this.innPost = {};
         this.handleClick = this.handleClick.bind(this);
     }
 
@@ -54,6 +56,30 @@ class PostPage extends Component {
                 },
                 createComment: () => {
                     log('createComment');
+                    const comment = PostPage.preparePost(
+                        userService.addDefaultPars({}, defaultComment)
+                    );
+
+                    let updated = {};
+                    if (this.postData.isUpdate) {
+                        updated = {
+                            ...this.postData.data,
+                            comments: [
+                                ...this.postData.data.comments,
+                                comment
+                            ]
+                        };
+                    } else {
+                        updated = {
+                            ...this.innPost,
+                            comments: [
+                                ...this.innPost.comments,
+                                comment
+                            ]
+                        }
+                    }
+
+                    this.props.putData( updated );
                 },
                 savePost: () => {
                     log('savePost');
@@ -85,15 +111,12 @@ class PostPage extends Component {
             if ( this.stateProps.data.length ) {
                 if (id !== 'default') {
                     innPost = PostPage.getPostById(id, this.stateProps.data);
-                    if (Object.keys(innPost).length) {
-                        return PostPage.preparePost(innPost);
-                    } else {
+                    if (!Object.keys(innPost).length) {
                         //TO DO ALERT no id found in posts state
                         this.history.push('/');
                     }
-                } else {
-                    return PostPage.preparePost(innPost);
                 }
+                return PostPage.preparePost(userService.addDefaultPars(innPost));
             } else {
                 return innPost; //returning empty object;
             }
@@ -107,8 +130,7 @@ class PostPage extends Component {
         log('rendering PostPage...');
         this.stateProps = this.props.posts; //can will be re-rendered
         this.postData = this.props.postData; //reducer
-
-        let innPost = this.initPost();
+        this.innPost = this.initPost();
 
         const body = (
             <div className={styles.topWrapper}>
@@ -153,8 +175,8 @@ class PostPage extends Component {
                 <div className={styles.contentBar}>
                     <div className={styles.fixedContainer}>
                         {
-                            (Object.keys( innPost ).length)
-                                ? <PostDetail data={ innPost } />
+                            (Object.keys( this.innPost ).length)
+                                ? <PostDetail data={ this.innPost } />
                                 : <LoadingAlert />
                         }
                     </div>
@@ -188,9 +210,8 @@ PostPage.getPostById = function( id, postArr ) {
 
 /**@description adding additional properties to the fetched Post
  * */
-PostPage.preparePost = function( post={} ) {
-    let innPost = userService.addDefaultPars( post );
-
+PostPage.preparePost = function( post ) {
+    let innPost = {...post};
     if (!innPost.createDate) {
         innPost.createDate = new Date().toDateString();
     }

@@ -34,6 +34,27 @@
   padding: 0.4em;
 }
 
+.textAreaWrapper {
+  position: relative;
+
+  .closeBttn {
+    position: absolute;
+    z-index: 10;
+    top: 0.2em;
+    right: 0.3em;
+    padding: 0.1em 0.3em;
+    color: $violet;
+    background-color: $foxy;
+    @include init-font(1em, 700);
+
+    &:hover {
+      animation: popup 0.5s ease-in-out infinite;
+      color: $foxy;
+      background-color: $violet;
+    }
+  }
+}
+
 .textArea {
   display: block;
   user-select: contain;

@@ -6,9 +6,12 @@
 
 .textArea {
   display: block;
+  width: 100%;
   user-select: contain;
   outline: none;
-  width: 100%;
+  resize: none;
+  -moz-appearance: none;
+  border: 2px solid $foxyLight; // deleting the outline in FireFox
   padding: 0.3em;
   margin: 0.3em auto;
   @include transition();
@@ -50,7 +53,7 @@
 
 .textAreaComment {
   composes: textArea;
-  height: 10em;
+  height: 5em;
   font: {
     family: "HelveticaNeue", sans-serif;
     weight: 400;

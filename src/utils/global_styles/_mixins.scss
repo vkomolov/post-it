@@ -1,3 +1,5 @@
+@import "./variables";
+
 $flex-box-row-center: row, center, center;
 $flex-box-row-between: row, space-between, center;
 $flex-box-row-left: row, flex-start, center;
@@ -48,13 +50,6 @@ $flex-box-col-center: column, center, center;
       width: auto;
     }
   }
-}
-
-@mixin text-area() {
-  outline: none;
-  resize: none;
-  -moz-appearance: none;
-  border: 1px solid #999; // deleting the outline in FireFox
 }
 
 @mixin scroll-init($width, $thumbColor, $trackColor) {

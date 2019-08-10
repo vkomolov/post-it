@@ -5,7 +5,7 @@ import React from 'react';
 import styles from './TextArea.module.scss';
 
 export default function TextArea(props) {
-    const { dataValue, cbArr, text='' } = props;
+    const { dataValue, id, cbArr, text } = props;
     let classCss = '';
     const cssObj = {
         'comments' : styles.textAreaComment,
@@ -18,6 +18,7 @@ export default function TextArea(props) {
         return (
         <textarea name={ dataValue }
                   value={ text }
+                  id = { id }
                   className={ classCss }
                   data-value={ dataValue }
                   onChange={(e) => cbArr.handleText(e)}
