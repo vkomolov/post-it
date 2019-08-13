@@ -147,3 +147,4 @@ function deepEqual (obj1, obj2){
 function activateClassName ( condition, activeClassName, className ) {
     return ( className ) => ( condition ) ? `${className} ${activeClassName}` : className;
 }
+

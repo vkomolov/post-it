@@ -11,7 +11,7 @@ import LoadingAlert from '../../components/LoadingAlert';
 import PageTemplate from '../../containers/PageTemplate';
 
 import userService from '../../utils/userService';
-import { defaultComment } from '../../utils/userService/initialData';
+import { defaultComment, source } from '../../utils/userService/initialData';
 import { mapStateToProps, mapActionsToProps } from './PostPage.redux';
 import funcs from '../../utils/funcsCollection';
 
@@ -36,14 +36,13 @@ class PostPage extends Component {
         if ( !this.props.posts.loaded && !this.props.posts.error ) {
             log('getAllPosts... from componentDidMount');
             userService.fetchAll(
-                'https://bloggy-api.herokuapp.com/posts',
+                source,
                 this.props.gotSuccess,
                 this.props.gotFailure
             );
         } else {
             console.log('passing PostPage didMount...');
         }
-        //проверка акшенов
     }
 
     handleClick({ target }) {
@@ -57,7 +56,8 @@ class PostPage extends Component {
                 createComment: () => {
                     log('createComment');
                     const comment = PostPage.preparePost(
-                        userService.addDefaultPars({}, defaultComment)
+                        userService.addDefaultPars({}, defaultComment),
+                        true
                     );
 
                     let updated = {};
@@ -82,6 +82,16 @@ class PostPage extends Component {
                     this.props.putData( updated );
                 },
                 savePost: () => {
+                    if (this.postData.isUpdate) {
+                        const prevCommentsArr = this.innPost.comments;
+                        userService.updatePost(
+                            source,
+                            this.postData.data,
+                            prevCommentsArr
+                        );
+                        //this.props.getAllPosts();
+                        //this.props.getDefault();
+                    }
                     log('savePost');
                 },
                 undo: () => {
@@ -90,6 +100,7 @@ class PostPage extends Component {
                 },
                 deletePost: () => {
                     log('deletePost');
+                    this.props.getAllPosts();
                 },
             };
             if (dataSet in datasetObj) {
@@ -201,7 +212,7 @@ PostPage.getId = function( pathName ) {
 
 PostPage.getPostById = function( id, postArr ) {
     const innData = postArr.filter(el => {
-        return el.id === +id;
+        return String(el.id) === id;
     });
     /**returning the copy of the Post
      * */
@@ -210,13 +221,13 @@ PostPage.getPostById = function( id, postArr ) {
 
 /**@description adding additional properties to the fetched Post
  * */
-PostPage.preparePost = function( post ) {
+PostPage.preparePost = function( post, isComment ) {
     let innPost = {...post};
     if (!innPost.createDate) {
         innPost.createDate = new Date().toDateString();
     }
 
-    if (innPost.id === 'default') {
+    if (innPost.id === 'default' && isComment) {
         if ( v4 ) {
             innPost.id = v4();
         } else {

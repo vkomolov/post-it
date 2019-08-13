@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 ///components
 import TextArea from '../../components/TextArea';
 import { defaultComment } from '../../utils/userService/initialData';
+import userService from '../../utils/userService';
 
 import userActions from '../../store/actions/user.actions';
-import userService from '../../utils/userService';
 import funcs from '../../utils/funcsCollection';
 
 import { mapStateToProps, mapActionsToProps } from './PostDetail.redux';
@@ -30,24 +30,6 @@ class PostDetail extends Component {
         log('PostDetail did mount..');
     }
 
-    handleClose({ target }) {
-        let dataset = target.dataset.value;
-        log(dataset);
-        let updatedData = {};
-
-        if (dataset === 'comments') {
-            updatedData = {
-                ...this.activeData,
-                [dataset]: this.activeData[dataset].filter(el => {
-                    return el.id !== target.id;
-                })
-            };
-        }
-        if (Object.keys(updatedData).length) {
-            this.props.putData(updatedData);
-        }
-    }
-
     handleText({ target }) {
         let str = target.value;
         let dataset = target.dataset.value;
@@ -63,7 +45,7 @@ class PostDetail extends Component {
                 updatedData = {
                     ...this.activeData,
                     [dataset]: this.activeData[dataset].map(el => {
-                        if ( el.id === target.id ) {
+                        if ( String(el.id) === target.id ) {
                             el.body = str;
                         }
                         return el;
@@ -143,6 +125,23 @@ class PostDetail extends Component {
         if(e.key === 'Enter') {
             e.preventDefault();
             e.target.blur();
+        }
+    }
+
+    handleClose({ target }) {
+        let dataset = target.dataset.value;
+        let updatedData = {};
+
+        if (dataset === 'comments') {
+            updatedData = {
+                ...this.activeData,
+                [dataset]: this.activeData[dataset].filter(el => {
+                    return String(el.id) !== target.id;
+                })
+            };
+        }
+        if (Object.keys(updatedData).length) {
+            this.props.putData(updatedData);
         }
     }
 

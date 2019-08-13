@@ -30,6 +30,68 @@ export const defaultPost = {
 
 export const defaultComment = {
     id: 'default',
+    postId: '',
     body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
     createDate: ''
 };
+
+export const source = 'https://bloggy-api.herokuapp.com';
+
+export const getAllParams = () => {
+    return {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        params: {
+            _embed: 'comments'
+        }
+    };
+};
+
+export const postParams = ( { id, title, body, comments, createDate } ) => {
+    const data = {title, body, comments, createDate};
+    let method = '';
+    if (id === 'default') {
+        method = 'POST';
+    } else {
+        method = 'PUT';
+    }
+    return {
+        method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data
+    };
+};
+
+export const commentsParams = ( postId, body, toSave=true ) => {
+    const data = { postId: +postId, body };
+    //log(data);
+    //const method = ( toSave ) ? 'POST' : 'DEL';
+    if ( toSave ) {
+        return {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data
+        }
+    }
+    ///TO DO API BLOCKS THE DEL OF COMMENTS
+    /*else {
+        return {
+            method: 'DEL',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    }*/
+    ////////////////////////
+
+};
+/////dev
+function log(it) {
+    console.log(it);
+}
