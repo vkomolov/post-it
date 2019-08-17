@@ -35,7 +35,7 @@ export const defaultComment = {
     createDate: ''
 };
 
-export const source = 'https://bloggy-api.herokuapp.com';
+export const urlSource = 'https://bloggy-api.herokuapp.com';
 
 export const getAllParams = () => {
     return {
@@ -51,12 +51,8 @@ export const getAllParams = () => {
 
 export const postParams = ( { id, title, body, comments, createDate } ) => {
     const data = {title, body, comments, createDate};
-    let method = '';
-    if (id === 'default') {
-        method = 'POST';
-    } else {
-        method = 'PUT';
-    }
+    let method = (id === 'default') ? 'POST' : 'PUT';
+
     return {
         method,
         headers: {
@@ -66,23 +62,22 @@ export const postParams = ( { id, title, body, comments, createDate } ) => {
     };
 };
 
-export const commentsParams = ( postId, body, toSave=true ) => {
+export const commentsParams = ( postId, body, isNew=true ) => {
     const data = { postId: +postId, body };
     //log(data);
-    //const method = ( toSave ) ? 'POST' : 'DEL';
-    if ( toSave ) {
-        return {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data
-        }
+    const method = ( isNew ) ? 'POST' : 'PUT';
+    return {
+        method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data
     }
-    ///TO DO API BLOCKS THE DEL OF COMMENTS
+};
+    ///TODO API BLOCKS DEL request for comments
     /*else {
         return {
-            method: 'DEL',
+            method,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -90,7 +85,7 @@ export const commentsParams = ( postId, body, toSave=true ) => {
     }*/
     ////////////////////////
 
-};
+
 /////dev
 function log(it) {
     console.log(it);

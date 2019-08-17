@@ -9,6 +9,8 @@ const userService  = {
     fetchAll,
     addDefaultPars,
     updatePost,
+    updateComments,
+    getRestObj
 };
 export default userService;
 
@@ -19,9 +21,10 @@ function fetchAll(source, actionSuccess, actionError) {
     const postSource = source + '/posts';
 
     ////SWITCHING TO AXIOS
-    funcs.initAxios(postSource, getAllParams())
-        .then(objData => {
-            const { data } = objData;
+    return funcs.initAxios(postSource, getAllParams())
+        .then(({ data }) => {
+            //log('fetched data...');
+            //log(data);
             setTimeout(() => actionSuccess( data ), 1000);
         })
         .catch(error => {
@@ -41,36 +44,60 @@ function fetchAll(source, actionSuccess, actionError) {
         })*/
 }
 
-function updatePost( source, post, prevCommentsArr=[] ) {
+function updatePost( source, post ) {
     const urlSource = ( post.id === 'default' )
         ? source + '/posts'
         : `${source}/posts/${post.id}`;
 
-    funcs.initAxios(urlSource, postParams( post ))
-        .then(({ data }) => {
-            let restComments = getRestArr( post.comments, prevCommentsArr );
-            let postComments = [];
-
-            //TO DO
-            if (restComments.newElems.length) {
-                postComments = restComments.newElems.map(( comment )=> {
-                    return funcs.initAxios(source + '/comments', commentsParams( data.id, comment.body ));
-                });
-            }
-            if (restComments.missingElems.length) {
-                //TODO API BLOCKS THE DEL OF COMMENTS
-            }
-
-            return axios.all([...postComments]);
-        }).then(( resultArr ) => {
-                return resultArr;
-            })
-        .catch(error => {
-            console.error(error);
-            //actionError(error)
-        })
+    return funcs.initAxios(urlSource, postParams( post ));
 }
 
+function updateComments( source, dataId, postCommentsArr, prevCommentsArr=[] ) {
+    let restComments = getRestObj(postCommentsArr, prevCommentsArr);
+
+    log('restComments...');
+    log(restComments);
+
+    let toPost = [];
+    let toPut = [];
+    let toDel = [];
+
+    /**if we have new comments for POST method...
+     * */
+    if ( restComments.toPostElems.length ) {
+        toPost = restComments.toPostElems.map((comment) => {
+            return funcs.initAxios(source + '/comments', commentsParams(dataId, comment.body));
+        });
+    }
+    /**if we have existing comments changed , then for PUT method...
+     * */
+    if (restComments.toPutElems.length) {
+        toPut = restComments.toPutElems.map((comment) => {
+            log('comment to PUT...');
+            log(comment);
+            return funcs.initAxios(source + '/comments/' + comment.id, commentsParams(dataId, comment.body, false));
+        });
+    }
+    /**if we have comments to be deleted in the API, then for DEL method...
+     * */
+    if (restComments.toDelElems.length) {
+        //TODO API BLOCKS DEL by the server with axios
+/*        toDel = restComments.missingElems.map((comment) => {
+            return funcs.initAxios(source + '/comments/' + comment.id,
+                commentsParams(dataId, comment.body, false)
+            );
+        });*/
+        log('comments to delete from API list');
+        log(restComments.toDelElems);
+    }
+    /**making promise all of axios to do, returning the arr of results
+     * */
+    return axios.all([
+        ...toPost,
+        ...toPut,
+        ///...toDel,
+    ]);
+}
 
 
 /**@description it add additional properties of defaultData to the data
@@ -82,37 +109,68 @@ function addDefaultPars( data={}, defaultData=defaultPost) {
     }
 }
 
-function getRestArr(targetArr, sourceArr) {
-    let newElems = targetArr.filter(( el ) => {
-        let found = false;
+function getRestObj(targetArr, sourceArr) {
+    let restObj = {
+        toPostElems: [],
+        toPutElems: [],
+        toDelElems: [],
+    };
 
-        sourceArr.forEach((elem) => {
-            if (String(elem.id) === el.id) {
-                found = true;
+    restObj.toPostElems = isIn(targetArr, sourceArr);
+    log('restObj.toPostElems...');
+    log(restObj.toPostElems);
+
+    restObj.toDelElems = isIn(sourceArr, targetArr);
+    log('restObj.toDelElems...');
+    log(restObj.toDelElems);
+
+    restObj.toPutElems = isInAndEqual(targetArr, sourceArr);
+    log('restObj.toPutElems...');
+    log(restObj.toPutElems);
+
+    return restObj;
+
+    function isIn( targetArr, sourceArr ) {
+        return targetArr.filter( el => {
+            let found = false;
+
+            sourceArr.forEach((elem) => {
+                if (elem.id == el.id) {
+                    found = true;
+                    log('founded...');
+                }
+            });
+            if (!found) {
+                log('not found...');
+                return el;
             }
         });
-        if (!found) {
-            return el;
-        }
-    });
-
-    let missingElems = sourceArr.filter(( el ) => {
-        let found = false;
-        targetArr.forEach((elem) => {
-            if (String(elem.id) === el.id) {
-                found = true;
-            }
-        });
-        if (!found) {
-            return el;
-        }
-    });
-    return {
-        newElems,
-        missingElems
     }
-
+    function isInAndEqual( targetArr, sourceArr ) {
+        return targetArr.filter( el => {
+            let isDiff = false;
+            sourceArr.forEach((elem) => {
+                if (elem.id == el.id) {
+                    log('equal comments by id...');
+                    log('elem.body');
+                    log(elem.body);
+                    log('el.body');
+                    log(el.body);
+                    if(elem.body !== el.body) {
+                        log('comments bodies are different...');
+                        isDiff = true;
+                    } else {
+                        log(`${elem.body} is equal ${el.body}`);
+                    }
+                }
+            });
+            return isDiff && el;
+        });
+    }
 }
+
+
+
 
 /////dev
 function log(it) {

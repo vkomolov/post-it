@@ -11,7 +11,7 @@ import LoadingAlert from '../../components/LoadingAlert';
 import PageTemplate from '../../containers/PageTemplate';
 
 import userService from '../../utils/userService';
-import { defaultComment, source } from '../../utils/userService/initialData';
+import { defaultComment, urlSource } from '../../utils/userService/initialData';
 import { mapStateToProps, mapActionsToProps } from './PostPage.redux';
 import funcs from '../../utils/funcsCollection';
 
@@ -26,6 +26,7 @@ class PostPage extends Component {
         this.stateProps = {};
         this.postData = {};
         this.innPost = {};
+        this.postId = '';
         this.handleClick = this.handleClick.bind(this);
     }
 
@@ -36,7 +37,7 @@ class PostPage extends Component {
         if ( !this.props.posts.loaded && !this.props.posts.error ) {
             log('getAllPosts... from componentDidMount');
             userService.fetchAll(
-                source,
+                urlSource,
                 this.props.gotSuccess,
                 this.props.gotFailure
             );
@@ -82,25 +83,51 @@ class PostPage extends Component {
                     this.props.putData( updated );
                 },
                 savePost: () => {
-                    if (this.postData.isUpdate) {
+                    if ( this.postData.isUpdate ) {
                         const prevCommentsArr = this.innPost.comments;
+                        const postCommentsArr = this.postData.data.comments;
+
                         userService.updatePost(
-                            source,
+                            urlSource,
                             this.postData.data,
-                            prevCommentsArr
-                        );
-                        //this.props.getAllPosts();
-                        //this.props.getDefault();
+
+                        ).then(({ data }) => {
+                            this.postId = data.id;
+
+                            return userService.updateComments(
+                                urlSource,
+                                this.postId,
+                                postCommentsArr,
+                                prevCommentsArr
+                            );
+                        }).then( () => {
+                            let path = '/posts/' + this.postId;
+
+                            userService.fetchAll(
+                                urlSource,
+                                this.props.gotSuccess,
+                                this.props.gotFailure
+                            ).then(()=> {
+
+                                log(`pushing history... ${path}`);
+                                this.history.push( path );
+
+                                log('sitching off update...');
+                                this.props.getDefault();
+                            });
+
+                        } );
                     }
                     log('savePost');
                 },
+
                 undo: () => {
                     this.props.getDefault();
                     log('undoUpdate');
                 },
+
                 deletePost: () => {
                     log('deletePost');
-                    this.props.getAllPosts();
                 },
             };
             if (dataSet in datasetObj) {
@@ -114,18 +141,30 @@ class PostPage extends Component {
     }
 
     initPost() {
+        log('initPost runs...');
+
         let pathName = this.history.location.pathname;
         let id = PostPage.getId(pathName);
+        //log('pathname:');
+        //log(pathName);
         let innPost = {};
 
-        if ( id ) {
+        if ( id.length ) {
             if ( this.stateProps.data.length ) {
-                if (id !== 'default') {
-                    innPost = PostPage.getPostById(id, this.stateProps.data);
+                if (id !== 'default' || this.postId.length) {
+                    let innId = (id !== 'default') ? id : this.postId;
+                    innPost = PostPage.getPostById(innId, this.stateProps.data);
                     if (!Object.keys(innPost).length) {
                         //TO DO ALERT no id found in posts state
-                        this.history.push('/');
+                        console.error('given id is not found...');
+                        //this.history.push('/');
+                    } else {
+                        log('InnPost is ready...');
+                        log(innPost);
                     }
+                    /**deep cloning
+                     * */
+                    return funcs.deepClone(innPost);
                 }
                 return PostPage.preparePost(userService.addDefaultPars(innPost));
             } else {
@@ -133,13 +172,20 @@ class PostPage extends Component {
             }
         } else {
             //TO DO ALERT
-            this.history.push('/');
+            //this.history.push('/');
+            console.error('no id in path');
         }
     }
 
     render() {
         log('rendering PostPage...');
-        this.stateProps = this.props.posts; //can will be re-rendered
+
+        /**@description deepClone gives the copies of comments, before they
+         * are changed: will be used for defaults with 'undo' and searching
+         * the differences in comments for PUT or POST options
+         */
+        //this.stateProps = funcs.deepClone( this.props.posts ); //can will be re-rendered
+        this.stateProps = this.props.posts;
         this.postData = this.props.postData; //reducer
         this.innPost = this.initPost();
 
@@ -212,7 +258,11 @@ PostPage.getId = function( pathName ) {
 
 PostPage.getPostById = function( id, postArr ) {
     const innData = postArr.filter(el => {
-        return String(el.id) === id;
+        if (el.id == id) {
+            log('the id is found...');
+            return el;
+        }
+        //return el.id == id;
     });
     /**returning the copy of the Post
      * */
@@ -223,11 +273,15 @@ PostPage.getPostById = function( id, postArr ) {
  * */
 PostPage.preparePost = function( post, isComment ) {
     let innPost = {...post};
+    /**@description giving additional property to the post or comment
+     * */
     if (!innPost.createDate) {
         innPost.createDate = new Date().toDateString();
     }
 
     if (innPost.id === 'default' && isComment) {
+        /**@description giving unique id to new comment
+         * */
         if ( v4 ) {
             innPost.id = v4();
         } else {

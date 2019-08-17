@@ -18,7 +18,7 @@ import styles from './PostDetail.module.scss';
 class PostDetail extends Component {
     constructor(props) {
         super(props);
-        this.propsData = props.data;
+        this.propsData = {};
         this.activeData = {};
 
         this.handleText = this.handleText.bind(this);
@@ -27,7 +27,7 @@ class PostDetail extends Component {
     }
 
     componentDidMount() {
-        log('PostDetail did mount..');
+        //log('PostDetail did mount..');
     }
 
     handleText({ target }) {
@@ -146,12 +146,16 @@ class PostDetail extends Component {
     }
 
     render() {
-        log('rendering PostDetail');
+        //log('rendering PostDetail');
         const cbArr = {
             handleText: this.handleText,
             handleBlur: this.handleBlur,
             handleKey: this.handleKey
         };
+        if (Object.keys(this.props.data).length) {
+            this.propsData = this.props.data;
+        }
+
 
         const postState = this.props.postData;
         this.activeData = postState.isUpdate

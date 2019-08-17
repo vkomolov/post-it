@@ -10,6 +10,8 @@ export const mapStateToProps = ( state ) => {
 export const mapActionsToProps = ( dispatch ) => {
     return {
         gotSuccess: ( data ) => {
+            log('fetched data success...');
+            log(data);
             dispatch(userActions.gotSuccess( data ))
         },
         getAllPosts: () => {
@@ -26,3 +28,8 @@ export const mapActionsToProps = ( dispatch ) => {
         }
     }
 };
+
+/////dev
+function log(it) {
+    console.log(it);
+}

@@ -7,7 +7,7 @@ import Post from '../../components/Post';
 import Button from '../../components/Button';
 import LoadingAlert from '../../components/LoadingAlert';
 import userService from '../../utils/userService';
-import { source } from '../../utils/userService/initialData';
+import { urlSource } from '../../utils/userService/initialData';
 
 import PageTemplate from '../../containers/PageTemplate';
 import { mapStateToProps, mapActionsToProps } from './MainPage.redux';
@@ -29,7 +29,7 @@ class MainPage extends Component {
         if(!this.propState.loaded && !this.propState.error) {
             log('getAllPosts...');
             userService.fetchAll(
-                source,
+                urlSource,
                 this.props.gotSuccess,
                 this.props.gotFailure
             );
