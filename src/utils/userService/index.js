@@ -2,7 +2,12 @@
 import axios from 'axios';
 
 import funcs from "../funcsCollection";
-import { commentsParams, defaultPost, getAllParams, postParams }
+import { commentsParams,
+    defaultPost,
+    getAllParams,
+    postParams,
+    urlSource,
+    delParams }
     from "../../utils/userService/initialData";
 
 const userService  = {
@@ -10,6 +15,7 @@ const userService  = {
     addDefaultPars,
     updatePost,
     updateComments,
+    deletePost,
     getRestObj
 };
 export default userService;
@@ -17,8 +23,8 @@ export default userService;
 /**@description it packs axios or fetch realization.
  *
  * */
-function fetchAllPosts(source, actionSuccess, actionError) {
-    const postSource = source + '/posts';
+function fetchAllPosts( actionSuccess, actionError ) {
+    const postSource = urlSource + '/posts';
 
     ////SWITCHING TO AXIOS
     return funcs.initAxios(postSource, getAllParams())
@@ -42,15 +48,23 @@ function fetchAllPosts(source, actionSuccess, actionError) {
         })*/
 }
 
-function updatePost( source, post ) {
-    const urlSource = ( post.id === 'default' )
-        ? source + '/posts'
-        : `${source}/posts/${post.id}`;
+function updatePost( post ) {
+    const urlPath = ( post.id === 'default' )
+        ? urlSource + '/posts'
+        : `${urlSource}/posts/${post.id}`;
 
-    return funcs.initAxios(urlSource, postParams( post ));
+    return funcs.initAxios(urlPath, postParams( post ));
 }
 
-function updateComments( source, dataId, postCommentsArr, prevCommentsArr=[] ) {
+function deletePost( postId ) {
+    const urlPath = `${urlSource}/posts/${postId}`;
+    log('urlPath for deleting...');
+    log(urlPath);
+
+    return funcs.initAxios(urlPath, delParams());
+}
+
+function updateComments( dataId, postCommentsArr, prevCommentsArr=[] ) {
     let restComments = getRestObj(postCommentsArr, prevCommentsArr);
 
     log('restComments...');
@@ -64,7 +78,7 @@ function updateComments( source, dataId, postCommentsArr, prevCommentsArr=[] ) {
      * */
     if ( restComments.toPostElems.length ) {
         toPost = restComments.toPostElems.map((comment) => {
-            return funcs.initAxios(source + '/comments', commentsParams(dataId, comment.body));
+            return funcs.initAxios(urlSource + '/comments', commentsParams(dataId, comment.body));
         });
     }
     /**if we have existing comments changed , then for PUT method...
@@ -73,18 +87,18 @@ function updateComments( source, dataId, postCommentsArr, prevCommentsArr=[] ) {
         toPut = restComments.toPutElems.map((comment) => {
             log('comment to PUT...');
             log(comment);
-            return funcs.initAxios(source + '/comments/' + comment.id, commentsParams(dataId, comment.body, false));
+            return funcs.initAxios(urlSource + '/comments/' + comment.id, commentsParams(dataId, comment.body, false));
         });
     }
     /**if we have comments to be deleted in the API, then for DEL method...
      * */
     if (restComments.toDelElems.length) {
         //TODO API BLOCKS DEL by the server with axios
-/*        toDel = restComments.missingElems.map((comment) => {
-            return funcs.initAxios(source + '/comments/' + comment.id,
-                commentsParams(dataId, comment.body, false)
+        toDel = restComments.toDelElems.map(( comment ) => {
+            return funcs.initAxios(urlSource + '/comments/' + comment.id,
+                delParams(dataId, comment.body, false)
             );
-        });*/
+        });
         log('comments to delete from API list');
         log(restComments.toDelElems);
     }

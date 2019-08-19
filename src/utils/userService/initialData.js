@@ -62,6 +62,15 @@ export const postParams = ( { id, title, body, comments, createDate } ) => {
     };
 };
 
+export const delParams = () => {
+    return {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }
+};
+
 export const commentsParams = ( postId, body, isNew=true ) => {
     const data = { postId: +postId, body };
     //log(data);

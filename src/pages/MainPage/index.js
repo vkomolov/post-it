@@ -27,9 +27,8 @@ class MainPage extends Component {
 
     componentDidMount() {
         if(!this.props.posts.loaded && !this.props.posts.error) {
-            log('getAllPosts...');
+            log('getAllPosts... from MainPage DidMount');
             userService.fetchAllPosts(
-                urlSource,
                 this.props.gotSuccess,
                 this.props.gotFailure
             );

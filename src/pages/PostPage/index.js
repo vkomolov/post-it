@@ -11,7 +11,7 @@ import LoadingAlert from '../../components/LoadingAlert';
 import PageTemplate from '../../containers/PageTemplate';
 
 import userService from '../../utils/userService';
-import { defaultComment, urlSource } from '../../utils/userService/initialData';
+import { defaultComment } from '../../utils/userService/initialData';
 import { mapStateToProps, mapActionsToProps } from './PostPage.redux';
 import funcs from '../../utils/funcsCollection';
 
@@ -38,7 +38,6 @@ class PostPage extends Component {
         if ( !this.props.posts.loaded && !this.props.posts.error ) {
             log('getAllPosts... from PostPage DidMount');
             userService.fetchAllPosts(
-                urlSource,
                 this.props.gotSuccess,
                 this.props.gotFailure
             );
@@ -89,49 +88,29 @@ class PostPage extends Component {
                         const postCommentsArr = this.postData.data.comments;
 
                         userService.updatePost(
-                            urlSource,
                             this.postData.data,
-
                         ).then(({ data }) => {
                             this.postId = String(data.id);
-                            log('this.postId = ' + this.postId);
+                            //log('this.postId = ' + this.postId);
 
                             return userService.updateComments(
-                                urlSource,
                                 this.postId,
                                 postCommentsArr,
                                 prevCommentsArr
                             );
-                        }).then(( resArr ) => {
-                            log('resultArr...');
-                            log( resArr );
-
-                            //log('clean posts by getAllPosts ....after save');
-                            //this.props.getAllPosts();
-
-                            log(`this.postId = ${this.postId}; url.id = ${this.urlId}`);
+                        }).then(() => {
                             let path = '/posts/' + this.postId;
-                            log('path');
-                            log(path);
-
                             log('getAllPosts... and history.push');
+
                             userService.fetchAllPosts(
-                                urlSource,
-                                ( data ) => this.props.gotSuccessAndReload( data, path, this.history),
+                                ( data ) => this.props.gotSuccessAndReload( data, path, this.history ),
                                 this.props.gotFailure
                             );
 
-                            //log('replacing history to :' + path);
-
                             log('getDefault ....after save');
                             this.props.getDefault();
-
-                            //this.postId = '';
-                            //this.history.replace( path );
-
                         } );
                     }
-                    log('savePost');
                 },
 
                 undo: () => {
@@ -141,6 +120,16 @@ class PostPage extends Component {
 
                 deletePost: () => {
                     log('deletePost');
+
+                    return userService.deletePost( this.urlId )
+                        .then((res) => {
+                            log('response on delete: ');
+                            log(res);
+
+                            this.props.getAllPosts();
+                            this.history.push('/');
+                            this.props.getDefault();
+                        });
                 },
             };
             if (dataSet in datasetObj) {
