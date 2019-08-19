@@ -14,6 +14,13 @@ export const mapActionsToProps = ( dispatch ) => {
             log(data);
             dispatch(userActions.gotSuccess( data ))
         },
+        gotSuccessAndReload: ( data, path, history ) => {
+            log('fetched data success...');
+            log(data);
+            dispatch(userActions.gotSuccess( data ));
+            log('history push by gotSuccessAndReload...');
+            history.push(path);
+        },
         getAllPosts: () => {
             dispatch(userActions.getAllPosts())
         },

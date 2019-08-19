@@ -18,7 +18,7 @@ import styles from './MainPage.module.scss';
 class MainPage extends Component {
     constructor(props) {
         super(props);
-        this.propState = {};
+        this.statePosts = {};
         this.innData = []; //received array of posts from Receiver 'posts'
         this.sortBy = 'title';
         this.history = this.props.history;
@@ -26,9 +26,9 @@ class MainPage extends Component {
     }
 
     componentDidMount() {
-        if(!this.propState.loaded && !this.propState.error) {
+        if(!this.props.posts.loaded && !this.props.posts.error) {
             log('getAllPosts...');
-            userService.fetchAll(
+            userService.fetchAllPosts(
                 urlSource,
                 this.props.gotSuccess,
                 this.props.gotFailure
@@ -51,40 +51,39 @@ class MainPage extends Component {
     }
 
     initPosts() {
-        const compare = (a, b) => {
+        const comparePosts = (postA, postB) => {
             if (this.sortBy === 'title') {
-                if (a.title > b.title) {
+                if (postA.title > postB.title) {
                     return 1
                 }
-                if (a.title < b.title) {
+                if (postA.title < postB.title) {
                     return -1;
                 }
                 return 0;
             }
             if (this.sortBy === 'date') {
-                const aDate = (a.date) ? Date.parse(a.date) : new Date();
-                const bDate = (b.date) ? Date.parse(b.date) : new Date();
+                const aDate = ( postA.date ) ? Date.parse(postA.date) : new Date();
+                const bDate = (postB.date) ? Date.parse(postB.date) : new Date();
 
                 return aDate - bDate;
             }
         };
+        const sortedArr = [...this.statePosts.data].sort( comparePosts );
 
-        if ( this.propState.data.length ){
-            const sortedArr = [...this.propState.data].sort(compare);
-            this.innData = sortedArr.map(el => {
-                return (
-                    <Post key={ el.id } data={ el } />
-                );
-            });
-        }
+        return sortedArr.map(el => {
+            return (
+                <Post key={ el.id } data={ el } />
+            );
+        });
     }
 
     render() {
         log('rendering MainPage...');
+        this.statePosts = this.props.posts; //will be re-rendered
 
-        this.propState = this.props.posts; //will be re-rendered
-        this.initPosts();
-
+        if ( this.statePosts.data && this.statePosts.data.length ) {
+            this.innData = this.initPosts();
+        }
         const body = (
             <div className={styles.topWrapper}>
                 <div className={styles.postHeadingBlock}>
@@ -126,7 +125,7 @@ class MainPage extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapActionsToProps)(MainPage);
+export default connect( mapStateToProps, mapActionsToProps )( MainPage );
 
 /////dev
 function log(it) {

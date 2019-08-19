@@ -14,7 +14,7 @@ export function posts(innState = initialPostsState, {type, data}) {
     const typeObj = {
         [userConstants.GETALL_POSTS_REQUEST]: () => {
             return {
-                ...state,
+                data: [],
                 loaded: false,
                 error: false,
             };

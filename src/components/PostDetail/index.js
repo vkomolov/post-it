@@ -18,7 +18,7 @@ import styles from './PostDetail.module.scss';
 class PostDetail extends Component {
     constructor(props) {
         super(props);
-        this.propsData = {};
+        this.propsData = props.data;
         this.activeData = {};
 
         this.handleText = this.handleText.bind(this);
@@ -156,10 +156,9 @@ class PostDetail extends Component {
             this.propsData = this.props.data;
         }
 
-
-        const postState = this.props.postData;
-        this.activeData = postState.isUpdate
-            ? postState.data
+        const postData = this.props.postData;
+        this.activeData = postData.isUpdate
+            ? postData.data
             : this.propsData;
 
         let commentsArr = [];

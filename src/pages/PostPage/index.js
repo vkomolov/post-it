@@ -23,20 +23,21 @@ class PostPage extends Component {
     constructor(props) {
         super(props);
         this.history = props.history;
-        this.stateProps = {};
+        this.statePosts = {};
         this.postData = {};
         this.innPost = {};
+        this.urlId = '';
         this.postId = '';
         this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
-        /**Fetching all Posts from API, if the Page was reached without
-         * the Main Page (by inputting the url path)
+        /**Fetching all Posts from API, if the Page was reached by url without
+         * the Main Page
          * */
         if ( !this.props.posts.loaded && !this.props.posts.error ) {
-            log('getAllPosts... from componentDidMount');
-            userService.fetchAll(
+            log('getAllPosts... from PostPage DidMount');
+            userService.fetchAllPosts(
                 urlSource,
                 this.props.gotSuccess,
                 this.props.gotFailure
@@ -51,11 +52,11 @@ class PostPage extends Component {
         if( dataSet ) {
             const datasetObj = {
                 backToList: () => {
-                    this.props.getDefault();
                     this.history.push('/');
+                    this.props.getDefault();
                 },
                 createComment: () => {
-                    log('createComment');
+                    log('creating Comment...');
                     const comment = PostPage.preparePost(
                         userService.addDefaultPars({}, defaultComment),
                         true
@@ -92,7 +93,8 @@ class PostPage extends Component {
                             this.postData.data,
 
                         ).then(({ data }) => {
-                            this.postId = data.id;
+                            this.postId = String(data.id);
+                            log('this.postId = ' + this.postId);
 
                             return userService.updateComments(
                                 urlSource,
@@ -100,21 +102,32 @@ class PostPage extends Component {
                                 postCommentsArr,
                                 prevCommentsArr
                             );
-                        }).then( () => {
+                        }).then(( resArr ) => {
+                            log('resultArr...');
+                            log( resArr );
+
+                            //log('clean posts by getAllPosts ....after save');
+                            //this.props.getAllPosts();
+
+                            log(`this.postId = ${this.postId}; url.id = ${this.urlId}`);
                             let path = '/posts/' + this.postId;
+                            log('path');
+                            log(path);
 
-                            userService.fetchAll(
+                            log('getAllPosts... and history.push');
+                            userService.fetchAllPosts(
                                 urlSource,
-                                this.props.gotSuccess,
+                                ( data ) => this.props.gotSuccessAndReload( data, path, this.history),
                                 this.props.gotFailure
-                            ).then(()=> {
+                            );
 
-                                log(`pushing history... ${path}`);
-                                this.history.push( path );
+                            //log('replacing history to :' + path);
 
-                                log('sitching off update...');
-                                this.props.getDefault();
-                            });
+                            log('getDefault ....after save');
+                            this.props.getDefault();
+
+                            //this.postId = '';
+                            //this.history.replace( path );
 
                         } );
                     }
@@ -142,52 +155,77 @@ class PostPage extends Component {
 
     initPost() {
         log('initPost runs...');
-
         let pathName = this.history.location.pathname;
-        let id = PostPage.getId(pathName);
-        //log('pathname:');
-        //log(pathName);
+        this.urlId = PostPage.getId(pathName);
         let innPost = {};
 
-        if ( id.length ) {
-            if ( this.stateProps.data.length ) {
-                if (id !== 'default' || this.postId.length) {
-                    let innId = (id !== 'default') ? id : this.postId;
-                    innPost = PostPage.getPostById(innId, this.stateProps.data);
-                    if (!Object.keys(innPost).length) {
-                        //TO DO ALERT no id found in posts state
-                        console.error('given id is not found...');
-                        //this.history.push('/');
-                    } else {
-                        log('InnPost is ready...');
-                        log(innPost);
-                    }
-                    /**deep cloning
+        if ( this.urlId.length && this.statePosts.data.length ) {
+            if ( this.urlId !== 'default' ) {
+                let foundById = PostPage.getPostById(this.urlId, this.statePosts.data);
+                if (Object.keys(foundById).length) {
+                    /**adding additional properties to the Post
                      * */
-                    return funcs.deepClone(innPost);
+                    innPost = PostPage.preparePost(userService.addDefaultPars( foundById ));
+                    log('found By Id ...');
+                    log(foundById);
+                } else {
+                    //TO DO ALERT no id found in posts state
+                    console.error('given id is not found...');
+                    this.history.push('/');
+                    this.props.getDefault();
                 }
-                return PostPage.preparePost(userService.addDefaultPars(innPost));
+                /**@description deepClone gives the copies of comments, before they
+                 * are changed: will be used for defaults with 'undo' and searching
+                 * the differences in comments for PUT or POST options
+                 */
+                //return funcs.deepClone(innPost);
             } else {
-                return innPost; //returning empty object;
+                log('id is default');
+
+                log('the postId: ');
+                log(!!this.postId.length);
+
+                /**if we have already received the id of the new created Post,
+                 *saved in this.postId, but the url id is still 'default', then
+                 * to relocate the history to this.postId;
+                 * */
+                /*if ( this.postId.length ) {
+                    log(`${this.postId} = id from url: ${id}`);
+                    let path = '/posts/' + this.postId;
+                    log('path');
+                    log(path);
+                    log('replacing history to :' + path);
+                    this.postId = '';
+                    this.history.push( path );
+                    //this.props.getDefault();
+                } else {
+                    console.error('no postId.length');
+                }*/
+                /**adding default properties to the Post
+                 * */
+                innPost = PostPage.preparePost(userService.addDefaultPars());
             }
         } else {
             //TO DO ALERT
             //this.history.push('/');
-            console.error('no id in path');
+            console.error('waiting for the statePosts data ...');
         }
+
+        return Object.keys(innPost).length
+            ? funcs.deepClone(innPost)
+            : innPost;
     }
 
     render() {
-        log('rendering PostPage...');
+        if ( this.props.posts.data.length ) {
+            this.statePosts = this.props.posts; //reducer posts
+            this.postData = this.props.postData; //reducer postData
 
-        /**@description deepClone gives the copies of comments, before they
-         * are changed: will be used for defaults with 'undo' and searching
-         * the differences in comments for PUT or POST options
-         */
-        //this.stateProps = funcs.deepClone( this.props.posts ); //can will be re-rendered
-        this.stateProps = this.props.posts;
-        this.postData = this.props.postData; //reducer
-        this.innPost = this.initPost();
+            /**looking for the post element by the id, which is taken
+             * from the url path with 'matchPath' (react-router-dom)
+             * */
+            this.innPost = this.initPost();
+        }
 
         const body = (
             <div className={styles.topWrapper}>
@@ -250,7 +288,7 @@ PostPage.getId = function( pathName ) {
         let matchedPars = matchPath(pathName, {
             path: '/posts/:id',
         });
-        return matchedPars.params.id;
+        return String(matchedPars.params.id);
     } else {
         throw new Error('no matchPath module found...');
     }
@@ -258,7 +296,7 @@ PostPage.getId = function( pathName ) {
 
 PostPage.getPostById = function( id, postArr ) {
     const innData = postArr.filter(el => {
-        if (el.id == id) {
+        if (el.id == id) {  //to equalize Num and String
             log('the id is found...');
             return el;
         }

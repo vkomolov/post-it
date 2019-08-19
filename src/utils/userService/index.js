@@ -6,7 +6,7 @@ import { commentsParams, defaultPost, getAllParams, postParams }
     from "../../utils/userService/initialData";
 
 const userService  = {
-    fetchAll,
+    fetchAllPosts,
     addDefaultPars,
     updatePost,
     updateComments,
@@ -17,15 +17,13 @@ export default userService;
 /**@description it packs axios or fetch realization.
  *
  * */
-function fetchAll(source, actionSuccess, actionError) {
+function fetchAllPosts(source, actionSuccess, actionError) {
     const postSource = source + '/posts';
 
     ////SWITCHING TO AXIOS
     return funcs.initAxios(postSource, getAllParams())
         .then(({ data }) => {
-            //log('fetched data...');
-            //log(data);
-            setTimeout(() => actionSuccess( data ), 1000);
+            return setTimeout(() => actionSuccess( data ), 1000);
         })
         .catch(error => {
             console.error(error);
@@ -99,7 +97,6 @@ function updateComments( source, dataId, postCommentsArr, prevCommentsArr=[] ) {
     ]);
 }
 
-
 /**@description it add additional properties of defaultData to the data
  * */
 function addDefaultPars( data={}, defaultData=defaultPost) {
@@ -137,11 +134,11 @@ function getRestObj(targetArr, sourceArr) {
             sourceArr.forEach((elem) => {
                 if (elem.id == el.id) {
                     found = true;
-                    log('founded...');
+                    log('id founded in arr...');
                 }
             });
             if (!found) {
-                log('not found...');
+                log('id not found in arr...');
                 return el;
             }
         });
@@ -168,7 +165,6 @@ function getRestObj(targetArr, sourceArr) {
         });
     }
 }
-
 
 
 
