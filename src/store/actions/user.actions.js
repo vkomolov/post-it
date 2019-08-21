@@ -47,15 +47,15 @@ export default userActions;
 /**@description action of alerts to alertData Reducer
  * to show the Alert Component with the message
  * @param {string} message: will show the message of the alert
- * @param {boolean} what: true - positive alert, false - negative alert;
+ * @param {boolean} isPositive: true - positive alert, false - negative alert;
  * @return {object}
  * */
-    function giveAlert({ message, what }) {
+    function giveAlert({ message, isPositive }) {
         return {
             type: userConstants.ALERT,
             data: {
                 message,
-                what
+                isPositive
             }
         }
     }

@@ -5,8 +5,6 @@ import React from 'react';
 import styles from './Alert.module.scss';
 
 function AlertBlock() {
-
-
     return (
         <div className={styles.topWrapper} >
             <div className={styles.alertBlock}>

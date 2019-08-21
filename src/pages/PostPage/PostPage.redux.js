@@ -9,17 +9,23 @@ export const mapStateToProps = ( state ) => {
 
 export const mapActionsToProps = ( dispatch ) => {
     return {
-        gotSuccess: ( data ) => {
+/*        gotSuccess: ( data ) => {
             log('fetched data success...');
             log(data);
             dispatch(userActions.gotSuccess( data ))
-        },
-        gotSuccessAndReload: ( data, path, history ) => {
+        },*/
+        gotSuccess: ( data, callBacks={} ) => {
             log('fetched data success...');
             log(data);
             dispatch(userActions.gotSuccess( data ));
-            log('history push by gotSuccessAndReload...');
-            history.push(path);
+
+            if( Object.keys(callBacks).length ) {
+                for ( let callBack in callBacks ) {
+                    if (typeof callBacks[callBack] === 'function') {
+                        callBacks[callBack]();
+                    }
+                }
+            }
         },
         getAllPosts: () => {
             dispatch(userActions.getAllPosts())

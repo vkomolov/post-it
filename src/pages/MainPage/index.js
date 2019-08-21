@@ -1,14 +1,13 @@
 ///node_modules
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 ///components
 import Post from '../../components/Post';
 import Button from '../../components/Button';
 import LoadingAlert from '../../components/LoadingAlert';
 import userService from '../../utils/userService';
-import { urlSource } from '../../utils/userService/initialData';
-
 import PageTemplate from '../../containers/PageTemplate';
 import { mapStateToProps, mapActionsToProps } from './MainPage.redux';
 
@@ -25,6 +24,9 @@ class MainPage extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    /**if in the 'posts' reducer the list of Posts is not fetched, then
+     * to fetch all Posts and update the 'posts' reducer with the list;
+     * */
     componentDidMount() {
         if(!this.props.posts.loaded && !this.props.posts.error) {
             log('getAllPosts... from MainPage DidMount');
@@ -35,6 +37,10 @@ class MainPage extends Component {
         }
     }
 
+    /**@description it takes the 'data-value' attribute from the
+     * clicked element; it starts the following callback;
+     * @param {object} target: event.target;
+     * */
     handleClick({ target }) {
         const dataValue = target.dataset.value;
         const funcObj = {

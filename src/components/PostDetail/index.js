@@ -30,11 +30,17 @@ class PostDetail extends Component {
         //log('PostDetail did mount..');
     }
 
+    /**@description it takes the value of the textarea, prepares and
+     * patches the updated data of the Post to the reducer 'postData';
+     * */
     handleText({ target }) {
         let str = target.value;
         let dataset = target.dataset.value;
         let updatedData = {};
 
+        /**- it depends on the data-value attribute of the textarea how
+         * to prepare the updated data of the Post;
+         * */
         if (dataset in this.activeData) {
             if (dataset !== 'comments') {
                 updatedData = {
@@ -63,6 +69,12 @@ class PostDetail extends Component {
         }
     }
 
+    /**@description it depends on the data-value attribute of the textarea
+     * how to prepare the updated data of the Post;
+     * - if on blur the textarea value is empty then to switch to the
+     * previous initial value;
+     * @param {object} target: event.target
+     * */
     handleBlur({ target }) {
         let str = target.value.trim();
         let dataset = target.dataset.value;
@@ -121,6 +133,9 @@ class PostDetail extends Component {
         }
     }
 
+    /**@description it changes the behavior of the key press 'Enter' when
+     * typing in the textarea; Changing from 'next line' to the blur effect;
+     * */
     handleKey(e) {
         if(e.key === 'Enter') {
             e.preventDefault();
@@ -128,6 +143,9 @@ class PostDetail extends Component {
         }
     }
 
+    /**@description it filters the array of the Post comments and
+     * patches the updated data of the Post to the reducer 'postData'
+     * */
     handleClose({ target }) {
         let dataset = target.dataset.value;
         let updatedData = {};
@@ -156,6 +174,11 @@ class PostDetail extends Component {
             this.propsData = this.props.data;
         }
 
+        /**- if the property 'isUpdate' (of the reducer 'postData') is true,
+         * then to use the updated data from 'postData';
+         * - if 'isUpdate' is false (no changes of the Post), then to use the
+         * initial Post data, taken from the props;
+         * */
         const postData = this.props.postData;
         this.activeData = postData.isUpdate
             ? postData.data

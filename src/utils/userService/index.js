@@ -96,7 +96,7 @@ function updateComments( dataId, postCommentsArr, prevCommentsArr=[] ) {
         //TODO API BLOCKS DEL by the server with axios
         toDel = restComments.toDelElems.map(( comment ) => {
             return funcs.initAxios(urlSource + '/comments/' + comment.id,
-                delParams(dataId, comment.body, false)
+                delParams()
             );
         });
         log('comments to delete from API list');
@@ -107,7 +107,7 @@ function updateComments( dataId, postCommentsArr, prevCommentsArr=[] ) {
     return axios.all([
         ...toPost,
         ...toPut,
-        ///...toDel,
+        ...toDel,
     ]);
 }
 

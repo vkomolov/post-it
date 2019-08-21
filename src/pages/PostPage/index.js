@@ -32,8 +32,9 @@ class PostPage extends Component {
     }
 
     componentDidMount() {
-        /**Fetching all Posts from API, if the Page was reached by url without
-         * the Main Page
+        /**if in the 'posts' reducer the list of Posts is not fetched, then
+         * to fetch all Posts and update the 'posts' reducer with the list
+         * in case the Page is reached from the url path, without the Main Page;
          * */
         if ( !this.props.posts.loaded && !this.props.posts.error ) {
             log('getAllPosts... from PostPage DidMount');
@@ -45,74 +46,123 @@ class PostPage extends Component {
             console.log('passing PostPage didMount...');
         }
     }
-
+/**@description one handleClick for all clickables which have the data-value
+ * attribute;
+ * @param {object} target: event.target;
+ * */
     handleClick({ target }) {
         const dataSet = target.dataset.value;
         if( dataSet ) {
             const datasetObj = {
+                /**@description returning to the Main Page by pushing this.history
+                 * to the Post list location;
+                 * .getDefault() switches off the state 'isUpdate' of the reducer
+                 * 'postData'
+                 * */
                 backToList: () => {
                     this.history.push('/');
                     this.props.getDefault();
                 },
                 createComment: () => {
-                    log('creating Comment...');
+                    log('creating default Comment...');
+
+                    /**creating the new Comment with the default properties
+                     * and unique temporal id (from uuid);
+                     * */
                     const comment = PostPage.preparePost(
                         userService.addDefaultPars({}, defaultComment),
                         true
                     );
 
-                    let updated = {};
-                    if (this.postData.isUpdate) {
-                        updated = {
-                            ...this.postData.data,
-                            comments: [
-                                ...this.postData.data.comments,
-                                comment
-                            ]
-                        };
-                    } else {
-                        updated = {
-                            ...this.innPost,
-                            comments: [
-                                ...this.innPost.comments,
-                                comment
-                            ]
-                        }
-                    }
+                    /** - if the Post has already the changes at reducer 'postData'
+                     * (if 'title' or 'body' of the Post have changed),
+                     * then: to take the updated Post data from the reducer 'postData';
+                     * - if the Post has no changes at the reducer 'postData',
+                     * then: to take the Post data from this.innPost (original Post, taken
+                     * from the fetched array of the Posts, or new default Post);                     *
+                     * */
 
+                    let fromData = ( this.postData.isUpdate )
+                        ? this.postData.data : this.innPost;
+
+                    let updated = {
+                        ...fromData,
+                        comments: [
+                            ...fromData.comments,
+                            comment
+                        ]
+                    };
+
+                    /**sending the updated Post to the reducer 'postData'
+                     * */
                     this.props.putData( updated );
                 },
                 savePost: () => {
+                    /**if the Post has already changes and the reducer 'postData'
+                     * property 'isActive' is true
+                     * */
                     if ( this.postData.isUpdate ) {
                         const prevCommentsArr = this.innPost.comments;
                         const postCommentsArr = this.postData.data.comments;
 
+                    /**to fetch API with POST or PUT methods for updating or creating
+                     * the Post in the API by .updatePost(the state of reducer 'postData')
+                     * then: to take the postId of the newly created or updated Post
+                     * from the API response when OK;
+                     * */
                         userService.updatePost(
                             this.postData.data,
                         ).then(({ data }) => {
                             this.postId = String(data.id);
                             //log('this.postId = ' + this.postId);
 
+                     /**then: to POST or PUT the comments with the postId by checking the
+                      * differences in the original and updated comments and fetching the proper
+                      * method for newly created or already existing comments of the Post;
+                      * '.updateComments' returns the array of responses from Promise.all results;                      *
+                      * * */
                             return userService.updateComments(
                                 this.postId,
                                 postCommentsArr,
                                 prevCommentsArr
                             );
                         }).then(() => {
+                      /**then: to make the path with 'postId' for the newly created Post,
+                       * then: to fetch all Posts (with the updated or newly created)
+                       * from API and to push 'this.history' with the proper Post path;
+                       * !!!When a new Post is created, it auto receives the id='default'...
+                       * When this new Post is POSTed to API, in response it receives
+                       * the id ('postId') of this new Post, created by API;
+                       * !!!In order to show the new Post by its id, we push history to
+                       * new url location (from '/posts/default' to '/posts/${postId}')
+                       * */
                             let path = '/posts/' + this.postId;
-                            log('getAllPosts... and history.push');
+                            const callBacks = {
+                                pushHistory: () => {
+                                    log('pushing history...');
+                                    this.history.push( path );
+                                },
+                                /**it switches off the state 'isUpdate' of the reducer 'postData'
+                                 * */
+                                setDefault: () => {
+                                    log('setting getDefault...');
+                                    this.props.getDefault();
+                                }
+                            };
 
-                            userService.fetchAllPosts(
-                                ( data ) => this.props.gotSuccessAndReload( data, path, this.history ),
+                       /** when the Posts are updated at API, then to refetch all Posts
+                        * and to push this.history to the proper path with 'postId'
+                        * */
+                            return userService.fetchAllPosts(
+                                ( data ) => this.props.gotSuccess( data, callBacks ),
                                 this.props.gotFailure
                             );
-
-                            log('getDefault ....after save');
-                            this.props.getDefault();
                         } );
                     }
                 },
-
+                /**it switches off the state 'isUpdate' of the reducer 'postData'
+                 * then the Post data is taken from the original Post before update;
+                 * */
                 undo: () => {
                     this.props.getDefault();
                     log('undoUpdate');
@@ -121,6 +171,11 @@ class PostPage extends Component {
                 deletePost: () => {
                     log('deletePost');
 
+                    /**fetching the DELETE method with the Post id,
+                     * then fetching all updated Posts from API,
+                     * pushing this.history to the Main Page with the list of Posts;
+                     * then switching off 'isUpdate' of the reducer 'postData';
+                     * */
                     return userService.deletePost( this.urlId )
                         .then((res) => {
                             log('response on delete: ');
@@ -142,6 +197,13 @@ class PostPage extends Component {
         }
     }
 
+    /**@description it starts on each render, takes the id from the url path,
+     * then it looks for the Post from the fetched list of the Posts;
+     * if no Post by the id is found (the Page is loaded from the url path),
+     * then to redirect to the Main Page with the list of the Posts;
+     * if the Post id === 'default', then to create a default Post with the
+     * initial props.
+     * */
     initPost() {
         log('initPost runs...');
         let pathName = this.history.location.pathname;
@@ -152,13 +214,13 @@ class PostPage extends Component {
             if ( this.urlId !== 'default' ) {
                 let foundById = PostPage.getPostById(this.urlId, this.statePosts.data);
                 if (Object.keys(foundById).length) {
-                    /**adding additional properties to the Post
+                    /**if the Post is found, then to add initial properties to the Post
                      * */
                     innPost = PostPage.preparePost(userService.addDefaultPars( foundById ));
-                    log('found By Id ...');
-                    log(foundById);
                 } else {
-                    //TO DO ALERT no id found in posts state
+                    /**if the Post is not found, then to show the Main Page with the
+                     * list of the Posts; to switch off the 'isUpdate' of 'dataPost'
+                     * */
                     console.error('given id is not found...');
                     this.history.push('/');
                     this.props.getDefault();
@@ -169,37 +231,17 @@ class PostPage extends Component {
                  */
                 //return funcs.deepClone(innPost);
             } else {
-                log('id is default');
-
-                log('the postId: ');
-                log(!!this.postId.length);
-
-                /**if we have already received the id of the new created Post,
-                 *saved in this.postId, but the url id is still 'default', then
-                 * to relocate the history to this.postId;
-                 * */
-                /*if ( this.postId.length ) {
-                    log(`${this.postId} = id from url: ${id}`);
-                    let path = '/posts/' + this.postId;
-                    log('path');
-                    log(path);
-                    log('replacing history to :' + path);
-                    this.postId = '';
-                    this.history.push( path );
-                    //this.props.getDefault();
-                } else {
-                    console.error('no postId.length');
-                }*/
-                /**adding default properties to the Post
+                /**adding default properties to the new Post
                  * */
                 innPost = PostPage.preparePost(userService.addDefaultPars());
             }
         } else {
             //TO DO ALERT
-            //this.history.push('/');
             console.error('waiting for the statePosts data ...');
         }
 
+        /**deepcloning of the Post data for the future checking of changes
+         * */
         return Object.keys(innPost).length
             ? funcs.deepClone(innPost)
             : innPost;

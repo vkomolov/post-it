@@ -8,8 +8,8 @@ Will receive the Array of the Objects with keys: id, title, body;
 properties: creationDate, comments;
 - To realize the methods for creation, update, delete actions 
 for the posts and comments;
-- Each action with the post or its comments should be Posted to
-the API for changing state and retrieving new state of the data;
+- Each 'save' action should change the API state and retrieve the 
+updated state;
 - The state of the App should be synchronized with the API state
 when POSTing new data to the API; POST new data - retrieve the 
 updated data from the API - rendering APP with the new App State;
@@ -34,26 +34,21 @@ then render the list of the fetched posts;
     in the state of the posts;
     if the Posts State doesn`t find the id, taken from 'pathMatch.params',
     then to push the history to the Main Page;
-    - PostPage has the Navlink to the MainPage with the list of all posts;
-    - PostPage has delete, save and undo interfaces;
-      - When the Post is deleted, then to fetch DEL to the API, 
+    - PostPage has the link to the MainPage with the list of all posts;
+    - PostPage has delete, save and undo options for the Post;
+      - When the Post is deleted, then to fetch DELETE to the API, 
       then to retrieve the updated data with rendering new list of the posts,
       then to push the history to MainPage with the updated list of the posts;
-      - When the Post is updated with the 'save' button, then to
-      create the save of the current State and to fetch UPDATE to the API
-      with the updated post by id; Then to retrieve and re-render the
-      current Post;
-      - When the Post is updated and later fired on 'Redo' button,
-      then to update the Post with the prevState properties, then
-      to fetch UPDATE of the post to the API with refreshing and re-rendering;
-    - PostPage adds option for creating/updating/deleting 'comments';
-      The comments property is to be added to the Post keys;
+      - When the Post is updated or created and pushed 'save' button, then to
+      resolve all promises in POSTing and PUTting of the updated Post and its
+      comments; If the Post is newly created and its necessary to add comments,
+      then firstly to POST a new Post, then, on retrieving the postId from the
+      successful response, to POST new comments attached with the postId;
       - The list of comments is to be rendered under the Post body text;
       - Each comments` item can be updated, deleted, created;
       The final "save" action will PUT the API with the updated Post;
-      - If the 'save' action is fired, but no change of the Post, then
-      to ignore the action; If no changes of Post, then to inactivate
-      the 'save' button;
+      - If no changes of Post, then to inactivate the 'save' button;
+      
 /////////////////////////////////////////////////////////////////
 
 

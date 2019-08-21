@@ -11,8 +11,5 @@ export const mapActionsToProps = ( dispatch ) => {
         putData: ( data ) => {
             dispatch(userActions.putData( data ));
         },
-        /*getPrevious: () => {
-            dispatch(userActions.getPrevious());
-        }*/
     }
 };
