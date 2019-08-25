@@ -10,11 +10,16 @@ export const initialPostsState = {
 };
 
 export const initialAlertState = {
-    toAlert: false,
-    alertWhat: null,
-    toConfirm: false,
-    confirmWhat: null,
-    message: '',
+    isAlert: false,
+    isConfirm: false,
+    data: {
+        message: '',
+        isPositive: true,
+        callbacks: {
+            positive: () => {},
+            negative: () => {}
+        }
+    },
 };
 
 export const defaultPost = {
@@ -96,6 +101,7 @@ export const commentsParams = ( postId, body, isNew=true ) => {
 
 
 /////dev
+/*
 function log(it) {
     console.log(it);
-}
+}*/

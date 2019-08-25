@@ -1,22 +1,17 @@
 import userActions from '../../store/actions/user.actions';
+import alertActions from '../../store/actions/alert.actions';
 
 export const mapStateToProps = ( state ) => {
     return {
         posts: state.posts,
-        postData: state.postData
+        postData: state.postData,
+        alertData: state.alertData
     }
 };
 
 export const mapActionsToProps = ( dispatch ) => {
     return {
-/*        gotSuccess: ( data ) => {
-            log('fetched data success...');
-            log(data);
-            dispatch(userActions.gotSuccess( data ))
-        },*/
         gotSuccess: ( data, callBacks={} ) => {
-            log('fetched data success...');
-            log(data);
             dispatch(userActions.gotSuccess( data ));
 
             if( Object.keys(callBacks).length ) {
@@ -27,22 +22,32 @@ export const mapActionsToProps = ( dispatch ) => {
                 }
             }
         },
+        gotFailure: ( error ) => {
+            dispatch(alertActions.showAlert( error, false ))
+        },
         getAllPosts: () => {
             dispatch(userActions.getAllPosts())
-        },
-        gotFailure: ( error ) => {
-            dispatch(userActions.gotFailure( error ))
         },
         putData: ( data ) => {
             dispatch(userActions.putData( data ));
         },
         getDefault: () => {
             dispatch(userActions.getDefault());
-        }
+        },
+        showAlert: ( message, isPositive=true, delayHide=0 ) => {
+            dispatch(alertActions.showAlert( message, isPositive ));
+            if ( +delayHide > 0 ) {
+                setTimeout(()=> dispatch(alertActions.clear()), +delayHide);
+            }
+        },
+        withConfirm: (message, { positive, negative } ) => {
+            dispatch(alertActions.withConfirm( message, { positive, negative } ));
+        },
     }
 };
 
 /////dev
+/*
 function log(it) {
     console.log(it);
-}
+}*/

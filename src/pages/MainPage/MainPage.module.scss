@@ -5,6 +5,7 @@
 ///@import "../../global_styles/fonts";
 
 .topWrapper {
+  position: relative; //for alerts
   @extend %topWrapper;
 
   .asideBar {

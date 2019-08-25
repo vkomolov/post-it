@@ -1,10 +1,16 @@
 @import "../../utils/global_styles/variables";
-@import "../../utils/global_styles/mixins";
-@import "../../utils/global_styles/animations";
+//@import "../../utils/global_styles/mixins";
+@import "../../utils/global_styles/extends";
+//@import "../../utils/global_styles/animations";
 ///@import "../../global_styles/fonts";
 
 .topWrapper {
-  border: 1px dotted coral;
+  min-height: 800px;
   padding: 20px;
-  background-color: $yelly;
+  background-color: $foxyLighter;
+
+  .buttonBack {
+    @extend %asideButton;
+    background-color: $greyNorm;
+  }
 }

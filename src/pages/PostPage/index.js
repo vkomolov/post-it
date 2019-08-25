@@ -9,6 +9,7 @@ import PostDetail from '../../components/PostDetail';
 import Button from '../../components/Button';
 import LoadingAlert from '../../components/LoadingAlert';
 import PageTemplate from '../../containers/PageTemplate';
+import AlertBlock from "../../components/AlertBlock";
 
 import userService from '../../utils/userService';
 import { defaultComment } from '../../utils/userService/initialData';
@@ -28,6 +29,7 @@ class PostPage extends Component {
         this.innPost = {};
         this.urlId = '';
         this.postId = '';
+        this.alertData = {};
         this.handleClick = this.handleClick.bind(this);
     }
 
@@ -37,13 +39,10 @@ class PostPage extends Component {
          * in case the Page is reached from the url path, without the Main Page;
          * */
         if ( !this.props.posts.loaded && !this.props.posts.error ) {
-            log('getAllPosts... from PostPage DidMount');
             userService.fetchAllPosts(
                 this.props.gotSuccess,
                 this.props.gotFailure
             );
-        } else {
-            console.log('passing PostPage didMount...');
         }
     }
 /**@description one handleClick for all clickables which have the data-value
@@ -114,7 +113,6 @@ class PostPage extends Component {
                             this.postData.data,
                         ).then(({ data }) => {
                             this.postId = String(data.id);
-                            //log('this.postId = ' + this.postId);
 
                      /**then: to POST or PUT the comments with the postId by checking the
                       * differences in the original and updated comments and fetching the proper
@@ -139,7 +137,6 @@ class PostPage extends Component {
                             let path = '/posts/' + this.postId;
                             const callBacks = {
                                 pushHistory: () => {
-                                    log('pushing history...');
                                     this.history.push( path );
                                 },
                                 /**it switches off the state 'isUpdate' of the reducer 'postData'
@@ -168,23 +165,21 @@ class PostPage extends Component {
                     log('undoUpdate');
                 },
 
+                /**fetching the DELETE method with the Post id,
+                 * then fetching all updated Posts from API,
+                 * pushing this.history to the Main Page with the list of Posts;
+                 * then switching off 'isUpdate' of the reducer 'postData';
+                 * */
                 deletePost: () => {
-                    log('deletePost');
-
-                    /**fetching the DELETE method with the Post id,
-                     * then fetching all updated Posts from API,
-                     * pushing this.history to the Main Page with the list of Posts;
-                     * then switching off 'isUpdate' of the reducer 'postData';
-                     * */
-                    return userService.deletePost( this.urlId )
-                        .then((res) => {
-                            log('response on delete: ');
-                            log(res);
-
-                            this.props.getAllPosts();
-                            this.history.push('/');
-                            this.props.getDefault();
-                        });
+                    if (this.urlId !== 'default') {
+                        log('deleting...');
+                        return userService.deletePost( this.urlId )
+                            .then(() => {
+                                this.props.getAllPosts();
+                                this.history.push('/');
+                                this.props.getDefault();
+                            });
+                    }
                 },
             };
             if (dataSet in datasetObj) {
@@ -205,7 +200,6 @@ class PostPage extends Component {
      * initial props.
      * */
     initPost() {
-        log('initPost runs...');
         let pathName = this.history.location.pathname;
         this.urlId = PostPage.getId(pathName);
         let innPost = {};
@@ -231,7 +225,7 @@ class PostPage extends Component {
                  */
                 //return funcs.deepClone(innPost);
             } else {
-                /**adding default properties to the new Post
+                /**adding default properties to the new empty Post
                  * */
                 innPost = PostPage.preparePost(userService.addDefaultPars());
             }
@@ -251,6 +245,7 @@ class PostPage extends Component {
         if ( this.props.posts.data.length ) {
             this.statePosts = this.props.posts; //reducer posts
             this.postData = this.props.postData; //reducer postData
+            this.alertData = this.props.alertData; //reducer alertData
 
             /**looking for the post element by the id, which is taken
              * from the url path with 'matchPath' (react-router-dom)
@@ -310,7 +305,12 @@ class PostPage extends Component {
             </div>
         );
 
-        return <PageTemplate>{ body }</PageTemplate>
+        const isAlert = this.alertData.isAlert || this.alertData.isConfirm;
+
+        return <PageTemplate>
+            { isAlert && <AlertBlock data={ this.alertData } /> }
+            { body }
+            </PageTemplate>
     }
 }
 
@@ -327,14 +327,9 @@ PostPage.getId = function( pathName ) {
 
 PostPage.getPostById = function( id, postArr ) {
     const innData = postArr.filter(el => {
-        if (el.id == id) {  //to equalize Num and String
-            log('the id is found...');
-            return el;
-        }
-        //return el.id == id;
+        return String(el.id) === id;
     });
-    /**returning the copy of the Post
-     * */
+
     return ( innData.length ) ? { ...innData[0] } : {};
 };
 
@@ -361,7 +356,7 @@ PostPage.preparePost = function( post, isComment ) {
     return innPost;
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(PostPage);
+export default connect( mapStateToProps, mapActionsToProps )(PostPage);
 
 /////dev
 function log(it) {

@@ -7,8 +7,10 @@ import PropTypes from 'prop-types';
 import Post from '../../components/Post';
 import Button from '../../components/Button';
 import LoadingAlert from '../../components/LoadingAlert';
-import userService from '../../utils/userService';
 import PageTemplate from '../../containers/PageTemplate';
+import AlertBlock from "../../components/AlertBlock";
+
+import userService from '../../utils/userService';
 import { mapStateToProps, mapActionsToProps } from './MainPage.redux';
 
 ///styles
@@ -18,6 +20,7 @@ class MainPage extends Component {
     constructor(props) {
         super(props);
         this.statePosts = {};
+        this.alertData = {};
         this.innData = []; //received array of posts from Receiver 'posts'
         this.sortBy = 'title';
         this.history = this.props.history;
@@ -42,11 +45,30 @@ class MainPage extends Component {
      * @param {object} target: event.target;
      * */
     handleClick({ target }) {
+        /**!!! ('sortByTitle', 'sortByDate') Click changes this.sortBy,
+         * which is not in the reducer and cannot re-render this;
+         * Solution: we show the alert by changing the reducer 'alertData'
+         * which will re-render the Component, after this.sortBy is changed;
+         * */
         const dataValue = target.dataset.value;
         const funcObj = {
             createPost: () => this.history.push('/posts/default'),
-            sortByTitle: () => this.sortBy = 'title',
-            sortByDate: () => this.sortBy = 'date',
+            sortByTitle: () => {
+                this.sortBy = 'title';
+                this.props.showAlert(`Sorting by ${this.sortBy}`, true, 1000);
+            },
+            sortByDate: () => {
+                this.sortBy = 'date';
+                this.props.showAlert(`Sorting by ${this.sortBy}`, true, 1000);
+                /*this.props.withConfirm('Please, choose', {
+                    positive: () => {
+                        log('this is positive func...');
+                    },
+                    negative: () => {
+                        log('this is negative func...');
+                    }
+                });*/
+            },
         };
         if (dataValue && dataValue in funcObj) {
             funcObj[dataValue]();
@@ -56,7 +78,7 @@ class MainPage extends Component {
     }
 
     initPosts() {
-        const comparePosts = (postA, postB) => {
+        const comparePosts = ( postA, postB ) => {
             if (this.sortBy === 'title') {
                 if (postA.title > postB.title) {
                     return 1
@@ -70,7 +92,7 @@ class MainPage extends Component {
                 const aDate = ( postA.date ) ? Date.parse(postA.date) : new Date();
                 const bDate = (postB.date) ? Date.parse(postB.date) : new Date();
 
-                return aDate - bDate;
+                return bDate - aDate;
             }
         };
         const sortedArr = [...this.statePosts.data].sort( comparePosts );
@@ -83,12 +105,18 @@ class MainPage extends Component {
     }
 
     render() {
-        log('rendering MainPage...');
-        this.statePosts = this.props.posts; //will be re-rendered
+        log('Main Page rendering...');
+        if ( this.props.posts.data.length ) {
+            this.statePosts = this.props.posts; //will be re-rendered
+            this.alertData = this.props.alertData;
+        }
 
         if ( this.statePosts.data && this.statePosts.data.length ) {
             this.innData = this.initPosts();
         }
+
+        const isAlert = this.alertData.isAlert || this.alertData.isConfirm;
+
         const body = (
             <div className={styles.topWrapper}>
                 <div className={styles.postHeadingBlock}>
@@ -124,6 +152,7 @@ class MainPage extends Component {
 
         return (
             <PageTemplate>
+                { isAlert && <AlertBlock data={ this.alertData } /> }
                 { body }
             </PageTemplate>
         );

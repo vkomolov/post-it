@@ -1,5 +1,5 @@
 import userConstants from '../constants/user.constants';
-//import { alertActions } from './alert.actions';
+import alertActions from './alert.actions';
 
 const userActions = {
     getAllPosts,
@@ -7,8 +7,6 @@ const userActions = {
     gotFailure,
     putData,
     getDefault,
-    giveAlert,
-    giveConfirm
 };
 export default userActions;
 
@@ -26,10 +24,10 @@ export default userActions;
     }
 
     function gotFailure(error) {
-        return {
-            type: userConstants.GETALL_PRODUCTS_FAILURE,
-            error
-        }
+        console.error('gotFailure...');
+        console.error(error);
+
+        return alertActions.showAlert( error, false );
     }
 
     function putData( data ) {
@@ -44,38 +42,4 @@ export default userActions;
             type: userConstants.GET_DEFAULT
         }
     }
-/**@description action of alerts to alertData Reducer
- * to show the Alert Component with the message
- * @param {string} message: will show the message of the alert
- * @param {boolean} isPositive: true - positive alert, false - negative alert;
- * @return {object}
- * */
-    function giveAlert({ message, isPositive }) {
-        return {
-            type: userConstants.ALERT,
-            data: {
-                message,
-                isPositive
-            }
-        }
-    }
 
-/**@description action of confirms to alertData Reducer
- * to show the confirm component with the message
- * @param {string} message: will show the message of the confirmation;
- * @param {string} what: puts the title of the confirmation to the Reducer;
- * When 'toConfirm' is true, the Confirm block will popup. If the confirmation
- * is confirmed, then 'toConfirm' sets to false, but 'confirmWhat' stays in the
- * reducer. When condition ('toConfirm': false, 'confirmWhat': 'something')is fired
- * then to make operation and to set 'confirmWhat' to null;
- * @return {object}
- * */
-    function giveConfirm({ message, what }) {
-        return {
-            type: userConstants.CONFIRM,
-            data: {
-                message,
-                what
-            }
-        }
-    }

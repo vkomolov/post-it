@@ -17,7 +17,6 @@
 %asideBar {
   max-width: 11em;
   padding: 0.5em;
-  border: 1px solid red;
 
   @include flex-box($flex-box-row-center...);
 
@@ -79,7 +78,7 @@
   }
 
   &:active {
-    transform: scale(1);
+    transform: translateY(0);
     @include box-shadow(1px, 3px);
   }
 }

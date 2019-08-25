@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 
 ///components
-
-///pages
 import PageTemplate from '../../containers/PageTemplate';
 
 ///styles
@@ -11,14 +9,15 @@ import styles from './NotFound.module.scss';
 
 class NotFound extends Component {
 
-    componentDidMount() {
-
+    handleBack() {
+        this.props.history.push('/');
     }
 
     render() {
         const body = (
             <div className={styles.topWrapper}>
-                NOT FOUND PAGE
+                <div className={styles.buttonBack} onClick={()=> this.handleBack()}>to Main Page</div>
+                <span>NOT FOUND PAGE</span>
             </div>
         );
 

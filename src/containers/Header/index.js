@@ -10,6 +10,7 @@ const Header = () => {
                 <span className={styles.heading}>Edit Posts</span>
             </div>
             <div className={styles.headerMain}>
+                <img src="" alt=""/>
                 HEADER MAIN BLOCK
             </div>
         </header>

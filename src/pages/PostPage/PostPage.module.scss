@@ -18,6 +18,11 @@
 
 .fixedContainer {
   @extend %fixedScrolledContainer;
+
+  border: 5px solid $foxy;
+  border-radius: 1.2em;
+  padding: 1.25em;
+  background-color: $white;
 }
 
 .postHeadingBlock {

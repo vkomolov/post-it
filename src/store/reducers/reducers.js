@@ -1,5 +1,4 @@
-//import alertConstants from "../../utils/constants/alert.constants";
-
+import alertConstants from "../constants/alert.constants";
 import userConstants from "../constants/user.constants";
 import {
     initialPost,
@@ -26,13 +25,6 @@ export function posts(innState = initialPostsState, {type, data}) {
                 data
             };
         },
-        [userConstants.GETALL_POSTS_FAILURE]: () => {
-            return {
-                ...state,
-                loaded: false,
-                error: data
-            };
-        }
     };
 
     return (type in typeObj) ? typeObj[type]() : state;
@@ -55,8 +47,8 @@ export function postData(innState = initialPost, {type, data}) {
         },
         [userConstants.GET_DEFAULT]: () => {
             return {
-                ...state,
                 isUpdate: false,
+                data: {}
             };
         },
     };
@@ -66,27 +58,28 @@ export function postData(innState = initialPost, {type, data}) {
 
 /**@description AlertReducer
  * */
-export function alertData(innState = initialAlertState, {type, data}) {
+export function alertData(innState = initialAlertState, { type, data }) {
     const state = {...innState};
     const typeObj = {
-        [userConstants.ALERT]: () => {
+        [alertConstants.SHOW_ALERT]: () => {
             return {
-                ...state,
-                toAlert: true,
-                alertWhat: data.what,
-                toConfirm: false,
-                confirmWhat: null,
-                message: data.message,
+                isAlert: true,
+                isConfirm: false,
+                data
             };
         },
-        [userConstants.CONFIRM]: () => {
+        [alertConstants.CONFIRM]: () => {
             return {
-                ...state,
-                toAlert: false,
-                alertWhat: null,
-                toConfirm: true,
-                confirmWhat: data.what,
-                message: data.message,
+                isAlert: false,
+                isConfirm: true,
+                data
+            };
+        },
+        [alertConstants.CLEAR]: () => {
+            return {
+                isAlert: false,
+                isConfirm: false,
+                data: {},
             };
         },
     };

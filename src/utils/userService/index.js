@@ -48,6 +48,8 @@ function fetchAllPosts( actionSuccess, actionError ) {
         })*/
 }
 
+/**@description it makes the request to API depending on the Post data
+ * */
 function updatePost( post ) {
     const urlPath = ( post.id === 'default' )
         ? urlSource + '/posts'
@@ -56,23 +58,23 @@ function updatePost( post ) {
     return funcs.initAxios(urlPath, postParams( post ));
 }
 
+/**@description it makes the request to API with DELETE method
+ * */
 function deletePost( postId ) {
     const urlPath = `${urlSource}/posts/${postId}`;
-    log('urlPath for deleting...');
-    log(urlPath);
 
     return funcs.initAxios(urlPath, delParams());
 }
 
+/**@description
+ * */
 function updateComments( dataId, postCommentsArr, prevCommentsArr=[] ) {
     let restComments = getRestObj(postCommentsArr, prevCommentsArr);
-
-    log('restComments...');
-    log(restComments);
-
     let toPost = [];
     let toPut = [];
     let toDel = [];
+
+    log('updating Comments...');
 
     /**if we have new comments for POST method...
      * */
@@ -85,12 +87,11 @@ function updateComments( dataId, postCommentsArr, prevCommentsArr=[] ) {
      * */
     if (restComments.toPutElems.length) {
         toPut = restComments.toPutElems.map((comment) => {
-            log('comment to PUT...');
-            log(comment);
+
             return funcs.initAxios(urlSource + '/comments/' + comment.id, commentsParams(dataId, comment.body, false));
         });
     }
-    /**if we have comments to be deleted in the API, then for DEL method...
+    /**if we have comments to be deleted by API, then using DELETE method...
      * */
     if (restComments.toDelElems.length) {
         //TODO API BLOCKS DEL by the server with axios
@@ -99,10 +100,8 @@ function updateComments( dataId, postCommentsArr, prevCommentsArr=[] ) {
                 delParams()
             );
         });
-        log('comments to delete from API list');
-        log(restComments.toDelElems);
     }
-    /**making promise all of axios to do, returning the arr of results
+    /**making promise all of axios to do, returning the Array of results
      * */
     return axios.all([
         ...toPost,
@@ -111,7 +110,7 @@ function updateComments( dataId, postCommentsArr, prevCommentsArr=[] ) {
     ]);
 }
 
-/**@description it add additional properties of defaultData to the data
+/**@description it adds additional properties of defaultData to the data
  * */
 function addDefaultPars( data={}, defaultData=defaultPost) {
     return {
@@ -120,24 +119,17 @@ function addDefaultPars( data={}, defaultData=defaultPost) {
     }
 }
 
+/**@description it adds additional properties of defaultData to the data
+ * */
 function getRestObj(targetArr, sourceArr) {
     let restObj = {
         toPostElems: [],
         toPutElems: [],
         toDelElems: [],
     };
-
     restObj.toPostElems = isIn(targetArr, sourceArr);
-    log('restObj.toPostElems...');
-    log(restObj.toPostElems);
-
     restObj.toDelElems = isIn(sourceArr, targetArr);
-    log('restObj.toDelElems...');
-    log(restObj.toDelElems);
-
     restObj.toPutElems = isInAndEqual(targetArr, sourceArr);
-    log('restObj.toPutElems...');
-    log(restObj.toPutElems);
 
     return restObj;
 
@@ -146,22 +138,19 @@ function getRestObj(targetArr, sourceArr) {
             let found = false;
 
             sourceArr.forEach((elem) => {
-                if (elem.id == el.id) {
+                if (String(elem.id) === String(el.id)) {
                     found = true;
-                    log('id founded in arr...');
                 }
             });
-            if (!found) {
-                log('id not found in arr...');
-                return el;
-            }
+
+            return (!found) && el;
         });
     }
     function isInAndEqual( targetArr, sourceArr ) {
         return targetArr.filter( el => {
             let isDiff = false;
             sourceArr.forEach((elem) => {
-                if (elem.id == el.id) {
+                if (String(elem.id) === String(el.id)) {
                     log('equal comments by id...');
                     log('elem.body');
                     log(elem.body);
@@ -179,8 +168,6 @@ function getRestObj(targetArr, sourceArr) {
         });
     }
 }
-
-
 
 /////dev
 function log(it) {

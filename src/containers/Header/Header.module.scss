@@ -4,7 +4,6 @@
 ///@import "../../utils/global_styles/fonts";
 
 .headerWrapper {
-  border: 1px dotted lightblue;
   @include flex-box($flex-box-row-center...);
 }
 
@@ -26,5 +25,5 @@
   padding: 20px;
   min-height: 70px;
   text-align: center;
-  border: 1px dotted green;
+  background: linear-gradient(90deg, $white 10%, $foxy);
 }
