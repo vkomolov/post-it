@@ -18,12 +18,12 @@
     @include flex-box($flex-box-row-center...);
 
     transform: scale(0);
-    width: 280px;
-    height: 190px;
-    padding: 10px;
+    width: 380px;
+    height: 200px;
+    padding: 30px;
     border: 3px solid $white;
     border-radius: 12px;
-    color: $violet;
+    color: $blueDark;
     background-color: $greyLightest;
     @include init-font(18px, 700);
     //@include box-shadow(4px, 6px, $blueDark);
@@ -34,7 +34,7 @@
     animation: scaleUpZero 0.5s ease-in-out forwards;
 
     &.negative {
-      background-color: $reddy;
+      background-color: $reddyLight;
     }
 
     .buttonsWrapper {

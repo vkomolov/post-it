@@ -10,28 +10,36 @@ export const mapStateToProps = (state) => {
 
 export const mapActionsToProps = (dispatch) => {
     return {
-        gotSuccess: ( data, callBacks={} ) => {
+        gotSuccess: ( data, callBacks=[] ) => {
             dispatch(userActions.gotSuccess( data ));
 
-            if( Object.keys(callBacks).length ) {
-                for ( let callBack in callBacks ) {
-                    if (typeof callBacks[callBack] === 'function') {
-                        callBacks[callBack]();
+            if( callBacks.length ) {
+                callBacks.forEach( cb => {
+                    if (typeof cb === 'function') {
+                        cb();
                     }
-                }
+                });
             }
         },
         getAllPosts: () => {
             dispatch(userActions.getAllPosts())
         },
-        gotFailure: (error) => {
-            dispatch(userActions.gotFailure(error))
+        gotFailure: ( error, callBacks=[] ) => {
+            dispatch(userActions.gotFailure( error ));
+            dispatch(alertActions.showAlert( error.toString(), false ));
+
+            if( callBacks.length ) {
+                callBacks.forEach( cb => {
+                    if (typeof cb === 'function') {
+                        cb();
+                    }
+                });
+            }
         },
         showAlert: ( message, isPositive=true, delayHide=0 ) => {
+            log('showing alert');
             dispatch(alertActions.showAlert( message, isPositive ));
             if ( +delayHide > 0 ) {
-                log('delay with' + delayHide);
-
                 setTimeout(()=> dispatch(alertActions.clear()), +delayHide);
             }
         },

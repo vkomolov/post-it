@@ -37,11 +37,17 @@ class PostPage extends Component {
         /**if in the 'posts' reducer the list of Posts is not fetched, then
          * to fetch all Posts and update the 'posts' reducer with the list
          * in case the Page is reached from the url path, without the Main Page;
+         * to alert notification on update with Array 'callBacks'
          * */
-        if ( !this.props.posts.loaded && !this.props.posts.error ) {
+        if(!this.props.posts.loaded && !Object.keys(this.props.posts.error).length) {
+            const cbSuccess = [
+                () => this.props.showAlert( 'Load is successful...',
+                    true, 1500 ),
+            ];
+
             userService.fetchAllPosts(
-                this.props.gotSuccess,
-                this.props.gotFailure
+                ( data ) => this.props.gotSuccess( data, cbSuccess ),
+                ( error ) => this.props.gotFailure( error )
             );
         }
     }
@@ -126,26 +132,19 @@ class PostPage extends Component {
                             );
                         }).then(() => {
                       /**then: to make the path with 'postId' for the newly created Post,
-                       * then: to fetch all Posts (with the updated or newly created)
+                       * then: to fetch all Posts (with the updated or newly created posts)
                        * from API and to push 'this.history' with the proper Post path;
-                       * !!!When a new Post is created, it auto receives the id='default'...
-                       * When this new Post is POSTed to API, in response it receives
+                       * !!!When a new Post is created, it initially has the id='default'...
+                       * When this new Post is POSTed to API, then in response it receives
                        * the id ('postId') of this new Post, created by API;
                        * !!!In order to show the new Post by its id, we push history to
                        * new url location (from '/posts/default' to '/posts/${postId}')
                        * */
                             let path = '/posts/' + this.postId;
-                            const callBacks = {
-                                pushHistory: () => {
-                                    this.history.push( path );
-                                },
-                                /**it switches off the state 'isUpdate' of the reducer 'postData'
-                                 * */
-                                setDefault: () => {
-                                    log('setting getDefault...');
-                                    this.props.getDefault();
-                                }
-                            };
+                            const callBacks = [
+                                () => this.history.push( path ),
+                                () => this.props.getDefault()
+                            ];
 
                        /** when the Posts are updated at API, then to refetch all Posts
                         * and to push this.history to the proper path with 'postId'
@@ -242,14 +241,15 @@ class PostPage extends Component {
     }
 
     render() {
-        if ( this.props.posts.data.length ) {
-            this.statePosts = this.props.posts; //reducer posts
-            this.postData = this.props.postData; //reducer postData
-            this.alertData = this.props.alertData; //reducer alertData
+        log('rendering the PostPage...');
+        this.statePosts = this.props.posts; //reducer posts
+        this.postData = this.props.postData; //reducer postData
+        this.alertData = this.props.alertData; //reducer alertData
 
-            /**looking for the post element by the id, which is taken
-             * from the url path with 'matchPath' (react-router-dom)
-             * */
+        /**looking for the post element by the id, which is taken
+         * from the url path with 'matchPath' (react-router-dom)
+         * */
+        if ( this.statePosts.data && this.statePosts.data.length ) {
             this.innPost = this.initPost();
         }
 

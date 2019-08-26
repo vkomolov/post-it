@@ -32,8 +32,7 @@ function fetchAllPosts( actionSuccess, actionError ) {
             return setTimeout(() => actionSuccess( data ), 1000);
         })
         .catch(error => {
-            console.error(error);
-            actionError(error)
+            actionError( error )
         });
 
     ////SWITCHING TO FETCH

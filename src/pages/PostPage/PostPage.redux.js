@@ -11,19 +11,28 @@ export const mapStateToProps = ( state ) => {
 
 export const mapActionsToProps = ( dispatch ) => {
     return {
-        gotSuccess: ( data, callBacks={} ) => {
+        gotSuccess: ( data, callBacks=[] ) => {
             dispatch(userActions.gotSuccess( data ));
 
-            if( Object.keys(callBacks).length ) {
-                for ( let callBack in callBacks ) {
-                    if (typeof callBacks[callBack] === 'function') {
-                        callBacks[callBack]();
+            if( callBacks.length ) {
+                callBacks.forEach( cb => {
+                    if (typeof cb === 'function') {
+                        cb();
                     }
-                }
+                });
             }
         },
-        gotFailure: ( error ) => {
-            dispatch(alertActions.showAlert( error, false ))
+        gotFailure: ( error, callBacks=[] ) => {
+            dispatch(userActions.gotFailure( error ));
+            dispatch(alertActions.showAlert( error.toString(), false ));
+
+            if( callBacks.length ) {
+                callBacks.forEach( cb => {
+                    if (typeof cb === 'function') {
+                        cb();
+                    }
+                });
+            }
         },
         getAllPosts: () => {
             dispatch(userActions.getAllPosts())

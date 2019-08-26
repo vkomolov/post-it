@@ -31,11 +31,15 @@ class MainPage extends Component {
      * to fetch all Posts and update the 'posts' reducer with the list;
      * */
     componentDidMount() {
-        if(!this.props.posts.loaded && !this.props.posts.error) {
-            log('getAllPosts... from MainPage DidMount');
+        if(!this.props.posts.loaded && !Object.keys(this.props.posts.error).length) {
+            const cbSuccess = [
+                () => this.props.showAlert( 'API updated...',
+                    true, 1500 ),
+            ];
+
             userService.fetchAllPosts(
-                this.props.gotSuccess,
-                this.props.gotFailure
+                ( data ) => this.props.gotSuccess( data, cbSuccess ),
+                ( error ) => this.props.gotFailure( error )
             );
         }
     }
@@ -52,7 +56,10 @@ class MainPage extends Component {
          * */
         const dataValue = target.dataset.value;
         const funcObj = {
-            createPost: () => this.history.push('/posts/default'),
+            createPost: () => {
+                this.history.push('/posts/default');
+                this.props.showAlert('filling a new Post...', true, 1000);
+            },
             sortByTitle: () => {
                 this.sortBy = 'title';
                 this.props.showAlert(`Sorting by ${this.sortBy}`, true, 1000);
@@ -106,10 +113,8 @@ class MainPage extends Component {
 
     render() {
         log('Main Page rendering...');
-        if ( this.props.posts.data.length ) {
-            this.statePosts = this.props.posts; //will be re-rendered
-            this.alertData = this.props.alertData;
-        }
+        this.statePosts = this.props.posts; //will be re-rendered
+        this.alertData = this.props.alertData;
 
         if ( this.statePosts.data && this.statePosts.data.length ) {
             this.innData = this.initPosts();

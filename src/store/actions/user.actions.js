@@ -23,11 +23,11 @@ export default userActions;
         }
     }
 
-    function gotFailure(error) {
-        console.error('gotFailure...');
-        console.error(error);
-
-        return alertActions.showAlert( error, false );
+    function gotFailure( error ) {
+        return {
+            type: userConstants.GETALL_POSTS_ERROR,
+            data: error
+        }
     }
 
     function putData( data ) {

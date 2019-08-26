@@ -13,16 +13,23 @@ export function posts(innState = initialPostsState, {type, data}) {
     const typeObj = {
         [userConstants.GETALL_POSTS_REQUEST]: () => {
             return {
-                data: [],
                 loaded: false,
-                error: false,
+                error: {},
+                data: []
             };
         },
         [userConstants.GETALL_POSTS_SUCCESS]: () => {
             return {
                 loaded: true,
-                error: false,
+                error: {},
                 data
+            };
+        },
+        [userConstants.GETALL_POSTS_ERROR]: () => {
+            return {
+                loaded: false,
+                error: data,
+                data: []
             };
         },
     };

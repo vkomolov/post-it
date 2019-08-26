@@ -5,7 +5,7 @@ export const initialPost = {
 
 export const initialPostsState = {
     loaded: false,
-    error: false,
+    error: {},
     data: []
 };
 
