@@ -71,7 +71,7 @@ class PostPage extends Component {
                 createComment: () => {
                     log('creating default Comment...');
 
-                    /**creating the new Comment with the default properties
+                    /**creating a new Comment with the default properties
                      * and unique temporal id (from uuid);
                      * */
                     const comment = PostPage.preparePost(
@@ -101,6 +101,8 @@ class PostPage extends Component {
                     /**sending the updated Post to the reducer 'postData'
                      * */
                     this.props.putData( updated );
+                    this.props.showAlert('new Comment created...',
+                        true, 1000 );
                 },
                 savePost: () => {
                     /**if the Post has already changes and the reducer 'postData'

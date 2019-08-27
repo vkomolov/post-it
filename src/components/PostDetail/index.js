@@ -79,13 +79,20 @@ class PostDetail extends Component {
         let str = target.value.trim();
         let dataset = target.dataset.value;
         let updatedData = {};
+        let alert = false;
 
         if (dataset in this.activeData) {
             if (dataset !== 'comments') {
                 if (str !== target.value || !str.length) {
-                    target.value = ( str.length )
+/*                    target.value = ( str.length )
                         ? str
-                        : this.propsData[dataset];
+                        : this.propsData[dataset];*/
+                    if ( str.length ) {
+                        target.value = str;
+                    } else {
+                        target.value = this.propsData[dataset];
+                        alert = true;
+                    }
 
                     updatedData = {
                         ...this.activeData,
@@ -95,24 +102,27 @@ class PostDetail extends Component {
 
             } else {
                 const index = this.propsData[dataset].findIndex(el => {
-                    return el.id === target.id;
+                    return String(el.id) === target.id;
                 });
-                if (str !== target.value || !str.length) {
-                    if (str.length) {
+
+                if ( str !== target.value || !str.length ) {
+                    if ( str.length ) {
                         target.value = str;
                     } else {
                         if( this.propsData[dataset][index]
                             && this.propsData[dataset][index].body ) {
                             target.value = this.propsData[dataset][index].body;
+
                         } else {
                             target.value = defaultComment.body;
                         }
+                        alert = true;
                     }
 
                     updatedData = {
                         ...this.activeData,
                         [dataset]: this.activeData[dataset].map(el => {
-                            if ( el.id === target.id ) {
+                            if ( String(el.id) === target.id ) {
                                 el.body = target.value;
                             }
                             return el;
@@ -123,9 +133,13 @@ class PostDetail extends Component {
 
             /**@description dispatching the updated Data, setting
              * isUpdate: true
+             * if the default values are used, then to alert for default
              * */
             if (Object.keys(updatedData).length) {
                 this.props.putData( updatedData );
+                if ( alert ) {
+                    this.props.showAlert('Default values are used...', false, 1000);
+                }
             }
 
         } else {
@@ -159,7 +173,14 @@ class PostDetail extends Component {
             };
         }
         if (Object.keys(updatedData).length) {
-            this.props.putData(updatedData);
+            //this.props.putData(updatedData);
+            this.props.withConfirm('delete the Comment?', {
+                positive: () => {
+                    this.props.putData(updatedData);
+                    this.props.alertsClear();
+                },
+                negative: () => this.props.alertsClear(),
+            });
         }
     }
 
