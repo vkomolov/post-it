@@ -5,10 +5,6 @@ import { connect } from 'react-redux';
 ///components
 import TextArea from '../../components/TextArea';
 import { defaultComment } from '../../utils/userService/initialData';
-import userService from '../../utils/userService';
-
-import userActions from '../../store/actions/user.actions';
-import funcs from '../../utils/funcsCollection';
 
 import { mapStateToProps, mapActionsToProps } from './PostDetail.redux';
 
@@ -24,10 +20,6 @@ class PostDetail extends Component {
         this.handleText = this.handleText.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
         this.handleKey = this.handleKey.bind(this);
-    }
-
-    componentDidMount() {
-        //log('PostDetail did mount..');
     }
 
     /**@description it takes the value of the textarea, prepares and
@@ -185,7 +177,6 @@ class PostDetail extends Component {
     }
 
     render() {
-        //log('rendering PostDetail');
         const cbArr = {
             handleText: this.handleText,
             handleBlur: this.handleBlur,
@@ -270,6 +261,7 @@ class PostDetail extends Component {
 export default connect(mapStateToProps, mapActionsToProps)(PostDetail);
 
 /////dev
+/*
 function log(it) {
     console.log(it);
-}
+}*/

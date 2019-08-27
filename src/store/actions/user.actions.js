@@ -1,5 +1,4 @@
 import userConstants from '../constants/user.constants';
-import alertActions from './alert.actions';
 
 const userActions = {
     getAllPosts,

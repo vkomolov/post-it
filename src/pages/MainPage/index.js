@@ -1,7 +1,6 @@
 ///node_modules
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 ///components
 import Post from '../../components/Post';
@@ -58,7 +57,7 @@ class MainPage extends Component {
         const funcObj = {
             createPost: () => {
                 this.history.push('/posts/default');
-                this.props.showAlert('filling a new Post...', true, 1000);
+                this.props.showAlert('New Post created', true, 1000);
             },
             sortByTitle: () => {
                 this.sortBy = 'title';
@@ -67,14 +66,6 @@ class MainPage extends Component {
             sortByDate: () => {
                 this.sortBy = 'date';
                 this.props.showAlert(`Sorting by ${this.sortBy}`, true, 1000);
-                /*this.props.withConfirm('Please, choose', {
-                    positive: () => {
-                        log('this is positive func...');
-                    },
-                    negative: () => {
-                        log('this is negative func...');
-                    }
-                });*/
             },
         };
         if (dataValue && dataValue in funcObj) {
@@ -84,6 +75,10 @@ class MainPage extends Component {
         }
     }
 
+    /**@description it takes the Array of Posts and sorts it with account
+     * to the option
+     * @return {array} the Array of Components 'Post'
+     * */
     initPosts() {
         const comparePosts = ( postA, postB ) => {
             if (this.sortBy === 'title') {
@@ -112,7 +107,6 @@ class MainPage extends Component {
     }
 
     render() {
-        log('Main Page rendering...');
         this.statePosts = this.props.posts; //will be re-rendered
         this.alertData = this.props.alertData;
 
@@ -167,6 +161,7 @@ class MainPage extends Component {
 export default connect( mapStateToProps, mapActionsToProps )( MainPage );
 
 /////dev
+/*
 function log(it) {
     console.log(it);
-}
+}*/

@@ -59,10 +59,20 @@ function updatePost( post ) {
 
 /**@description it makes the request to API with DELETE method
  * */
-function deletePost( postId ) {
+function deletePost( postId, callBacks=[] ) {
     const urlPath = `${urlSource}/posts/${postId}`;
 
-    return funcs.initAxios(urlPath, delParams());
+    return funcs.initAxios(urlPath, delParams())
+        .then( res => {
+            if( callBacks.length ) {
+                callBacks.forEach( cb => {
+                    if (typeof cb === 'function') {
+                        cb();
+                    }
+                });
+            }
+            return res;
+        } );
 }
 
 /**@description

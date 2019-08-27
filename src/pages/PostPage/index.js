@@ -101,7 +101,7 @@ class PostPage extends Component {
                     /**sending the updated Post to the reducer 'postData'
                      * */
                     this.props.putData( updated );
-                    this.props.showAlert('new Comment created...',
+                    this.props.showAlert('New Comment created...',
                         true, 1000 );
                 },
                 savePost: () => {
@@ -109,53 +109,65 @@ class PostPage extends Component {
                      * property 'isActive' is true
                      * */
                     if ( this.postData.isUpdate ) {
-                        const prevCommentsArr = this.innPost.comments;
-                        const postCommentsArr = this.postData.data.comments;
+                        const initSave = () => {
+                            const prevCommentsArr = this.innPost.comments;
+                            const postCommentsArr = this.postData.data.comments;
 
-                    /**to fetch API with POST or PUT methods for updating or creating
-                     * the Post in the API by .updatePost(the state of reducer 'postData')
-                     * then: to take the postId of the newly created or updated Post
-                     * from the API response when OK;
-                     * */
-                        userService.updatePost(
-                            this.postData.data,
-                        ).then(({ data }) => {
-                            this.postId = String(data.id);
+                            /**to fetch API with POST or PUT methods for updating or creating
+                             * the Post in the API by .updatePost(the state of reducer 'postData')
+                             * then: to take the postId of the newly created or updated Post
+                             * from the API response when OK;
+                             * */
+                            userService.updatePost(
+                                this.postData.data,
+                            ).then(({ data }) => {
+                                this.postId = String(data.id);
 
-                     /**then: to POST or PUT the comments with the postId by checking the
-                      * differences in the original and updated comments and fetching the proper
-                      * method for newly created or already existing comments of the Post;
-                      * '.updateComments' returns the array of responses from Promise.all results;                      *
-                      * * */
-                            return userService.updateComments(
-                                this.postId,
-                                postCommentsArr,
-                                prevCommentsArr
-                            );
-                        }).then(() => {
-                      /**then: to make the path with 'postId' for the newly created Post,
-                       * then: to fetch all Posts (with the updated or newly created posts)
-                       * from API and to push 'this.history' with the proper Post path;
-                       * !!!When a new Post is created, it initially has the id='default'...
-                       * When this new Post is POSTed to API, then in response it receives
-                       * the id ('postId') of this new Post, created by API;
-                       * !!!In order to show the new Post by its id, we push history to
-                       * new url location (from '/posts/default' to '/posts/${postId}')
-                       * */
-                            let path = '/posts/' + this.postId;
-                            const callBacks = [
-                                () => this.history.push( path ),
-                                () => this.props.getDefault()
-                            ];
+                                /**then: to POST or PUT the comments with the postId by checking the
+                                 * differences in the original and updated comments and fetching the proper
+                                 * method for newly created or already existing comments of the Post;
+                                 * '.updateComments' returns the array of responses from Promise.all results;                      *
+                                 * * */
+                                return userService.updateComments(
+                                    this.postId,
+                                    postCommentsArr,
+                                    prevCommentsArr
+                                );
+                            }).then(() => {
+                                /**then: to make the path with 'postId' for the newly created Post,
+                                 * then: to fetch all Posts (with the updated or newly created posts)
+                                 * from API and to push 'this.history' with the proper Post path;
+                                 * !!!When a new Post is created, it initially has the id='default'...
+                                 * When this new Post is POSTed to API, then in response it receives
+                                 * the id ('postId') of this new Post, created by API;
+                                 * !!!In order to show the new Post by its id, we push history to
+                                 * new url location (from '/posts/default' to '/posts/${postId}')
+                                 * */
+                                let path = '/posts/' + this.postId;
+                                const callBacks = [
+                                    () => this.history.push( path ),
+                                    () => this.props.getDefault(),
+                                    () => this.props.showAlert('The Post is saved', true, 1500),
+                                ];
 
-                       /** when the Posts are updated at API, then to refetch all Posts
-                        * and to push this.history to the proper path with 'postId'
-                        * */
-                            return userService.fetchAllPosts(
-                                ( data ) => this.props.gotSuccess( data, callBacks ),
-                                this.props.gotFailure
-                            );
-                        } );
+                                /** when the Posts are updated at API, then to refetch all Posts
+                                 * and to push this.history to the proper path with 'postId'
+                                 * */
+                                return userService.fetchAllPosts(
+                                    ( data ) => this.props.gotSuccess( data, callBacks ),
+                                    this.props.gotFailure
+                                );
+                            } );
+                        };
+
+                        this.props.withConfirm('Saving Post?', {
+                            positive: () => {
+                                //this.props.alertsClear();
+                                this.props.showAlert( 'Saving in process...' );
+                                initSave();
+                            },
+                            negative: () => this.props.alertsClear(),
+                        });
                     }
                 },
                 /**it switches off the state 'isUpdate' of the reducer 'postData'
@@ -174,12 +186,22 @@ class PostPage extends Component {
                 deletePost: () => {
                     if (this.urlId !== 'default') {
                         log('deleting...');
-                        return userService.deletePost( this.urlId )
-                            .then(() => {
-                                this.props.getAllPosts();
-                                this.history.push('/');
-                                this.props.getDefault();
-                            });
+                        const initDelete = () => {
+                            const callBacks = [
+                                this.props.getAllPosts(),
+                                this.history.push('/'),
+                                this.props.getDefault(),
+                            ];
+                            userService.deletePost( this.urlId, callBacks );
+                        };
+
+                        this.props.withConfirm('To delete the Post?', {
+                            positive: () => {
+                                this.props.alertsClear();
+                                initDelete();
+                            },
+                            negative: () => this.props.alertsClear()
+                        });
                     }
                 },
             };
@@ -243,7 +265,6 @@ class PostPage extends Component {
     }
 
     render() {
-        log('rendering the PostPage...');
         this.statePosts = this.props.posts; //reducer posts
         this.postData = this.props.postData; //reducer postData
         this.alertData = this.props.alertData; //reducer alertData

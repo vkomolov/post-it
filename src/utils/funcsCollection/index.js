@@ -142,7 +142,7 @@ function deepEqual (obj1, obj2){
     return JSON.stringify(obj1)===JSON.stringify(obj2);
 }
 
-/**@description giving condition to return activeClassName (using carring)
+/**@description giving condition to return activeClassName
  * */
 function activateClassName ( condition, activeClassName, className ) {
     return ( className ) => ( condition ) ? `${className} ${activeClassName}` : className;

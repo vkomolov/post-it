@@ -4,7 +4,7 @@ import React from 'react';
 ///styles
 import styles from './TextArea.module.scss';
 
-export default function TextArea(props) {
+export default function TextArea( props ) {
     const { dataValue, id, cbArr, text } = props;
     let classCss = '';
     const cssObj = {

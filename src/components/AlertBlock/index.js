@@ -39,8 +39,6 @@ function AlertBlock({ data }) {
         );
     }
 
-    log('returning the AlertBlock');
-
     return (
         <div className={styles.topWrapper} >
             <div className={ cssStyles }>
@@ -54,6 +52,6 @@ function AlertBlock({ data }) {
 export default AlertBlock;
 
 /////dev
-function log(it) {
+/*function log(it) {
     console.log(it);
-}
+}*/

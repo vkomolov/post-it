@@ -28,7 +28,7 @@
 
       &:hover {
         cursor: pointer;
-        background-color: $greyNorm;
+        background-color: $violetLight;
         transform: translateY(-0.26em);
         @include box-shadow(0.15em, 0.3em);
       }
