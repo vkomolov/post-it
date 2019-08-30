@@ -9,30 +9,29 @@
 
 .headingWrapper {
   font-family: "StardosStencil-Regular", sans-serif;
-  font-size: 1rem;
 
   .heading {
     color: $foxy;
-    letter-spacing: 2px;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
-    @include init-font(44px, 700);
-    @include text-shadow(2px, 3px);
+    @include init-font(3em, 700);
+    @include text-shadow(0.05em, 0.08em);
   }
 }
 
 .headerMain {
   flex-grow: 1;
-  padding: 20px;
-  min-height: 70px;
+  padding: 1.5em;
+  min-height: 5em;
   text-align: center;
   background: linear-gradient(90deg, $white 10%, $foxy);
 
   h2 {
     color: $white;
-    letter-spacing: 2px;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     text-align: right;
-    @include init-font(22px, 700);
-    @include text-shadow(2px, 3px);
+    @include init-font(1.5em, 700);
+    @include text-shadow(0.05em, 0.08em);
   }
 }

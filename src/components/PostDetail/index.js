@@ -165,7 +165,6 @@ class PostDetail extends Component {
             };
         }
         if (Object.keys(updatedData).length) {
-            //this.props.putData(updatedData);
             this.props.withConfirm('delete the Comment?', {
                 positive: () => {
                     this.props.putData(updatedData);
@@ -229,7 +228,7 @@ class PostDetail extends Component {
             : innId;
 
         return (
-            <div className={styles.postWrapper}>
+            <form name= 'postForm' className={styles.postWrapper}>
                 <h3 className={styles.headingId}>Post ID: { showId }</h3>
                 <h4 className={styles.subHeading}>Creation Date:
                     <span className={styles.dateIndicate}>
@@ -254,7 +253,7 @@ class PostDetail extends Component {
                 <hr className={styles.hr}/>
 
                 { commentsArr }
-            </div>
+            </form>
         );
     }
 }

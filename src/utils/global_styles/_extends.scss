@@ -4,43 +4,56 @@
 ///////EXTENDS///////
 
 %topWrapper {
-  font-size: 1rem;
-  padding: 1.25em;
+  //font-size: 1rem;
+  padding: 1.7em 0;
 
   @include flex-box($flex-box-row-center...);
 
-  @media screen and (max-width: 768px) {
+  /*@media screen and (max-width: 1024px) {
     font-size: 0.9em;
   }
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.8em;
+  }*/
 }
 
 %asideBar {
-  max-width: 11em;
-  padding: 0.5em;
+  flex-basis: 11em;
 
-  @include flex-box($flex-box-row-center...);
+  @include flex-box($flex-box-row-left...);
 
   @media screen and (max-width: 768px) {
-    max-width: 100%;
+    flex-basis: 100%;
   }
 }
 
 %contentBar {
   flex-basis: 450px;
   flex-grow: 1;
-  padding: 1.25em 0.6em;
-  margin: 0 1.25em;
+  padding: 1em 0.6em;
+  margin-left: 1.25em;
+
+  @media screen and (max-width: 768px) {
+    margin: 0;
+    padding: 1em 0;
+  }
 }
 
 %fixedScrolledContainer {
   position: relative;
   min-width: 140px;
   height: 700px;
+  border: 5px solid $foxy;
+  border-radius: 1.2em;
+  padding: 1em;
+  background-color: $white;
 
-/*  @include flex-box($flex-box-col-center...);
-  align-items: flex-start;
-  flex-flow: column nowrap;*/
   @include scroll-init(5px, $blueDark, $foxyGrey);
+
+  @media screen and (max-width: 768px) {
+    padding: 0.7em;
+  }
 }
 
 %postHeadingBlock {

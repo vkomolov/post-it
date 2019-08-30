@@ -162,7 +162,6 @@ class PostPage extends Component {
 
                         this.props.withConfirm('Saving Post?', {
                             positive: () => {
-                                //this.props.alertsClear();
                                 this.props.showAlert( 'Saving in process...' );
                                 initSave();
                             },
@@ -242,18 +241,13 @@ class PostPage extends Component {
                     this.history.push('/');
                     this.props.getDefault();
                 }
-                /**@description deepClone gives the copies of comments, before they
-                 * are changed: will be used for defaults with 'undo' and searching
-                 * the differences in comments for PUT or POST options
-                 */
-                //return funcs.deepClone(innPost);
             } else {
                 /**adding default properties to the new empty Post
                  * */
                 innPost = PostPage.preparePost(userService.addDefaultPars());
             }
         } else {
-            //TO DO ALERT
+            this.props.showAlert( 'Waiting for the Server...' );
             console.error('waiting for the statePosts data ...');
         }
 
@@ -265,6 +259,10 @@ class PostPage extends Component {
     }
 
     render() {
+        /**putting data to the Constructor in order to have the data
+         * accessible for the other Class funcs...
+         * The data will be re-rendered and up-to-date
+         * */
         this.statePosts = this.props.posts; //reducer posts
         this.postData = this.props.postData; //reducer postData
         this.alertData = this.props.alertData; //reducer alertData
@@ -319,7 +317,7 @@ class PostPage extends Component {
                 <div className={styles.contentBar}>
                     <div className={styles.fixedContainer}>
                         {
-                            (Object.keys( this.innPost ).length)
+                            (Object.keys( this.innPost ).length > 0)
                                 ? <PostDetail data={ this.innPost } />
                                 : <LoadingAlert />
                         }

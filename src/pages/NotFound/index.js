@@ -8,6 +8,10 @@ import PageTemplate from '../../containers/PageTemplate';
 import styles from './NotFound.module.scss';
 
 class NotFound extends Component {
+    componentDidMount() {
+        //for github pages
+        setTimeout(()=> this.props.history.push('/'), 1000);
+    }
 
     handleBack() {
         this.props.history.push('/');
