@@ -50,18 +50,18 @@ export const mapActionsToProps = ( dispatch ) => {
          * to the initial state;
          * */
         getAllPosts: () => {
-            dispatch(userActions.getAllPosts())
+            return dispatch(userActions.getAllPosts())
         },
         /**@description it patches the data to the Reducer 'postData';         *
          * */
         putData: ( data ) => {
-            dispatch(userActions.putData( data ));
+            return dispatch(userActions.putData( data ));
         },
         /**@description it resets the Reducer 'posts' with the default
          * values; loaded: false
          * */
         getDefault: () => {
-            dispatch(userActions.getDefault());
+            return dispatch(userActions.getDefault());
         },
         /**@description it dispatches the alertData Reducer to alert
          * the message;

@@ -62,12 +62,16 @@ function updatePost( post ) {
 function deletePost( postId, callBacks=[] ) {
     const urlPath = `${urlSource}/posts/${postId}`;
 
-    return funcs.initAxios(urlPath, delParams())
+    funcs.initAxios(urlPath, delParams())
         .then( res => {
             if( callBacks.length ) {
                 callBacks.forEach( cb => {
                     if (typeof cb === 'function') {
+                        log('cb is func');
+                        log(cb);
                         cb();
+                    } else {
+                        log('cb is not func');
                     }
                 });
             }

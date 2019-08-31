@@ -187,9 +187,9 @@ class PostPage extends Component {
                         log('deleting...');
                         const initDelete = () => {
                             const callBacks = [
-                                this.props.getAllPosts(),
-                                this.history.push('/'),
-                                this.props.getDefault(),
+                                () => this.props.getAllPosts(),
+                                () => this.history.push('/'),
+                                () => this.props.getDefault(),
                             ];
                             userService.deletePost( this.urlId, callBacks );
                         };
