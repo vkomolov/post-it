@@ -67,11 +67,7 @@ function deletePost( postId, callBacks=[] ) {
             if( callBacks.length ) {
                 callBacks.forEach( cb => {
                     if (typeof cb === 'function') {
-                        log('cb is func');
-                        log(cb);
                         cb();
-                    } else {
-                        log('cb is not func');
                     }
                 });
             }
