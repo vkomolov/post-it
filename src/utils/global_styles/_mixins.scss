@@ -42,7 +42,9 @@ $flex-box-col-center: column, center, center;
 
   img {
     display: block;
-    #{$dimension_param}: 100%;
+    max-width: 100%;
+    max-height: 100%;
+
     @if($dimension_param == 'width') {
       height: auto;
     }

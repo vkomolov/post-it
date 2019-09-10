@@ -4,43 +4,35 @@
 @import "../../utils/global_styles/animations";
 ///@import "../../global_styles/fonts";
 
-.topWrapper {
+.alertBlock {
   position: absolute;
-  z-index: 100;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-
+  z-index: 100;
+  transform: scale(0);
   @include flex-box($flex-box-row-center...);
+  @include init-font(18px, 700);
 
-  .alertBlock {
-    @include flex-box($flex-box-row-center...);
+  width: 380px;
+  height: 200px;
+  padding: 30px;
+  border: 3px solid $white;
+  border-radius: 12px;
+  color: $blueDark;
+  background-color: $greyLightest;
+  box-shadow: 3px 3px 6px $blueDark,
+  inset -1px -1px 4px $greyNorm,
+  inset 1px 1px 4px $greyNorm;
 
-    transform: scale(0);
-    width: 380px;
-    height: 200px;
-    padding: 30px;
-    border: 3px solid $white;
-    border-radius: 12px;
-    color: $blueDark;
-    background-color: $greyLightest;
-    @include init-font(18px, 700);
-    //@include box-shadow(4px, 6px, $blueDark);
-    box-shadow: 3px 3px 6px $blueDark,
-                inset -1px -1px 4px $greyNorm,
-                inset 1px 1px 4px $greyNorm;
+  animation: scaleUpZero 0.5s ease-in-out forwards;
 
-    animation: scaleUpZero 0.5s ease-in-out forwards;
+  &.negative {
+    background-color: $reddyLight;
+  }
 
-    &.negative {
-      background-color: $reddyLight;
-    }
-
-    .buttonsWrapper {
-      text-align: center;
-      padding: 5px;
-    }
+  .buttonsWrapper {
+    text-align: center;
+    padding: 5px;
   }
 }
 

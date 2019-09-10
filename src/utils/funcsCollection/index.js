@@ -7,9 +7,14 @@ const funcs = {
     deepClone,
     initFetch,
     initAxios,
+    setLocalStorage,
     equalCols,
     deepEqual,
-    activateClassName
+    activateClassName,
+    randomize,
+    absDomOpen,
+    absDomClose,
+    getAbsCenter
 };
 export default funcs;
 
@@ -146,5 +151,45 @@ function deepEqual (obj1, obj2){
  * */
 function activateClassName ( condition, activeClassName, className ) {
     return ( className ) => ( condition ) ? `${className} ${activeClassName}` : className;
+}
+
+function randomize(max, min) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function absDomOpen(obj) {     //to open obj in DOM abs center
+    document.body.appendChild(obj);
+    obj.style.position = "absolute";
+    if (document.documentElement.clientHeight <= obj.offsetHeight) {
+        obj.style.top = 20 + document.documentElement.scrollTop + "px";
+    }
+    else {
+        obj.style.top = document.documentElement.clientHeight / 2 + document.documentElement.scrollTop
+            - obj.offsetHeight / 2 + "px";
+    }
+    obj.style.left = document.documentElement.clientWidth / 2 - obj.offsetWidth / 2 + "px";
+}
+
+function absDomClose(obj) { //to close obj in DOM
+    var remove = function () {
+        if (!!obj.parentNode) {   //if exists in DOM
+            obj.parentNode.removeChild(obj);
+            obj = null;
+        }
+    };
+    setTimeout(remove, 400);
+}
+
+function getAbsCenter( domEl ) {
+    if (document.documentElement.clientHeight <= domEl.offsetHeight) {
+        domEl.style.top = 20 + document.documentElement.scrollTop + "px";
+    }
+    else {
+        domEl.style.top = document.documentElement.clientHeight / 2
+            + document.documentElement.scrollTop
+            - domEl.offsetHeight / 2 + "px";
+    }
+    domEl.style.left = document.documentElement.clientWidth / 2
+        - domEl.offsetWidth / 2 + "px";
 }
 

@@ -50,6 +50,7 @@ class PostPage extends Component {
                 ( error ) => this.props.gotFailure( error )
             );
         }
+
     }
 /**@description one handleClick for all clickables which have the data-value
  * attribute;

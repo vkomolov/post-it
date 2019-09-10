@@ -9,13 +9,13 @@
 
   @include flex-box($flex-box-row-center...);
 
-  /*@media screen and (max-width: 1024px) {
+  @media screen and (max-width: 1024px) {
     font-size: 0.9em;
   }
 
   @media screen and (max-width: 768px) {
     font-size: 0.8em;
-  }*/
+  }
 }
 
 %asideBar {
