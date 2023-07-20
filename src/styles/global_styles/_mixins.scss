@@ -21,7 +21,7 @@ $flex-box-col-center: column, center, center;
   align-items: $align;
 }
 
-@mixin transition($property: all, $time: 0.2s) {
+@mixin transition($property: all, $time: 0.15s) {
   transition: $property $time ease-in-out;
 }
 

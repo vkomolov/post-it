@@ -4,8 +4,24 @@
 @import "../../styles/global_styles/_animations.scss";
 
 .posts-wrapper {
-  border: 1px dotted darkblue;
+  border: 2px dashed purple;
+  width: 100%;
+  //giving height: 0 with flex-grow: 1 gives the fixed height for .posts-wrapper within the height of the parent
+  // AsideBar (which has flex-direction: column, align-items: scratch). It gives possibility to scroll .posts-wrapper
+  //without fixing height with the particular value.
+  height: 0;
   flex-grow: 1;
+  padding: 0.3em 0;
 
-  @include flex-box($flex-box-col-top...);
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: stretch;
+  align-items: center;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+
+  //@include scroll-init(0.5em, $foxy, $foxy);
 }

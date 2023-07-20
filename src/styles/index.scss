@@ -41,6 +41,9 @@ body:before {
 
   @include init-font(1rem, 400);
   @include flex-box($flex-box-col-top...);
+
+  align-items: stretch;
+  flex-wrap: nowrap;
 }
 
 .button {
@@ -65,15 +68,7 @@ body:before {
 }
 
 .icon {
-  font-size: 2.5em;
-
-  @include text-shadow(0.03em, 0.1em);
-  @include transition();
-
-  &:hover {
-    cursor: pointer;
-    @include text-shadow(0.05em, 0.15em);
-  }
+  @extend %icon;
 
   &_login {
     color: $greenDarker;
@@ -87,8 +82,7 @@ body:before {
 
   &_add {
     color: $greenDarker;
-
-    @include init-font(3.5em, 600);
+    font-weight: 600;
 
     &:hover {
       cursor: pointer;
@@ -100,14 +94,22 @@ body:before {
   &_delete {
     color: $greenDarker;
 
-    @include init-font(2.7em, 600);
-
     &:hover {
       cursor: pointer;
       color: $foxy;
       @include text-shadow(0.04em, 0.13em);
     }
   }
+
+  &_raiting {
+    @include init-font(1.2em, 500);
+
+    &.icon_foxy {
+      color: $foxy;
+    }
+  }
 }
+
+
 
 

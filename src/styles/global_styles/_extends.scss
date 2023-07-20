@@ -29,3 +29,14 @@
   }
 }
 
+%icon {
+  @include init-font(2.8em, 500);
+  @include text-shadow(0.03em, 0.1em);
+  @include transition();
+
+  &:hover {
+    cursor: pointer;
+    @include text-shadow(0.05em, 0.15em);
+  }
+}
+

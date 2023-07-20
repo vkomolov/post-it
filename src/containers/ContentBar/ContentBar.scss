@@ -6,7 +6,11 @@
 @import '../../styles/global_styles/_fonts.scss';
 
 .content-bar {
+  padding: 0.3em;
   border: 1px solid darkblue;
   flex-grow: 1;
-  @include flex-box($flex-box-row-center-wrap...);
+  height: 100%;
+
+  @include flex-box($flex-box-row-left-wrap...);
+  align-items: flex-start;
 }
