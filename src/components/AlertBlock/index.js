@@ -1,61 +1,60 @@
-///node_modules
-import React, { Component } from 'react';
+import React, { useMemo } from "react";
+import * as PropTypes from "prop-types";
+import { nanoid } from "@reduxjs/toolkit";
 
-import funcs from '../../utils/funcsCollection';
-///styles
-import styles from './AlertBlock.module.scss';
+import "./AlertBlock.scss";
+import loadingIcon from "../../asset/img/loadingIcon.svg";
 
-class AlertBlock extends Component {
-    componentDidMount() {
-        const domAlert = document.getElementById('alert-block');
-        funcs.getAbsCenter( domAlert );
-    }
-    render() {
-        const { isConfirm, data: { message, isPositive, callbacks }
-        } = this.props.data;
-        let cssStyles = ( isPositive )
-            ? styles.alertBlock :
-            `${styles.alertBlock} ${styles.negative}`;
+export default function AlertBlock({ alertState }) {
+    const { alertType, alertContent } = alertState;
 
-        let confirmBlock = {};
+    const alertElement = useMemo(() => {
+        if (!alertType) return null;
 
-        if ( isConfirm && Object.keys(callbacks).length ) {
-            const { positive, negative } = callbacks;
-
-            if (typeof positive !== 'function'
-                || typeof negative !== 'function') {
-                throw new Error('no positive or negative callbacks found... in confirmation');
-            }
-
-            cssStyles = styles.alertBlock;
-
-            confirmBlock = (
-                <div className={styles.buttonsWrapper}>
-                    <div className={ styles.bttn }
-                         onClick={() => positive()}
-                    >
-                        Confirm
-                    </div>
-                    <div className={ styles.bttnCancel }
-                         onClick={() => negative()}
-                    >
-                        Cancel
-                    </div>
-                </div>
-            );
+        //only two options for now
+        const classNameOut = alertType === "ALERT_ERROR" ? "alert-error" : "alert-loading";
+        //looking for the alert text content...
+        let contentArr = [];
+        if (alertContent.length) {
+            contentArr = alertContent.map(text => (
+                <span className={ classNameOut } key={nanoid()} >
+                    { text }
+                </span>
+            ));
         }
+
         return (
-            <div className={ cssStyles } id="alert-block">
-                <h3>{ message }</h3>
-                { !!Object.keys(confirmBlock).length && confirmBlock }
+            <div id="alert-block">
+                <div
+                    className="alert-content-block"
+                    role="alert"
+                >
+                    { classNameOut === "alert-loading"
+                    && <img src={loadingIcon} alt="loading" /> }
+                    { contentArr }
+                </div>
             </div>
         );
-    }
+    }, [alertType, alertContent]);
+
+    return alertElement;
 }
 
-export default AlertBlock;
+AlertBlock.propTypes = {
+    alertState: PropTypes.shape({
+        alertType: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.oneOf([null])
+        ]),
+        alertContent: PropTypes.array
+    })
+};
 
-/////dev
-/*function log(it) {
-    console.log(it);
-}*/
+
+
+/////////////////   dev
+//  eslint-disable-next-line no-unused-vars
+function log(it, comments="value: ") {
+    console.log(comments, it);
+}
+

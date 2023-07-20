@@ -1,0 +1,10 @@
+@import "../styles/global_styles/reset";
+@import '../styles/global_styles/_variables.scss';
+@import '../styles/global_styles/_mixins.scss';
+@import '../styles/global_styles/_extends.scss';
+@import '../styles/global_styles/_animations.scss';
+@import '../styles/global_styles/_fonts.scss';
+
+main {
+  @include flex-box($flex-box-row-center-nowrap...);
+}

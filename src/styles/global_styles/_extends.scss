@@ -1,0 +1,31 @@
+@import "mixins";
+@import "variables";
+
+///////EXTENDS///////
+
+%button {
+  outline: none;
+  min-width: 6em;
+  min-height: 2.7em;
+  border: 0.15em solid $white;
+  border-radius: 0.5em;
+  color: $white;
+  background-color: $foxy;
+  letter-spacing: 0.05em;
+  transition: all .08s ease-in-out;
+
+  @include init-font(1.13em, 500);
+  @include text-shadow(0.03em, 0.1em);
+  @include box-shadow(0.12em, 0.2em);
+
+  &:hover {
+    transform: scale(1.03);
+    @include box-shadow(0.13em, 0.22em);
+  }
+
+  &:active {
+    transform: scale(1);
+    box-shadow: none;
+  }
+}
+

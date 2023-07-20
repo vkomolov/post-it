@@ -1,8 +1,9 @@
 ///node_modules
-import React from 'react';
+//import React from "react";
 
 ///styles
-import styles from './Button.module.scss';
+/*
+import "./Button.scss";
 
 export default function Button ({ dataValue, handle, active=false, children }) {
     let classCss = '';
@@ -37,4 +38,4 @@ export default function Button ({ dataValue, handle, active=false, children }) {
             { children }
         </div>
     );
-}
+}*/

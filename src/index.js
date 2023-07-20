@@ -1,27 +1,14 @@
-///node_modules
-import React from 'react';
-import { render } from 'react-dom';
-import { Router, Route, Switch } from 'react-router';
-import { Provider } from 'react-redux';
+import React from "react";
+import * as ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 
-import store from './store';
-import history from './routes/history';
-import routes from './routes';
+import App from "./App";
+import "./styles/index.scss";
+import store from "./store";
 
-///styles
-import './utils/global_styles/index.scss';
 
-const routesArr = routes.map(({path, exact, component, name}) => {
-    return <Route key={ name }{...{path, exact, component}} />
-});
-
-render(
+ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={ store }>
-        <Router history={ history }>
-            <Switch>
-                { routesArr }
-            </Switch>
-        </Router>
-    </Provider>,
-    document.getElementById("root")
+      <App />
+    </Provider>
 );
