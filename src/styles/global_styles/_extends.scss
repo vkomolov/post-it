@@ -5,13 +5,13 @@
 
 %button {
   outline: none;
-  min-width: 6em;
+  min-width: 5.8em;
   min-height: 2.7em;
   border: 0.15em solid $white;
   border-radius: 0.5em;
   color: $white;
   background-color: $foxy;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   transition: all .08s ease-in-out;
 
   @include init-font(1.13em, 500);

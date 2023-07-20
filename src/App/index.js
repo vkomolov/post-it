@@ -9,7 +9,7 @@ export default function App() {
     return (
       <>
         <Header />
-        <main>
+        <main className="main-wrapper">
             <AsideBar />
             <ContentBar />
         </main>

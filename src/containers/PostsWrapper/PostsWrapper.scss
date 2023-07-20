@@ -3,7 +3,9 @@
 @import "../../styles/global_styles/_extends.scss";
 @import "../../styles/global_styles/_animations.scss";
 
-.aside-bar {
-  border: 1px solid red;
+.posts-wrapper {
+  border: 1px dotted darkblue;
+  flex-grow: 1;
+
   @include flex-box($flex-box-col-top...);
 }

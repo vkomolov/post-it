@@ -40,6 +40,7 @@ body:before {
   border: 1px solid black;
 
   @include init-font(1rem, 400);
+  @include flex-box($flex-box-col-top...);
 }
 
 .button {
@@ -60,6 +61,52 @@ body:before {
   &_sign-in {
     background-color: $greenDarker;
     margin-left: 2em;
+  }
+}
+
+.icon {
+  font-size: 2.5em;
+
+  @include text-shadow(0.03em, 0.1em);
+  @include transition();
+
+  &:hover {
+    cursor: pointer;
+    @include text-shadow(0.05em, 0.15em);
+  }
+
+  &_login {
+    color: $greenDarker;
+    margin-left: 1.5em;
+
+    &:hover {
+      color: white;
+      transform: scale(1.1);
+    }
+  }
+
+  &_add {
+    color: $greenDarker;
+
+    @include init-font(3.5em, 600);
+
+    &:hover {
+      cursor: pointer;
+      color: $foxy;
+      @include text-shadow(0.04em, 0.13em);
+    }
+  }
+
+  &_delete {
+    color: $greenDarker;
+
+    @include init-font(2.7em, 600);
+
+    &:hover {
+      cursor: pointer;
+      color: $foxy;
+      @include text-shadow(0.04em, 0.13em);
+    }
   }
 }
 
