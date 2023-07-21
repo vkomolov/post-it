@@ -4,13 +4,14 @@
 ///////EXTENDS///////
 
 %button {
+  position: relative;
   outline: none;
   min-width: 5.8em;
   min-height: 2.7em;
   border: 0.15em solid $white;
   border-radius: 0.5em;
   color: $white;
-  background-color: $foxy;
+  background-color: $greyNorm;
   letter-spacing: 0.03em;
   transition: all .08s ease-in-out;
 
@@ -21,11 +22,6 @@
   &:hover {
     transform: scale(1.03);
     @include box-shadow(0.13em, 0.22em);
-  }
-
-  &:active {
-    transform: scale(1);
-    box-shadow: none;
   }
 }
 

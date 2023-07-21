@@ -31,7 +31,7 @@ const PostItem = ({ postData }) => {
         { stars }
       </div>
       <div className="post-details-wrapper">
-        <span className="post-details-wrapper__userName">{ userName }: </span>
+        <span className="post-details-wrapper__userName">Author: { userName } </span>
         <p className="post-details-wrapper__title"><span className="elem-info">Title: </span>{ titleString }</p>
         <p className="post-details-wrapper__tags"><span className="elem-info">Tags: </span>{ tagsString }</p>
       </div>

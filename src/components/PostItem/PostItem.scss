@@ -6,8 +6,8 @@
 .post-wrapper {
   width: 100%;
   padding: 0.3em;
-  margin: 0.3em auto;
-  border: 0.2em solid $foxy;
+  margin: 0.3em 0;
+  border: 0.15em solid $foxy;
 
   @include box-shadow(0.12em, 0.25em);
   @include transition();
@@ -15,13 +15,17 @@
   &:hover {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.1);
-    transform: translateY(-0.25em);
-    @include box-shadow(0.2em, 0.45em);
+    transform: translateY(-0.2em);
+    /*box-shadow: inset -0.25em -0.25em 0.25em rgba(0,0,0,0.8),
+    inset 0.25em 0.25em 0.25em rgba(255,255,255,0.8),
+    0.2em 0.2em 0.25em rgba(255,255,255,0.8);*/
+
+    @include box-shadow(0.25em, 0.25em);
   }
 
   &.active {
-    box-shadow: inset -0.12em -0.12em 0.25em rgba(0,0,0,0.8),
-    inset 0.12em 0.12em 0.25em rgba(0,0,0,0.8);
+    box-shadow: inset -0.15em -0.1em 0.2em rgba(255,255,255,0.8),
+    inset 0.15em 0.15em 0.2em rgba(0,0,0,0.8);
     background-color: rgba(0, 0, 0, 0.2);
 
     &:hover {

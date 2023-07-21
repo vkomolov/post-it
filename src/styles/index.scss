@@ -49,16 +49,18 @@ body:before {
 .button {
   @extend %button;
 
+  //additional class for active buttons
   &_active {
+    position: relative;
+    background-color: $foxy;
     box-shadow: none;
-    border: 0.005 solid $white;
-    background-image: radial-gradient($foxyGrey 70%, $white);
 
     &:hover {
       cursor: initial;
       transform: none;
-      box-shadow: none;
+      box-shadow: inherit;
     }
+
   }
 
   &_sign-in {
