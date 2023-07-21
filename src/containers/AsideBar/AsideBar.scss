@@ -4,14 +4,12 @@
 @import "../../styles/global_styles/_animations.scss";
 
 .aside-bar {
-  width: 100%;
-  height: 100%;
-  max-width: 30em;
-  padding: 0.3em;
-  border: 2px dashed green;
-
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: stretch;
+  width: 100%;
+  height: 100%;
+  max-width: 33em;
+  padding: 0.3em;
 }

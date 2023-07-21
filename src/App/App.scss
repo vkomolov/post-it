@@ -8,7 +8,6 @@
 .main-wrapper {
   width: 100%;
   flex-grow: 1;
-  border: 1px solid red;
 
   @include flex-box($flex-box-row-top-nowrap...);
 }

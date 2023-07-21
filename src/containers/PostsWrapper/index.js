@@ -1,102 +1,113 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import "./PostsWrapper.scss";
 import PostItem from "../../components/PostItem";
 import { nanoid } from "@reduxjs/toolkit";
+import { useOpacityTransition } from "../../hooks";
+
+//TODO: array of posts:
+const postsArr = [
+  {
+    id: "1",
+    userName: "John Polak",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "4",
+    tags: ["history", "American", "crime"]
+  },
+  {
+    id: "2",
+    userName: "Rogger Vander",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "5",
+    tags: ["history", "crime"]
+  },
+  {
+    id: "3",
+    userName: "Jimmy Franch",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "2",
+    tags: ["history", "Frendh", "love"]
+  },
+  {
+    id: "4",
+    userName: "Zend Free",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "3",
+    tags: ["love", "American", "crime"]
+  },
+  {
+    id: "5",
+    userName: "Margy Polak",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "4",
+    tags: ["history", "American", "crime"]
+  },
+  {
+    id: "6",
+    userName: "John Polak",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "5",
+    tags: ["history", "American", "love"]
+  },
+  {
+    id: "7",
+    userName: "Andery Berry",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "2",
+    tags: ["love", "crime"]
+  },
+  {
+    id: "8",
+    userName: "Zendy Bor",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "4",
+    tags: ["history"]
+  },
+  {
+    id: "9",
+    userName: "Anton Borr",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "5",
+    tags: ["crime"]
+  },
+  {
+    id: "10",
+    userName: "Rogeer Polak",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "3",
+    tags: ["French", "American", "love"]
+  },
+  {
+    id: "11",
+    userName: "Bordy Zend",
+    title: "Some text about something which can be taken as the following title of the post",
+    reactions: "4",
+    tags: ["history"]
+  },
+];
+const postActive = "5"
 
 const PostsWrapper = () => {
+  //false - sorting by latest, true - sorting by raiting
+  const [byRaiting, setByRaiting] = useState(true); //TODO: to Reducer
+  const transitionedRef = useOpacityTransition(700);
 
-  //TODO: array of posts:
-  const postsArr = [
-    {
-      id: "1",
-      userName: "John Polak",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "4",
-      tags: ["history", "American", "crime"]
-    },
-    {
-      id: "2",
-      userName: "Rogger Vander",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "5",
-      tags: ["history", "crime"]
-    },
-    {
-      id: "3",
-      userName: "Jimmy Franch",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "2",
-      tags: ["history", "Frendh", "love"]
-    },
-    {
-      id: "4",
-      userName: "Zend Free",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "3",
-      tags: ["love", "American", "crime"]
-    },
-    {
-      id: "5",
-      userName: "Margy Polak",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "4",
-      tags: ["history", "American", "crime"]
-    },
-    {
-      id: "6",
-      userName: "John Polak",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "5",
-      tags: ["history", "American", "love"]
-    },
-    {
-      id: "7",
-      userName: "Andery Berry",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "2",
-      tags: ["love", "crime"]
-    },
-    {
-      id: "8",
-      userName: "Zendy Bor",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "4",
-      tags: ["history"]
-    },
-    {
-      id: "9",
-      userName: "Anton Borr",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "5",
-      tags: ["crime"]
-    },
-    {
-      id: "10",
-      userName: "Rogeer Polak",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "3",
-      tags: ["French", "American", "love"]
-    },
-    {
-      id: "11",
-      userName: "Bordy Zend",
-      title: "Some text about something which can be taken as the following title of the post",
-      reactions: "4",
-      tags: ["history"]
-    },
-  ];
-  const postActive = "5"
+  const sortedPosts = useMemo(() => {
+    const byFilter = byRaiting ? "reactions" : "id";
+    const sortedArr = postsArr.sort((obj1, obj2) => +obj2[byFilter] - +obj1[byFilter]);
 
-  const postList = postsArr.map(data => (
-    <PostItem
-      postData={ Object.assign(data, { postActive }) }
-      key={ nanoid() }
-    />
-  ));
+    log(sortedArr, "sortedArr");
+
+    return sortedArr.map(data => (
+      <PostItem
+        postData={ Object.assign(data, { postActive }) }
+        key={ nanoid() }
+      />
+    ));
+  }, [byRaiting, postsArr]);
 
   return (
-    <div className="posts-wrapper">
-      { postList }
+    <div className="posts-wrapper" ref={ transitionedRef }>
+      { sortedPosts }
     </div>
   );
 };

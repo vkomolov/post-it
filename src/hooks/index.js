@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useLayoutEffect } from "react";
+import { useCallback, useRef, useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { alertError, alertClear, alertLoading } from "../store/features/AlertSlice";
 import { initOpacityAnimation } from "../api";
@@ -27,6 +27,10 @@ export function useAlertData() {
         initAlertError,
         initAlertClear
     };
+}
+
+export function useInnData() {
+
 }
 
 

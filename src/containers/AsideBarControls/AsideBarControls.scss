@@ -5,13 +5,11 @@
 
 .aside-bar__controls {
   width: 100%;
-  border: 1px solid blue;
 
   @include flex-box($flex-box-row-center-nowrap...);
 
   &__buttons {
     padding: 0.3em;
-    border: 1px solid green;
     flex-grow: 1;
     gap: 0.6em;
     @include flex-box($flex-box-row-left-nowrap...);
@@ -19,7 +17,5 @@
 
   &__handles {
     padding: 0.3em 1em;
-    //flex-grow: 1;
-    //@include flex-box($flex-box-row-center-nowrap...);
   }
 }

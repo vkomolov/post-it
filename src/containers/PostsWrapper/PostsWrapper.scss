@@ -4,7 +4,6 @@
 @import "../../styles/global_styles/_animations.scss";
 
 .posts-wrapper {
-  border: 2px dashed purple;
   width: 100%;
   //giving height: 0 with flex-grow: 1 gives the fixed height for .posts-wrapper within the height of the parent
   // AsideBar (which has flex-direction: column, align-items: scratch). It gives possibility to scroll .posts-wrapper
@@ -18,10 +17,5 @@
   justify-content: stretch;
   align-items: center;
 
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-
-
-  //@include scroll-init(0.5em, $foxy, $foxy);
+  @include scroll-init(0.3em, $foxy, $white);
 }
