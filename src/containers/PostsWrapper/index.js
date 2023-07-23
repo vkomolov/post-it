@@ -1,8 +1,9 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import "./PostsWrapper.scss";
 import PostItem from "../../components/PostItem";
 import { nanoid } from "@reduxjs/toolkit";
-import { useOpacityTransition } from "../../hooks";
+import { useOpacityTransition, useSortingData } from "../../hooks";
+import { sortObjectsByTwoParams } from "../../api";
 
 //TODO: array of posts:
 const postsArr = [
@@ -95,52 +96,33 @@ const postsArr = [
     tags: ["history"]
   },
 ];
-const postActive = "5"
+const postActive = "5";
 
 const PostsWrapper = () => {
-  log("PostsWrapper inits...");
+  //log("PostsWrapper renders...");
 
-  //false - sorting by latest, true - sorting by raiting
-  const raitOrLatest = true; //TODO: to Reducer
-  //false - sorting by title, true - sorting by user
-  const userOrTitle = true; //TODO: to Reducer
 
-  const transitionedRef = useOpacityTransition(700);
+    const [ sortState ] = useSortingData();
+    const transitionedRef = useOpacityTransition(700);
+    const { sortPrimary, sortSecondary } = sortState;
+    const sortedPosts = useMemo(() => {
+        const postsSorted = [...postsArr].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
 
-  const sortObjByMultyProps = useCallback((raitOrLatest, userOrTitle) => {
-    const byFilter = raitOrLatest ? "reactions" : "id";
-    const byPost = userOrTitle ? "userName" : "title";
+        //log(postsSorted, "postsSorted...");
 
-    return (obj1, obj2) => {
-      if (+obj2[byFilter] > +obj1[byFilter]) return 1
-      else if (+obj2[byFilter] < +obj1[byFilter]) return -1
-      else {
-        const text1 = obj1[byPost].split(" ")[0].toLowerCase();
-        const text2 = obj2[byPost].split(" ")[0].toLowerCase();
+        return postsSorted.map(data => (
+            <PostItem
+                postData={ Object.assign(data, { postActive }) }
+                key={ nanoid() }
+            />
+        ));
+    }, [sortPrimary, sortSecondary]);
 
-        return text1.localeCompare(text2);
-      }
-    }
-  }, []);
-
-  const sortedPosts = useMemo(() => {
-    const postsSorted = [...postsArr].sort(sortObjByMultyProps(raitOrLatest, userOrTitle));
-
-    log(postsSorted, "postsSorted: ");
-
-    return postsSorted.map(data => (
-      <PostItem
-        postData={ Object.assign(data, { postActive }) }
-        key={ nanoid() }
-      />
-    ));
-  }, [raitOrLatest, userOrTitle, sortObjByMultyProps]);
-
-  return (
-    <div className="posts-wrapper" ref={ transitionedRef }>
-      { sortedPosts }
-    </div>
-  );
+    return (
+        <div className="posts-wrapper" ref={ transitionedRef }>
+            { sortedPosts }
+        </div>
+    );
 };
 
 export default PostsWrapper;
@@ -148,5 +130,5 @@ export default PostsWrapper;
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars
 function log(it, comments="value: ") {
-  console.log(comments, it);
+    console.log(comments, it);
 }

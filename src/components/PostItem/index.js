@@ -12,30 +12,30 @@ const PostItem = ({ postData }) => {
     return new Array(starQnty).fill("").map((e, index) => {
       const specClass = (index + 1) <= +reactions ? "material-icons icon icon_raiting icon_foxy" : "material-icons icon icon_raiting";
       return (
-        <i className={ specClass } key={ nanoid() }>star_rate</i>
+          <i className={ specClass } key={ nanoid() }>star_rate</i>
       );
     });
   }, [reactions]);
 
   const titleString = useMemo(() => {
     return title.slice(0, 50) + "...";
-  }, [title])
+  }, [title]);
 
   const tagsString = useMemo(() => {
     return tags.join(", ");
-  }, [tags])
+  }, [tags]);
 
   return (
-    <div className={ specClass }>
-      <div className="ratings-wrapper">
-        { stars }
+      <div className={ specClass }>
+        <div className="ratings-wrapper">
+          { stars }
+        </div>
+        <div className="post-details-wrapper">
+          <span className="post-details-wrapper__userName">Author: { userName } </span>
+          <p className="post-details-wrapper__title"><span className="elem-info">Title: </span>{ titleString }</p>
+          <p className="post-details-wrapper__tags"><span className="elem-info">Tags: </span>{ tagsString }</p>
+        </div>
       </div>
-      <div className="post-details-wrapper">
-        <span className="post-details-wrapper__userName">Author: { userName } </span>
-        <p className="post-details-wrapper__title"><span className="elem-info">Title: </span>{ titleString }</p>
-        <p className="post-details-wrapper__tags"><span className="elem-info">Tags: </span>{ tagsString }</p>
-      </div>
-    </div>
   );
 };
 

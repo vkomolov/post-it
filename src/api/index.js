@@ -52,6 +52,52 @@ export function initOpacityAnimation(htmlElement, duration) {
     return () => cancelAnimationFrame(reqId);
 }
 
+/**
+ *
+ * @param {(number|string)} sortPrimary: first sorting of the array with objects
+ * @param {(number|string)} sortSecondary: second sorting of the array runs, when
+ * the two objects are equal with the first sorting...
+ * @returns {Function} as cb for the sorting with array.sort()
+ */
+export function sortObjectsByTwoParams (sortPrimary, sortSecondary ) {
+    return (obj1, obj2) => {
+        const sortString = objProp => {
+            const text1 = obj1[objProp].split(" ")[0].toLowerCase();
+            const text2 = obj2[objProp].split(" ")[0].toLowerCase();
+
+            return text1.localeCompare(text2);
+        };
+        const sortNumber = objProp => {
+            return +obj1[objProp] - +obj2[objProp];
+        };
+
+        if (+obj1[sortPrimary]) {
+            if (+obj2[sortPrimary] > +obj1[sortPrimary]) return 1;
+            else if (+obj2[sortPrimary] < +obj1[sortPrimary]) return -1;
+            //secondary sorting runs, when the objects are equal by the first sorting
+            else {
+                if (typeof obj1[sortSecondary] === "string") {
+                    return sortString(sortSecondary);
+                }
+                return sortNumber(sortSecondary);
+            }
+        } else {
+            const text1 = obj1[sortPrimary].split(" ")[0].toLowerCase();
+            const text2 = obj2[sortPrimary].split(" ")[0].toLowerCase();
+
+            if (text2 > text1) return 1;
+            else if (text2 < text1) return -1;
+            //secondary sorting runs, when the objects are equal by the first sorting
+            else {
+                if (typeof sortSecondary === "number") {
+                    return sortNumber(sortSecondary);
+                }
+                return sortString(sortSecondary);
+            }
+        }
+    }
+}
+
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars
 function log(it, comments="value: ") {

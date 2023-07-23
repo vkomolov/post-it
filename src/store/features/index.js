@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
-import alertReducer from "./AlertSlice";
-import dataReducer from "./DataSlice";
+import alertReducer from "./alertSlice";
+import dataReducer from "./dataSlice";
+import sortReducer from "./sortReducer";
 
 const rootReducer = combineReducers({
     alertState: alertReducer,
+    sortState: sortReducer,
     dataState: dataReducer
 });
 

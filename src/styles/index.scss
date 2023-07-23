@@ -51,7 +51,6 @@ body:before {
 
   //additional class for active buttons
   &_active {
-    position: relative;
     background-color: $foxy;
     box-shadow: none;
 
@@ -74,7 +73,7 @@ body:before {
 
   &_login {
     color: $greenDarker;
-    margin-left: 1.5em;
+    margin-left: 0.5em;
 
     &:hover {
       color: white;
