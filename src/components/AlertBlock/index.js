@@ -1,18 +1,16 @@
 import React, { useMemo } from "react";
 import * as PropTypes from "prop-types";
 import { nanoid } from "@reduxjs/toolkit";
-
 import "./AlertBlock.scss";
-import loadingIcon from "../../asset/img/loadingIcon.svg";
 
-export default function AlertBlock({ alertState }) {
-    const { alertType, alertContent } = alertState;
+export default function AlertBlock({ stateAlerts }) {
+    const { alertType, alertContent } = stateAlerts;
 
     const alertElement = useMemo(() => {
         if (!alertType) return null;
 
         //only two options for now
-        const classNameOut = alertType === "ALERT_ERROR" ? "alert-error" : "alert-loading";
+        const classNameOut = alertType === "error" ? "alert-error" : "alert-loading";
         //looking for the alert text content...
         let contentArr = [];
         if (alertContent.length) {
@@ -30,7 +28,7 @@ export default function AlertBlock({ alertState }) {
                     role="alert"
                 >
                     { classNameOut === "alert-loading"
-                    && <img src={loadingIcon} alt="loading" /> }
+                    && <span className="loader" /> }
                     { contentArr }
                 </div>
             </div>
@@ -41,7 +39,7 @@ export default function AlertBlock({ alertState }) {
 }
 
 AlertBlock.propTypes = {
-    alertState: PropTypes.shape({
+    stateAlerts: PropTypes.shape({
         alertType: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.oneOf([null])

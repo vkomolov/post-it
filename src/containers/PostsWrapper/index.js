@@ -1,29 +1,31 @@
 import React, { useMemo } from "react";
 import "./PostsWrapper.scss";
 import PostItem from "../../components/PostItem";
+import AlertBlock from "../../components/AlertBlock";
 import { nanoid } from "@reduxjs/toolkit";
-import { useOpacityTransition, useSortingData, usePosts } from "../../hooks";
+import { useOpacityTransition, useSortingData, usePosts, useAlertData } from "../../hooks";
 import { sortObjectsByTwoParams } from "../../api";
 
 const PostsWrapper = () => {
   log("PostsWrapper renders...");
-
+    const [ stateAlerts ] = useAlertData();
     const [ stateSort ] = useSortingData();
     //log(sortState, "sortState: ");
 
     const [ statePosts ] = usePosts();
-    //log(postState, "postState: ");
+    const { posts } = statePosts;
+    log(statePosts, "statePosts: ");
 
     const transitionedRef = useOpacityTransition(700);
 
     const { sortPrimary, sortSecondary } = stateSort;
-    const { posts } = statePosts;
 
     const sortedPosts = useMemo(() => {
         log("sortedPosts useMemo: ");
         if (!posts.length) {
             return null;
         }
+
         //log(posts, "posts");
         const postsSorted = [...posts].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
 
@@ -43,6 +45,7 @@ const PostsWrapper = () => {
             className="posts-wrapper"
             ref={ transitionedRef }
         >
+            { stateAlerts.alertType && <AlertBlock { ...{ stateAlerts } } /> }
             { sortedPosts }
         </div>
     );

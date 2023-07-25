@@ -13,13 +13,13 @@ const sliceAlerts = createSlice({
             state.alertType = initialState.alertType;
             state.alertContent = initialState.alertContent;
         },
-        alertLoading: (state, action) => {
+        alertLoading: (state, { payload }) => {
             state.alertType = "loading";
-            state.alertContent.push(action.payload);
+            state.alertContent.push(payload);
         },
-        alertError: (state, action) => {
+        alertError: (state, { payload }) => {
             state.alertType = "error";
-            state.alertContent.push(action.payload)
+            state.alertContent.push(payload)
         }
     }
 });

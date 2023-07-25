@@ -5,7 +5,7 @@ import { initOpacityAnimation } from "../api";
 
 /**
  * Custom Hook which returns the state of the alert in redux reducer and the following actions
- * @returns {{initAlertClear: *, initAlertError: *, alertState: {Object}, initAlertLoading: *}}
+ * @returns {*[]}
  */
 export function useAlertData() {
     const dispatch = useDispatch();
@@ -20,13 +20,14 @@ export function useAlertData() {
         dispatch(alertClear());
     }, [dispatch]);
 
-
-    return {
+    return [
         stateAlerts,
-        initAlertLoading,
-        initAlertError,
-        initAlertClear
-    };
+        {
+            initAlertLoading,
+            initAlertError,
+            initAlertClear
+        }
+    ];
 }
 
 /**
@@ -51,6 +52,12 @@ export function useSortingData() {
 export function usePosts() {
     const dispatch = useDispatch();
     const statePosts = useSelector((state) => state.statePosts);
+    const stateUsers = useSelector(state => state.stateUsers);
+
+    /** It takes the property of the currentTarget and dispatches it to sagasPosts, then it changes the id of the
+     * active (clicked) Post Component for demonstrating the details of the active post...
+     * @type {Function}
+     */
     const setPostActive = useCallback(({ currentTarget }) => {
         if (currentTarget?.dataset?.id) {
             //dispatching to sagas

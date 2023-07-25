@@ -5,10 +5,10 @@ import "./PostItem.scss";
 import { usePosts } from "../../hooks";
 
 const PostItem = ({ data }) => {
-  const [ postState, setPostActive ] = usePosts();
+  const [ statePosts, setPostActive ] = usePosts();
   const { id, userId, title, reactions, tags } = data;
 
-  const { posts, postActive } = postState;
+  const { posts, postActive } = statePosts;
   const starQnty = posts.length ? Math.max(...posts.map(post => post.reactions)) : 0;
 
   const specClass = +id === +postActive ? "post-wrapper active" : "post-wrapper";
