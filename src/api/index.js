@@ -53,50 +53,40 @@ export function initOpacityAnimation(htmlElement, duration) {
 }
 
 /**
- *
- * @param {(number|string)} sortPrimary: first sorting of the array with objects
- * @param {(number|string)} sortSecondary: second sorting of the array runs, when
+ * @param {(string|number)} sortPrimary: first sorting of the array with objects
+ * @param {(string|number)} sortSecondary: second sorting of the array runs, when
  * the two objects are equal with the first sorting...
  * @returns {Function} as cb for the sorting with array.sort()
  */
-export function sortObjectsByTwoParams (sortPrimary, sortSecondary ) {
+export function sortObjectsByTwoParams(sortPrimary, sortSecondary) {
+    const getFirstWord = (str) => str.split(" ")[0].toLowerCase();
+
     return (obj1, obj2) => {
-        const sortString = objProp => {
-            const text1 = obj1[objProp].split(" ")[0].toLowerCase();
-            const text2 = obj2[objProp].split(" ")[0].toLowerCase();
-
-            return text1.localeCompare(text2);
-        };
-        const sortNumber = objProp => {
-            return +obj1[objProp] - +obj2[objProp];
-        };
-
-        if (+obj1[sortPrimary]) {
-            if (+obj2[sortPrimary] > +obj1[sortPrimary]) return 1;
-            else if (+obj2[sortPrimary] < +obj1[sortPrimary]) return -1;
-            //secondary sorting runs, when the objects are equal by the first sorting
-            else {
-                if (typeof obj1[sortSecondary] === "string") {
-                    return sortString(sortSecondary);
-                }
-                return sortNumber(sortSecondary);
-            }
+        const primaryProp1 = obj1[sortPrimary];
+        const primaryProp2 = obj2[sortPrimary];
+        //checking for the type number
+        if (+primaryProp1 + 1) {
+            if (primaryProp2 > primaryProp1) return 1;
+            if (primaryProp2 < primaryProp1) return -1;
         } else {
-            const text1 = obj1[sortPrimary].split(" ")[0].toLowerCase();
-            const text2 = obj2[sortPrimary].split(" ")[0].toLowerCase();
-
+            const text1 = getFirstWord(primaryProp1);
+            const text2 = getFirstWord(primaryProp2);
             if (text2 > text1) return 1;
-            else if (text2 < text1) return -1;
-            //secondary sorting runs, when the objects are equal by the first sorting
-            else {
-                if (typeof sortSecondary === "number") {
-                    return sortNumber(sortSecondary);
-                }
-                return sortString(sortSecondary);
-            }
+            if (text2 < text1) return -1;
         }
-    }
+
+        const secondaryProp1 = obj1[sortSecondary];
+        const secondaryProp2 = obj2[sortSecondary];
+
+        if (+secondaryProp1 + 1) {
+            return secondaryProp1 - secondaryProp2;
+        } else {
+            return secondaryProp1.localeCompare(secondaryProp2);
+        }
+    };
 }
+
+
 
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { alertError, alertClear, alertLoading } from "../store/features/alertSlice";
+import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
 import { initOpacityAnimation } from "../api";
 
 /**
@@ -9,7 +9,7 @@ import { initOpacityAnimation } from "../api";
  */
 export function useAlertData() {
     const dispatch = useDispatch();
-    const alertState = useSelector(state => state.alertState);
+    const stateAlerts = useSelector(state => state.stateAlerts);
     const initAlertLoading = useCallback((...textContent) => {
         dispatch(alertLoading(...textContent));
     }, [dispatch]);
@@ -22,29 +22,44 @@ export function useAlertData() {
 
 
     return {
-        alertState,
+        stateAlerts,
         initAlertLoading,
         initAlertError,
         initAlertClear
     };
 }
 
+/**
+ * Custom Hook which returns the state of sorting the array of the posts fetched.
+ * It also returns the action to sagasSort for setting the sorting params to the sliceSort
+ * @returns {[Object, Function]}
+ */
 export function useSortingData() {
     const dispatch = useDispatch();
-    const sortState = useSelector(state => state.sortState);
+    const stateSort = useSelector(state => state.stateSort);
 
-    const dispatchSorting = useCallback(({ target }) => {
-        if (target?.dataset?.name) {
+    const dispatchSorting = useCallback(({ currentTarget }) => {
+        if (currentTarget?.dataset?.name) {
             //dispatching to sagas
-            dispatch({ type: "SET_SORTING", payload: target.dataset.name });
-        } else console.error(`the following button has no property "data-name": ${ target }`);
+            dispatch({ type: "SET_SORTING", payload: currentTarget.dataset.name });
+        } else console.error(`the following button has no property "data-name": ${ currentTarget }`);
     }, [dispatch]);
 
-    return [sortState, dispatchSorting];
+    return [stateSort, dispatchSorting];
 }
 
-export function useInnData() {
+export function usePosts() {
+    const dispatch = useDispatch();
+    const statePosts = useSelector((state) => state.statePosts);
+    const setPostActive = useCallback(({ currentTarget }) => {
+        if (currentTarget?.dataset?.id) {
+            //dispatching to sagas
+            dispatch({ type: "SET_POST_ACTIVE", payload: currentTarget.dataset.id });
+        } else console.error(`the following post element has no property "data-id": ${ currentTarget }`);
+    }, [dispatch]);
 
+
+    return [statePosts, setPostActive];
 }
 
 

@@ -2,124 +2,47 @@ import React, { useMemo } from "react";
 import "./PostsWrapper.scss";
 import PostItem from "../../components/PostItem";
 import { nanoid } from "@reduxjs/toolkit";
-import { useOpacityTransition, useSortingData } from "../../hooks";
+import { useOpacityTransition, useSortingData, usePosts } from "../../hooks";
 import { sortObjectsByTwoParams } from "../../api";
 
-//TODO: array of posts:
-const postsArr = [
-  {
-    id: "1",
-    userId: 5,
-    userName: "John Polak",
-    title: "Aliquam justo elit, bibendum ac commodo quis odio.",
-    reactions: "4",
-    tags: ["history", "American", "crime"]
-  },
-  {
-    id: "2",
-    userId: 2,
-    userName: "Elly Vander",
-    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer biam.",
-    reactions: "5",
-    tags: ["history", "crime"]
-  },
-  {
-    id: "3",
-    userId: 4,
-    userName: "Jimmy Franch",
-    title: "Nam non ante ut mi dignissim dignissim ut ac ante. Integer dapibus ex.",
-    reactions: "2",
-    tags: ["history", "Frendh", "love"]
-  },
-  {
-    id: "4",
-    userId: 6,
-    userName: "Zend Free",
-    title: "Cras ut sapien vel quam faucibus convallis ac vitae ante. Ut at morbi.",
-    reactions: "3",
-    tags: ["love", "American", "crime"]
-  },
-  {
-    id: "5",
-    userId: 7,
-    userName: "Bill Zhorek",
-    title: "Fusce sed lectus facilisis, volutpat quam at, congue risus vestibulum.",
-    reactions: "4",
-    tags: ["history", "American", "crime"]
-  },
-  {
-    id: "6",
-    userId: 5,
-    userName: "Bill Polak",
-    title: "Mauris massa lorem, bibendum sit amet nisl eu, sodales elementum eros.",
-    reactions: "5",
-    tags: ["history", "American", "love"]
-  },
-  {
-    id: "7",
-    userId: 8,
-    userName: "Andery Berry",
-    title: "Fusce quis bibendum erat. Fusce a dui vitae turpis tristique accumsan.",
-    reactions: "2",
-    tags: ["love", "crime"]
-  },
-  {
-    id: "8",
-    userId: 9,
-    userName: "Freddy Bor",
-    title: "Aliquam mattis sem a libero mollis iaculis quis quis orci. Aenean dui.",
-    reactions: "4",
-    tags: ["history"]
-  },
-  {
-    id: "9",
-    userId: 10,
-    userName: "Anton Borr",
-    title: "Pellentesque sed pretium nisi. Orci varius natoque penatibus et morbi.",
-    reactions: "5",
-    tags: ["crime"]
-  },
-  {
-    id: "10",
-    userId: 11,
-    userName: "Antony Brain",
-    title: "In nisi nulla, ultricies vel elementum vel, interdum a diam cras amet.",
-    reactions: "3",
-    tags: ["French", "American", "love"]
-  },
-  {
-    id: "11",
-    userId: 5,
-    userName: "Druid Venskiy",
-    title: "Quisque nisi augue, facilisis in libero et, cursus vestibulum egestas.",
-    reactions: "4",
-    tags: ["history"]
-  },
-];
-const postActive = "5";
-
 const PostsWrapper = () => {
-  //log("PostsWrapper renders...");
+  log("PostsWrapper renders...");
 
+    const [ stateSort ] = useSortingData();
+    //log(sortState, "sortState: ");
 
-    const [ sortState ] = useSortingData();
+    const [ statePosts ] = usePosts();
+    //log(postState, "postState: ");
+
     const transitionedRef = useOpacityTransition(700);
-    const { sortPrimary, sortSecondary } = sortState;
+
+    const { sortPrimary, sortSecondary } = stateSort;
+    const { posts } = statePosts;
+
     const sortedPosts = useMemo(() => {
-        const postsSorted = [...postsArr].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
+        log("sortedPosts useMemo: ");
+        if (!posts.length) {
+            return null;
+        }
+        //log(posts, "posts");
+        const postsSorted = [...posts].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
 
         //log(postsSorted, "postsSorted...");
 
+
         return postsSorted.map(data => (
             <PostItem
-                postData={ Object.assign(data, { postActive }) }
+                { ...{ data } }
                 key={ nanoid() }
             />
         ));
-    }, [sortPrimary, sortSecondary]);
+    }, [sortPrimary, sortSecondary, posts]);
 
     return (
-        <div className="posts-wrapper" ref={ transitionedRef }>
+        <div
+            className="posts-wrapper"
+            ref={ transitionedRef }
+        >
             { sortedPosts }
         </div>
     );

@@ -1,11 +1,15 @@
 import { fork } from "redux-saga/effects";
 
-import { postWatcher } from "./postSagas";
-import { sortWatcher } from "./sortSagas";
+import { postWatcher } from "./sagasPosts";
+import { sortWatcher } from "./sagasSort";
+import { usersWatcher } from "./sagasUsers";
+
+export const baseUrl = "https://dummyjson.com";
 
 
 export default function* rootSaga() {
-    //yield fork(postWatcher);
+    yield fork(postWatcher);
+    yield fork(usersWatcher);
     yield fork(sortWatcher);
 }
 

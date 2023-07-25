@@ -3,16 +3,16 @@ import "./AsideBarControls.scss";
 import { useSortingData } from "../../hooks";
 
 const AsideBarControls = () => {
-    const [sortState, dispatchSorting] = useSortingData();
+    const [stateSort, dispatchSorting] = useSortingData();
   //false - sorting by latest, true - sorting by raiting
-    const { sortPrimary } = sortState;
+    const { sortSecondary } = stateSort;
 
-  const specClassObj = sortPrimary === "reactions" ? {
+  const specClassObj = sortSecondary === "title" ? {
     latest: "button",
-    rating: "button button_active"
+    title: "button button_active"
   } : {
     latest: "button button_active",
-    rating: "button"
+      title: "button"
   };
 
   return (
@@ -26,11 +26,11 @@ const AsideBarControls = () => {
                   Latest
               </button>
               <button
-                  className={ specClassObj.rating }
-                  data-name="reactions"
+                  className={ specClassObj.title }
+                  data-name="title"
                   onClick={ dispatchSorting }
               >
-                  Raiting
+                  Title
               </button>
           </div>
           <div className="aside-bar__controls__handles">

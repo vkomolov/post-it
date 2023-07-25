@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     sortPrimary: "reactions",
-    sortSecondary: "userName",
+    sortSecondary: "id",
 };
 
-const sortSlice = createSlice({
-    name: "sortReducer",
+const sliceSort = createSlice({
+    name: "sortSlice",
     initialState,
     reducers: {
         setSortPrimary: (state, { payload }) => {
@@ -18,8 +18,8 @@ const sortSlice = createSlice({
     }
 });
 
-export const { setSortPrimary, setSortSecondary } = sortSlice.actions;
-export default sortSlice.reducer;
+export const { setSortPrimary, setSortSecondary } = sliceSort.actions;
+export default sliceSort.reducer;
 
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars

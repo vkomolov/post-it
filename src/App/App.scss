@@ -1,9 +1,9 @@
 @import "../styles/global_styles/reset";
-@import '../styles/global_styles/_variables.scss';
-@import '../styles/global_styles/_mixins.scss';
-@import '../styles/global_styles/_extends.scss';
-@import '../styles/global_styles/_animations.scss';
-@import '../styles/global_styles/_fonts.scss';
+@import '../styles/global_styles/variables';
+@import '../styles/global_styles/mixins';
+@import '../styles/global_styles/extends';
+@import '../styles/global_styles/animations';
+@import '../styles/global_styles/fonts';
 
 .main-wrapper {
   width: 100%;

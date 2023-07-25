@@ -2,11 +2,16 @@ import React, { useMemo } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
 import "./PostItem.scss";
+import { usePosts } from "../../hooks";
 
-const PostItem = ({ postData }) => {
-  const { id, userName, title, reactions, tags, postActive  } = postData;
-  const starQnty = 5;
-  const specClass = id === postActive ? "post-wrapper active" : "post-wrapper";
+const PostItem = ({ data }) => {
+  const [ postState, setPostActive ] = usePosts();
+  const { id, userId, title, reactions, tags } = data;
+
+  const { posts, postActive } = postState;
+  const starQnty = posts.length ? Math.max(...posts.map(post => post.reactions)) : 0;
+
+  const specClass = +id === +postActive ? "post-wrapper active" : "post-wrapper";
 
   const stars = useMemo(() => {
     return new Array(starQnty).fill("").map((e, index) => {
@@ -18,7 +23,7 @@ const PostItem = ({ postData }) => {
   }, [reactions]);
 
   const titleString = useMemo(() => {
-    return title.slice(0, 50) + "...";
+    return title.slice(0, 60) + "...";
   }, [title]);
 
   const tagsString = useMemo(() => {
@@ -26,12 +31,17 @@ const PostItem = ({ postData }) => {
   }, [tags]);
 
   return (
-      <div className={ specClass }>
+      <div
+          className={ specClass }
+          data-id={ id }
+          onClick={ setPostActive }
+          aria-label="to open the Post content"
+      >
         <div className="ratings-wrapper">
           { stars }
         </div>
         <div className="post-details-wrapper">
-          <span className="post-details-wrapper__userName">Author: { userName } </span>
+          <span className="post-details-wrapper__userName">Author: { userId } </span>
           <p className="post-details-wrapper__title"><span className="elem-info">Title: </span>{ titleString }</p>
           <p className="post-details-wrapper__tags"><span className="elem-info">Tags: </span>{ tagsString }</p>
         </div>
@@ -42,21 +52,23 @@ const PostItem = ({ postData }) => {
 export default PostItem;
 
 PostItem.propTypes = {
-  postData: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    userName: PropTypes.string.isRequired,
+  data: PropTypes.shape({
+    id: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
+    userId: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired,
     title: PropTypes.string.isRequired,
     reactions: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]).isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string).isRequired,
-    postActive: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ])
+    tags: PropTypes.arrayOf(PropTypes.string).isRequired
   }),
-}
+};
 
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars

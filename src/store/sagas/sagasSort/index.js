@@ -1,11 +1,11 @@
 import { take, put } from "redux-saga/effects";
-import { setSortPrimary, setSortSecondary } from "../../features/sortReducer";
+import { setSortPrimary, setSortSecondary } from "../../features/sliceSort";
 
 const sortObj = {
+    userId: () => setSortPrimary("userId"),
     reactions: () => setSortPrimary("reactions"),
-    id: () => setSortPrimary("id"),
-    userName: () => setSortSecondary("userName"),
-    title: () => setSortSecondary("title")
+    title: () => setSortSecondary("title"),
+    id: () => setSortSecondary("id"),
 };
 
 export function* sortWatcher() {
@@ -16,6 +16,7 @@ export function* sortWatcher() {
         const { payload } = yield take("SET_SORTING");
 
         if (lastTaken !== payload && payload in sortObj) {
+            lastTaken = payload;
             yield put(sortObj[payload]());
         }
     }

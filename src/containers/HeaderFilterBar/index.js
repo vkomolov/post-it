@@ -5,32 +5,35 @@ import { useSortingData } from "../../hooks";
 const HeaderFilterBar = () => {
     //log("HeaderFilterBar renders...");
 
-    const [sortState, dispatchSorting] = useSortingData();
-    const { sortSecondary } = sortState;
-    const specClassObj = sortSecondary === "title" ? {
-        userName: "button",
-        title: "button button_active"
+    const [stateSort, dispatchSorting] = useSortingData();
+    const { sortPrimary } = stateSort;
+
+    //log(sortSecondary, "sortSecondary in HeadFilterBar: ");
+
+    const specClassObj = sortPrimary === "reactions" ? {
+        userId: "button",
+        reactions: "button button_active"
     } : {
-        userName: "button button_active",
-        title: "button"
+        userId: "button button_active",
+        reactions: "button"
     };
 
     return (
         <div className="header__filter-bar">
             <span className="header__filter-bar__heading">Sort By: </span>
             <button
-                className={ specClassObj.userName }
-                data-name="userName"
+                className={ specClassObj.userId }
+                data-name="userId"
                 onClick={ dispatchSorting }
             >
                 User
             </button>
             <button
-                className={ specClassObj.title }
-                data-name="title"
+                className={ specClassObj.reactions }
+                data-name="reactions"
                 onClick={ dispatchSorting }
             >
-                Title
+                Raiting
             </button>
             <i
                 className="material-icons icon icon_login"

@@ -1,17 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const alertStateDefault = {
+const initialState = {
     alertType: null,
     alertContent: []
 };
 
-const alertSlice = createSlice({
+const sliceAlerts = createSlice({
     name: "alertReducer",
-    initialState: alertStateDefault,
+    initialState,
     reducers: {
         alertClear: state => {
-            state.alertType = alertStateDefault.alertType;
-            state.alertContent = alertStateDefault.alertContent;
+            state.alertType = initialState.alertType;
+            state.alertContent = initialState.alertContent;
         },
         alertLoading: (state, action) => {
             state.alertType = "loading";
@@ -24,5 +24,5 @@ const alertSlice = createSlice({
     }
 });
 
-export const { alertClear, alertError, alertLoading } = alertSlice.actions;
-export default alertSlice.reducer;
+export const { alertClear, alertError, alertLoading } = sliceAlerts.actions;
+export default sliceAlerts.reducer;
