@@ -21,7 +21,7 @@
     animation: popup 0.3s ease-in-out;
 
     @include init-font(1em, 700);
-    @include flex-box($flex-box-col-center...);
+    @include flex-box($flex-box-col-center-wrap...);
 
     .loader {
       width: 2.5em;

@@ -8,13 +8,12 @@ import { sortObjectsByTwoParams } from "../../api";
 
 const PostsWrapper = () => {
   log("PostsWrapper renders...");
-    const [ stateAlerts ] = useAlertData();
-    const [ stateSort ] = useSortingData();
-    //log(sortState, "sortState: ");
 
-    const [ statePosts ] = usePosts();
-    const { posts } = statePosts;
-    log(statePosts, "statePosts: ");
+    const { stateAlerts } = useAlertData();
+    const { stateSort } = useSortingData();
+
+    const { posts } = usePosts();
+    const starQnty = posts.length ? Math.max(...posts.map(post => post.reactions)) : 0;
 
     const transitionedRef = useOpacityTransition(700);
 
@@ -22,19 +21,17 @@ const PostsWrapper = () => {
 
     const sortedPosts = useMemo(() => {
         log("sortedPosts useMemo: ");
+
         if (!posts.length) {
             return null;
         }
 
-        //log(posts, "posts");
         const postsSorted = [...posts].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
-
-        //log(postsSorted, "postsSorted...");
-
 
         return postsSorted.map(data => (
             <PostItem
-                { ...{ data } }
+                data = { data }
+                starQnty = { starQnty }
                 key={ nanoid() }
             />
         ));

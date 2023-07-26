@@ -5,7 +5,7 @@ import { initOpacityAnimation } from "../api";
 
 /**
  * Custom Hook which returns the state of the alert in redux reducer and the following actions
- * @returns {*[]}
+ * @returns {{stateAlerts: *, initAlertClear: *, initAlertError: *, initAlertLoading: *}}
  */
 export function useAlertData() {
     const dispatch = useDispatch();
@@ -20,20 +20,18 @@ export function useAlertData() {
         dispatch(alertClear());
     }, [dispatch]);
 
-    return [
+    return {
         stateAlerts,
-        {
-            initAlertLoading,
-            initAlertError,
-            initAlertClear
-        }
-    ];
+        initAlertLoading,
+        initAlertError,
+        initAlertClear
+    }
 }
 
 /**
  * Custom Hook which returns the state of sorting the array of the posts fetched.
  * It also returns the action to sagasSort for setting the sorting params to the sliceSort
- * @returns {[Object, Function]}
+ * @returns {{stateSort: *, dispatchSorting: *}}
  */
 export function useSortingData() {
     const dispatch = useDispatch();
@@ -46,27 +44,44 @@ export function useSortingData() {
         } else console.error(`the following button has no property "data-name": ${ currentTarget }`);
     }, [dispatch]);
 
-    return [stateSort, dispatchSorting];
+    return {
+        stateSort,
+        dispatchSorting
+    }
 }
 
+
 export function usePosts() {
+    log("usePosts...");
     const dispatch = useDispatch();
-    const statePosts = useSelector((state) => state.statePosts);
+    const { posts } = useSelector((state) => state.statePosts);
     const stateUsers = useSelector(state => state.stateUsers);
 
-    /** It takes the property of the currentTarget and dispatches it to sagasPosts, then it changes the id of the
-     * active (clicked) Post Component for demonstrating the details of the active post...
+    return { posts };
+}
+
+export function usePostActive() {
+    //log("usePostActive...");
+
+    const dispatch = useDispatch();
+    const { postActive, viewed } = useSelector(state => state.stateActivePost);
+
+    /** It dispatches the data of the clicked post to sagasPosts, where it stores the id of the clicked post to the
+     * localStorage as the array of already viewed posts, then it dispatches the data of the active (clicked) post
+     * to reducerActivePost for demonstrating the details of the active post in the ContentBar and marking the post
+     * in PostItem as presently active(clicked)...
+     * @param { Object } postData: the data of the current post
      * @type {Function}
      */
-    const setPostActive = useCallback(({ currentTarget }) => {
-        if (currentTarget?.dataset?.id) {
-            //dispatching to sagas
-            dispatch({ type: "SET_POST_ACTIVE", payload: currentTarget.dataset.id });
-        } else console.error(`the following post element has no property "data-id": ${ currentTarget }`);
+    const setPostActive = useCallback((postData) => {
+        dispatch({ type: "SET_POST_ACTIVE", payload: postData });
     }, [dispatch]);
 
-
-    return [statePosts, setPostActive];
+    return {
+        postActive,
+        viewed,
+        setPostActive
+    };
 }
 
 

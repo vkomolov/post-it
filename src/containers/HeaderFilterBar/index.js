@@ -5,7 +5,7 @@ import { useSortingData } from "../../hooks";
 const HeaderFilterBar = () => {
     //log("HeaderFilterBar renders...");
 
-    const [stateSort, dispatchSorting] = useSortingData();
+    const { stateSort, dispatchSorting } = useSortingData();
     const { sortPrimary } = stateSort;
 
     //log(sortSecondary, "sortSecondary in HeadFilterBar: ");

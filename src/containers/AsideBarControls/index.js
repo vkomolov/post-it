@@ -3,7 +3,7 @@ import "./AsideBarControls.scss";
 import { useSortingData } from "../../hooks";
 
 const AsideBarControls = () => {
-    const [stateSort, dispatchSorting] = useSortingData();
+    const { stateSort, dispatchSorting } = useSortingData();
   //false - sorting by latest, true - sorting by raiting
     const { sortSecondary } = stateSort;
 

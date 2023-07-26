@@ -2,18 +2,19 @@ import React, { useMemo } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
 import "./PostItem.scss";
-import { usePosts } from "../../hooks";
+import { usePostActive } from "../../hooks";
 
-const PostItem = ({ data }) => {
-  const [ statePosts, setPostActive ] = usePosts();
-  const { id, userId, title, reactions, tags } = data;
-
-  const { posts, postActive } = statePosts;
-  const starQnty = posts.length ? Math.max(...posts.map(post => post.reactions)) : 0;
-
-  const specClass = +id === +postActive ? "post-wrapper active" : "post-wrapper";
-
-  const stars = useMemo(() => {
+const PostItem = ({ data, starQnty }) => {
+    const { postActive, viewed, setPostActive } = usePostActive();
+    const { id, userId, title, reactions, tags, body } = data;
+    const postData = {
+        id,
+        userId,
+        title,
+        body
+    };
+    const specClass = +id === +postActive.id ? "post-wrapper active" : "post-wrapper";
+    const stars = useMemo(() => {
     return new Array(starQnty).fill("").map((e, index) => {
       const specClass = (index + 1) <= +reactions ? "material-icons icon icon_raiting icon_foxy" : "material-icons icon icon_raiting";
       return (
@@ -22,37 +23,36 @@ const PostItem = ({ data }) => {
     });
   }, [reactions]);
 
-  const titleString = useMemo(() => {
-    return title.slice(0, 60) + "...";
+    const titleString = useMemo(() => {
+    return title.slice(0, 70) + "...";
   }, [title]);
 
-  const tagsString = useMemo(() => {
+    const tagsString = useMemo(() => {
     return tags.join(", ");
   }, [tags]);
 
-  return (
-      <div
-          className={ specClass }
-          data-id={ id }
-          onClick={ setPostActive }
-          aria-label="to open the Post content"
-      >
-        <div className="ratings-wrapper">
-          { stars }
+    return (
+        <div
+            className={ specClass }
+            onClick={ () => setPostActive(postData) }
+            aria-label="click to open the Post content"
+        >
+            <div className="ratings-wrapper">
+                { stars }
+            </div>
+            <div className="post-details-wrapper">
+                <span className="post-details-wrapper__userName">Author: { userId } </span>
+                <p className="post-details-wrapper__title"><span className="elem-info">Title: </span>{ titleString }</p>
+                <p className="post-details-wrapper__tags"><span className="elem-info">Tags: </span>{ tagsString }</p>
+            </div>
         </div>
-        <div className="post-details-wrapper">
-          <span className="post-details-wrapper__userName">Author: { userId } </span>
-          <p className="post-details-wrapper__title"><span className="elem-info">Title: </span>{ titleString }</p>
-          <p className="post-details-wrapper__tags"><span className="elem-info">Tags: </span>{ tagsString }</p>
-        </div>
-      </div>
-  );
+    );
 };
 
 export default PostItem;
 
 PostItem.propTypes = {
-  data: PropTypes.shape({
+    data: PropTypes.shape({
     id: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number
@@ -66,8 +66,10 @@ PostItem.propTypes = {
       PropTypes.string,
       PropTypes.number
     ]).isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string).isRequired
+    tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+    body: PropTypes.string.isRequired,
   }),
+    starQnty: PropTypes.number.isRequired
 };
 
 ///////////////// dev

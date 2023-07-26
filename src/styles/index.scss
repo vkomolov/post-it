@@ -37,10 +37,9 @@ body:before {
   min-width: $minWidth;
   height: 100vh;
   margin: 0 auto;
-  border: 1px solid black;
 
   @include init-font(1rem, 400);
-  @include flex-box($flex-box-col-top...);
+  @include flex-box($flex-box-col-top-wrap...);
 
   align-items: stretch;
   flex-wrap: nowrap;

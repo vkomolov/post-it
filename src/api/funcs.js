@@ -42,6 +42,12 @@ export async function setLocalForage(name="localData", data) {
     return await localforage.setItem(name, dataWithDate);
 }
 
+/**
+ * 
+ * @param {string} url
+ * @param {Object} config
+ * @returns {Promise<*>}
+ */
 export async function initAxios(url, config={}) {
     try {
         //if Object.keys(config).length === 0 then axios will use the default method: "get" with responseType: "json"
@@ -65,27 +71,6 @@ export async function initAxios(url, config={}) {
             throw error;
         }
     }
-}
-
-/**@description Converts the Date format to yyyy-mm-dd String
- * @param {string} date to localString
- * @param {string} delimiter '-' for joining in String
- * @returns {string} Date with the delimiter
- * */
-export function dateFormat(date, delimiter) {
-    let innDate = new Date(date);
-    let month = ("0" + (innDate.getMonth() + 1)).slice(-2); //if 2 digits then without 0
-    let day = ("0" + innDate.getDate()).slice(-2);
-    return [innDate.getFullYear(), month, day].join(delimiter);
-}
-
-/**@description: Rounds the Number to the necessary precision
- * @param: {number} num number to be rounded
- * @param: {number} decimal Number of decimals (100 - (2 decimals), 1000 (3 decimals) etc..
- * @returns: {number} Number rounded with necessary precision
- * */
-export function numFormat(num, decimal) {
-    return Math.round(num * decimal)/decimal;
 }
 
 ///////////////// dev
