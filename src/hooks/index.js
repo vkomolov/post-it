@@ -1,7 +1,7 @@
-import { useCallback, useRef, useLayoutEffect } from "react";
+import { useCallback, useRef, useLayoutEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
-import { initOpacityAnimation } from "../api";
+import { initOpacityAnimation, sortObjectsByTwoParams } from "../api";
 
 /**
  * Custom Hook which returns the state of the alert in redux reducer and the following actions
@@ -37,6 +37,10 @@ export function useSortingData() {
     const dispatch = useDispatch();
     const stateSort = useSelector(state => state.stateSort);
 
+    /**
+     * it dispatches the filter name for sorting array to sagasSort, then to sortSlice
+     * @type {Function}
+     */
     const dispatchSorting = useCallback(({ currentTarget }) => {
         if (currentTarget?.dataset?.name) {
             //dispatching to sagas
@@ -50,14 +54,21 @@ export function useSortingData() {
     }
 }
 
-
 export function usePosts() {
     log("usePosts...");
-    const dispatch = useDispatch();
+
     const { posts } = useSelector((state) => state.statePosts);
     const stateUsers = useSelector(state => state.stateUsers);
+    const { stateSort } = useSortingData();
+    const { sortPrimary, sortSecondary } = stateSort;
 
-    return { posts };
+    const postsSorted = useMemo(() => {
+        return !posts.length
+            ? []
+            : [...posts].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
+    }, [posts, sortPrimary, sortSecondary]);
+
+    return { postsSorted };
 }
 
 export function usePostActive() {

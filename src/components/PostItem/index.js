@@ -3,39 +3,61 @@ import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
 import "./PostItem.scss";
 import { usePostActive } from "../../hooks";
+import { limitSentence } from "../../api/funcs";
 
 const PostItem = ({ data, starQnty }) => {
     const { postActive, viewed, setPostActive } = usePostActive();
     const { id, userId, title, reactions, tags, body } = data;
+
+    //creating object to supply on click event
     const postData = {
         id,
         userId,
         title,
         body
     };
-    const specClass = +id === +postActive.id ? "post-wrapper active" : "post-wrapper";
+
+    //if the post is already viewed before then to separately style it...
+    const specViewedClass = (viewed.includes(id)) ? "post-wrapper viewed" : "post-wrapper";
+    //if the post is active then to separately style it, else to style as specViewedClass
+    const specClass = +id === +postActive.id ? "post-wrapper active" : specViewedClass;
+
+    //raiting stars of the post
     const stars = useMemo(() => {
-    return new Array(starQnty).fill("").map((e, index) => {
-      const specClass = (index + 1) <= +reactions ? "material-icons icon icon_raiting icon_foxy" : "material-icons icon icon_raiting";
-      return (
-          <i className={ specClass } key={ nanoid() }>star_rate</i>
-      );
-    });
-  }, [reactions]);
+        return new Array(starQnty).fill("").map((e, index) => {
+            const specClass = (index + 1) <= +reactions
+                ? "material-icons icon icon_raiting icon_foxy"
+                : "material-icons icon icon_raiting";
+            return (
+                <i className={ specClass } key={ nanoid() }>star_rate</i>
+            );
+        });
+        }, [reactions, starQnty]
+    );
 
     const titleString = useMemo(() => {
-    return title.slice(0, 70) + "...";
-  }, [title]);
+        return limitSentence(title, 55);
+    }, [title]);
 
     const tagsString = useMemo(() => {
-    return tags.join(", ");
-  }, [tags]);
+        return tags.join(", ");
+    }, [tags]);
+
+    //as the element is not interactive, to use handling of keyboard events...
+    const handleKeyEvent = e => {
+        if (e.key === "Enter") {
+            setPostActive(postData);
+        }
+    };
 
     return (
         <div
             className={ specClass }
             onClick={ () => setPostActive(postData) }
+            onKeyPress={ handleKeyEvent }
             aria-label="click to open the Post content"
+            role="menuitem"
+            tabIndex={0}
         >
             <div className="ratings-wrapper">
                 { stars }
@@ -53,27 +75,30 @@ export default PostItem;
 
 PostItem.propTypes = {
     data: PropTypes.shape({
-    id: PropTypes.oneOfType([
+        id: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number
+        ]).isRequired,
+        userId: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number
+        ]).isRequired,
+        title: PropTypes.string.isRequired,
+        reactions: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number
+        ]).isRequired,
+        tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+        body: PropTypes.string.isRequired,
+    }),
+    starQnty: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number
-    ]).isRequired,
-    userId: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number
-    ]).isRequired,
-    title: PropTypes.string.isRequired,
-    reactions: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]).isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string).isRequired,
-    body: PropTypes.string.isRequired,
-  }),
-    starQnty: PropTypes.number.isRequired
+    ]).isRequired
 };
 
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars
 function log(it, comments="value: ") {
-  console.log(comments, it);
+    console.log(comments, it);
 }

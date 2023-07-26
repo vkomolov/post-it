@@ -19,14 +19,14 @@ function* loadData() {
          * It will fetch both data, store them to the localforage and update postReducer, usersReducer
          */
         const [ dataPosts, dataUsers ] = yield all([
-                yield call(getAndStore, `${ baseUrl }/posts?limit=0`, "posts", 1),
-                yield call(
-                    getAndStore,
-                    `${ baseUrl }/users?limit=0&select=${ patternSelectUsers.join(",") }`,
-                    "users",
-                    1
-                )
-            ]);
+            yield call(getAndStore, `${ baseUrl }/posts?limit=0`, "posts", 1),
+            yield call(
+                getAndStore,
+                `${ baseUrl }/users?limit=0&select=${ patternSelectUsers.join(",") }`,
+                "users",
+                1
+            )
+        ]);
 
         yield put(setPosts(dataPosts.posts));
         yield put(setUsers(dataUsers.users));

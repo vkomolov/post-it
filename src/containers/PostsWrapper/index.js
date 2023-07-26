@@ -1,32 +1,24 @@
 import React, { useMemo } from "react";
 import "./PostsWrapper.scss";
 import PostItem from "../../components/PostItem";
-import AlertBlock from "../../components/AlertBlock";
 import { nanoid } from "@reduxjs/toolkit";
-import { useOpacityTransition, useSortingData, usePosts, useAlertData } from "../../hooks";
-import { sortObjectsByTwoParams } from "../../api";
+import { useOpacityTransition, usePosts } from "../../hooks";
 
 const PostsWrapper = () => {
   log("PostsWrapper renders...");
 
-    const { stateAlerts } = useAlertData();
-    const { stateSort } = useSortingData();
+    const { postsSorted } = usePosts();
+    const starQnty = postsSorted.length ? Math.max(...postsSorted.map(post => post.reactions)) : 0;
 
-    const { posts } = usePosts();
-    const starQnty = posts.length ? Math.max(...posts.map(post => post.reactions)) : 0;
-
+    //for animation of the element with transition opacity...
     const transitionedRef = useOpacityTransition(700);
-
-    const { sortPrimary, sortSecondary } = stateSort;
 
     const sortedPosts = useMemo(() => {
         log("sortedPosts useMemo: ");
 
-        if (!posts.length) {
+        if (!postsSorted.length) {
             return null;
         }
-
-        const postsSorted = [...posts].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
 
         return postsSorted.map(data => (
             <PostItem
@@ -35,14 +27,14 @@ const PostsWrapper = () => {
                 key={ nanoid() }
             />
         ));
-    }, [sortPrimary, sortSecondary, posts]);
+    }, [ postsSorted, starQnty ]);
 
     return (
         <div
             className="posts-wrapper"
+            role="menu"
             ref={ transitionedRef }
         >
-            { stateAlerts.alertType && <AlertBlock { ...{ stateAlerts } } /> }
             { sortedPosts }
         </div>
     );

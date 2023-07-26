@@ -73,6 +73,38 @@ export async function initAxios(url, config={}) {
     }
 }
 
+/**
+ * It takes the sentence and limits it with the complete words in the range of the given chars limit.
+ * @param {string} sentence: given sentence
+ * @param {number} maxCharCount: the chars limit
+ * @returns {string}
+ */
+export function limitSentence(sentence, maxCharCount) {
+    const words = sentence.split(" ");
+    const maxWithEllipsis = maxCharCount - 3;
+
+    if (words.length > 1) {
+        const limitedWords = [];
+        let totalCount = 0;
+
+        for (let i = 0; i < words.length; i++) {
+            const wordLength = words[i].length;
+
+            if (totalCount + wordLength <= maxWithEllipsis) {
+                limitedWords.push(words[i]);
+                totalCount += wordLength + 1; // +1 for the space
+            } else {
+                limitedWords[limitedWords.length - 1] += "...";
+                break;
+            }
+        }
+
+        return limitedWords.join(" ");
+    } else {
+        return words[0].length > maxWithEllipsis ? words[0].slice(0, maxWithEllipsis) + "..." : words[0];
+    }
+}
+
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars
 function log(it, comments="value: ") {
