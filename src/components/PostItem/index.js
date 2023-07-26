@@ -7,12 +7,19 @@ import { limitSentence } from "../../api/funcs";
 
 const PostItem = ({ data, starQnty }) => {
     const { postActive, viewed, setPostActive } = usePostActive();
-    const { id, userId, title, reactions, tags, body } = data;
+    const { id, userId, firstName, lastName, image, title, reactions, tags, body } = data;
 
-    //creating object to supply on click event
+    /**
+     * creating the data to dispatch, on click event at one of the post items, to sagasSort with the following
+     * dispatching the data to the activePostReducer.
+     * It is necessary for the ContentBar to demonstrate the data of the post clicked (which is currently active)
+     */
     const postData = {
         id,
         userId,
+        image,
+        firstName,
+        lastName,
         title,
         body
     };
@@ -63,9 +70,17 @@ const PostItem = ({ data, starQnty }) => {
                 { stars }
             </div>
             <div className="post-details-wrapper">
-                <span className="post-details-wrapper__userName">Author: { userId } </span>
-                <p className="post-details-wrapper__title"><span className="elem-info">Title: </span>{ titleString }</p>
-                <p className="post-details-wrapper__tags"><span className="elem-info">Tags: </span>{ tagsString }</p>
+                <span
+                    className="post-details-wrapper__userName"
+                >
+                    Author: { `${ firstName } ${ lastName }` }
+                </span>
+                <p className="post-details-wrapper__title">
+                    <span className="elem-info">Title: </span>{ titleString }
+                </p>
+                <p className="post-details-wrapper__tags">
+                    <span className="elem-info">Tags: </span>{ tagsString }
+                </p>
             </div>
         </div>
     );
@@ -83,6 +98,9 @@ PostItem.propTypes = {
             PropTypes.string,
             PropTypes.number
         ]).isRequired,
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+        image: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         reactions: PropTypes.oneOfType([
             PropTypes.string,

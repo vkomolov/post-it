@@ -71,8 +71,8 @@ export function sortObjectsByTwoParams(sortPrimary, sortSecondary) {
         } else {
             const text1 = getFirstWord(primaryProp1);
             const text2 = getFirstWord(primaryProp2);
-            if (text2 > text1) return 1;
-            if (text2 < text1) return -1;
+            if (text2 > text1) return -1;
+            if (text2 < text1) return 1;
         }
 
         const secondaryProp1 = obj1[sortSecondary];

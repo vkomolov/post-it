@@ -11,10 +11,10 @@ const HeaderFilterBar = () => {
     //log(sortSecondary, "sortSecondary in HeadFilterBar: ");
 
     const specClassObj = sortPrimary === "reactions" ? {
-        userId: "button",
+        firstName: "button",
         reactions: "button button_active"
     } : {
-        userId: "button button_active",
+        firstName: "button button_active",
         reactions: "button"
     };
 
@@ -22,8 +22,8 @@ const HeaderFilterBar = () => {
         <div className="header__filter-bar">
             <span className="header__filter-bar__heading">Sort By: </span>
             <button
-                className={ specClassObj.userId }
-                data-name="userId"
+                className={ specClassObj.firstName }
+                data-name="firstName"
                 onClick={ dispatchSorting }
             >
                 User

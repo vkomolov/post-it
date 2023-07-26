@@ -2,14 +2,15 @@ import { take, put } from "redux-saga/effects";
 import { setSortPrimary, setSortSecondary } from "../../features/sliceSort";
 
 const sortObj = {
-    userId: () => setSortPrimary("userId"),
+    firstName: () => setSortPrimary("firstName"),
     reactions: () => setSortPrimary("reactions"),
     title: () => setSortSecondary("title"),
     id: () => setSortSecondary("id"),
 };
 
 export function* sortWatcher() {
-    //the last taken sortName for avoiding repeats
+    //the last taken sortName for avoiding repeats at click events (any way the reducer will not change with the
+    //same data)
     let lastTaken = null;
 
     while (true) {

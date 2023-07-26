@@ -58,22 +58,49 @@ export function usePosts() {
     log("usePosts...");
 
     const { posts } = useSelector((state) => state.statePosts);
-    const stateUsers = useSelector(state => state.stateUsers);
+    const { users } = useSelector(state => state.stateUsers);
     const { stateSort } = useSortingData();
     const { sortPrimary, sortSecondary } = stateSort;
+    /**
+     * To convert the array of users to the object with the keys which equal the id of the users
+     * and values which equal the user`s data for the particular id...
+     * Motivation: as the array of posts have only the id of the user, who wrote it, it is necessary
+     * to turn to the users` array for the more detailed data to demonstrate: firstName, lastName. image.
+     * It order to avoid such expensive searches of ids in the array, the array can be converted to the object
+     * with the following id values as the properties. Then we can turn to the object without repeated searches.
+     */
+    const usersData = useMemo(() => {
+        return !users.length
+            ? {}
+            : users.reduce((acc, user) => {
+                acc[user.id] = user;
+                return acc;
+            }, {});
+    }, [ users ]);
 
-    const postsSorted = useMemo(() => {
-        return !posts.length
+    //to add the additional user`s data to the post object by the user`s id:
+    const postsUsersAddedArr = useMemo(() => {
+        return (!posts.length || !Object.keys(usersData).length)
             ? []
-            : [...posts].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
-    }, [posts, sortPrimary, sortSecondary]);
+            : posts.map(post => ({
+                ...post,
+                firstName: usersData[post.userId].firstName,
+                lastName: usersData[post.userId].lastName,
+                image: usersData[post.userId].image,
+            }));
+    }, [posts, usersData]);
+
+    //to sort the array of the posts by the filters set in sortSlice reducer
+    const postsSorted = useMemo(() => {
+        return !postsUsersAddedArr.length
+            ? []
+            : [...postsUsersAddedArr].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
+    }, [postsUsersAddedArr, sortPrimary, sortSecondary]);
 
     return { postsSorted };
 }
 
 export function usePostActive() {
-    //log("usePostActive...");
-
     const dispatch = useDispatch();
     const { postActive, viewed } = useSelector(state => state.stateActivePost);
 

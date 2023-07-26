@@ -8,10 +8,10 @@ const AsideBarControls = () => {
     const { sortSecondary } = stateSort;
 
   const specClassObj = sortSecondary === "title" ? {
-    latest: "button",
-    title: "button button_active"
+      latest: "button",
+      title: "button button_active"
   } : {
-    latest: "button button_active",
+      latest: "button button_active",
       title: "button"
   };
 

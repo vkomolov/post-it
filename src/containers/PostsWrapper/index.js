@@ -8,12 +8,14 @@ const PostsWrapper = () => {
   log("PostsWrapper renders...");
 
     const { postsSorted } = usePosts();
+
+    //checking out the maximum number of reactions (raitings):
     const starQnty = postsSorted.length ? Math.max(...postsSorted.map(post => post.reactions)) : 0;
 
-    //for animation of the element with transition opacity...
+    //for animation of the element with the transition opacity...
     const transitionedRef = useOpacityTransition(700);
 
-    const sortedPosts = useMemo(() => {
+    const postsList = useMemo(() => {
         log("sortedPosts useMemo: ");
 
         if (!postsSorted.length) {
@@ -35,7 +37,7 @@ const PostsWrapper = () => {
             role="menu"
             ref={ transitionedRef }
         >
-            { sortedPosts }
+            { postsList }
         </div>
     );
 };
