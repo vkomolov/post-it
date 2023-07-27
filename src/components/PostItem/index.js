@@ -7,22 +7,13 @@ import { limitSentence } from "../../api/funcs";
 
 const PostItem = ({ data, starQnty }) => {
     const { postActive, viewed, setPostActive } = usePostActive();
-    const { id, userId, firstName, lastName, image, title, reactions, tags, body } = data;
-
     /**
-     * creating the data to dispatch, on click event at one of the post items, to sagasSort with the following
+     * creating the postData to dispatch, on click event at one of the post items, to sagasSort with the following
      * dispatching the data to the activePostReducer.
      * It is necessary for the ContentBar to demonstrate the data of the post clicked (which is currently active)
      */
-    const postData = {
-        id,
-        userId,
-        image,
-        firstName,
-        lastName,
-        title,
-        body
-    };
+    const { reactions, tags, ...postData } = data;
+    const { id, firstName, lastName, title } = postData;
 
     //if the post is already viewed before then to separately style it...
     const specViewedClass = (viewed.includes(id)) ? "post-wrapper viewed" : "post-wrapper";

@@ -8,6 +8,8 @@ import { initOpacityAnimation, sortObjectsByTwoParams } from "../api";
  * @returns {{stateAlerts: *, initAlertClear: *, initAlertError: *, initAlertLoading: *}}
  */
 export function useAlertData() {
+    //log("useAlertData...");
+
     const dispatch = useDispatch();
     const stateAlerts = useSelector(state => state.stateAlerts);
     const initAlertLoading = useCallback((...textContent) => {
@@ -34,6 +36,8 @@ export function useAlertData() {
  * @returns {{stateSort: *, dispatchSorting: *}}
  */
 export function useSortingData() {
+    //log("useSortingData...");
+
     const dispatch = useDispatch();
     const stateSort = useSelector(state => state.stateSort);
 
@@ -55,7 +59,7 @@ export function useSortingData() {
 }
 
 export function usePosts() {
-    log("usePosts...");
+    //log("usePosts...");
 
     const { posts } = useSelector((state) => state.statePosts);
     const { users } = useSelector(state => state.stateUsers);
@@ -121,7 +125,6 @@ export function usePostActive() {
         setPostActive
     };
 }
-
 
 /**
  * It animates the opacity of the HTMLElement from 0 to 1

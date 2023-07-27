@@ -16,7 +16,7 @@ const PostsWrapper = () => {
     const transitionedRef = useOpacityTransition(700);
 
     const postsList = useMemo(() => {
-        log("sortedPosts useMemo: ");
+        //log("sortedPosts useMemo: ");
 
         if (!postsSorted.length) {
             return null;

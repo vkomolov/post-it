@@ -6,11 +6,24 @@
 @import '../../styles/global_styles/_fonts.scss';
 
 .content-bar {
-  padding: 0.3em;
+  padding: 0.5em 0.3em;
   border: 1px solid darkblue;
   flex-grow: 1;
   height: 100%;
 
-  @include flex-box($flex-box-row-left-wrap...);
-  align-items: flex-start;
+  @include flex-box($flex-box-row-top-wrap...);
+
+  .default-content-wrapper {
+    width: 100%;
+    height: 100%;
+
+    @include flex-box($flex-box-row-center-wrap...);
+
+    .default-text {
+      text-shadow: 0.05em 0.05em 0.03em rgba(0,0,0,0.5);
+      color: $greyLight;
+
+      @include init-font(3em, 700);
+    }
+  }
 }
