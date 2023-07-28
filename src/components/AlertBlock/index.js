@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
-import * as PropTypes from "prop-types";
 import { nanoid } from "@reduxjs/toolkit";
+import { useAlertData } from "../../hooks";
 import "./AlertBlock.scss";
 
-export default function AlertBlock({ stateAlerts }) {
+export default function AlertBlock() {
+    const { stateAlerts } = useAlertData();
     const { alertType, alertContent } = stateAlerts;
 
     return useMemo(() => {
@@ -36,15 +37,6 @@ export default function AlertBlock({ stateAlerts }) {
     }, [alertType, alertContent]);
 }
 
-AlertBlock.propTypes = {
-    stateAlerts: PropTypes.shape({
-        alertType: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.oneOf([null])
-        ]),
-        alertContent: PropTypes.array
-    })
-};
 
 
 

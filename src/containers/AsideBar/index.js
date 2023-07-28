@@ -4,12 +4,12 @@ import AsideBarControls from "../AsideBarControls";
 import PostsWrapper from "../PostsWrapper";
 
 const AsideBar = () => {
-  return (
-    <div className="aside-bar">
-      <AsideBarControls />
-      <PostsWrapper />
-    </div>
-  );
+    return (
+        <div className="aside-bar">
+            <AsideBarControls />
+            <PostsWrapper />
+        </div>
+    );
 };
 
 export default AsideBar;

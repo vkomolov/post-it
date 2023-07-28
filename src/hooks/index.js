@@ -8,8 +8,6 @@ import { initOpacityAnimation, sortObjectsByTwoParams } from "../api";
  * @returns {{stateAlerts: *, initAlertClear: *, initAlertError: *, initAlertLoading: *}}
  */
 export function useAlertData() {
-    //log("useAlertData...");
-
     const dispatch = useDispatch();
     const stateAlerts = useSelector(state => state.stateAlerts);
     const initAlertLoading = useCallback((...textContent) => {
@@ -36,8 +34,6 @@ export function useAlertData() {
  * @returns {{stateSort: *, dispatchSorting: *}}
  */
 export function useSortingData() {
-    //log("useSortingData...");
-
     const dispatch = useDispatch();
     const stateSort = useSelector(state => state.stateSort);
 
@@ -58,9 +54,14 @@ export function useSortingData() {
     }
 }
 
+/**
+ * It gets posts, users and sorting filters from the reducers statePosts, stateUsers, stateSort;
+ * It modifies the array of users to the object with properties as ids of the posts, for quick turns to the posts` data;
+ * It modifies the array of the posts with the data of the users for showing in the list of PostItem Components;
+ * It sorts the modified array of the posts with the active sorting filters, stored in the stateSort reducer;
+ * @returns {{postsSorted: []}}
+ */
 export function usePosts() {
-    //log("usePosts...");
-
     const { posts } = useSelector((state) => state.statePosts);
     const { users } = useSelector(state => state.stateUsers);
     const { stateSort } = useSortingData();
@@ -104,6 +105,12 @@ export function usePosts() {
     return { postsSorted };
 }
 
+/**
+ * It gets the data of the active post which was clicked;
+ * It gets the array of the post ids, which were already seen;
+ * It gets the callback for dispatching the data of the post clicked to the stateActivePost reducer;
+ * @returns {{viewed: [], setPostActive: function, postActive: Object}}
+ */
 export function usePostActive() {
     const dispatch = useDispatch();
     const { postActive, viewed } = useSelector(state => state.stateActivePost);

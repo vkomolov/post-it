@@ -5,19 +5,17 @@ import { nanoid } from "@reduxjs/toolkit";
 import { useOpacityTransition, usePosts } from "../../hooks";
 
 const PostsWrapper = () => {
-  log("PostsWrapper renders...");
-
     const { postsSorted } = usePosts();
 
     //checking out the maximum number of reactions (raitings):
-    const starQnty = postsSorted.length ? Math.max(...postsSorted.map(post => post.reactions)) : 0;
+    const starQnty = useMemo(() => {
+        return postsSorted.length ? Math.max(...postsSorted.map(post => post.reactions)) : 0;
+    }, [ postsSorted ]);
 
     //for animation of the element with the transition opacity...
     const transitionedRef = useOpacityTransition(700);
 
     const postsList = useMemo(() => {
-        //log("sortedPosts useMemo: ");
-
         if (!postsSorted.length) {
             return null;
         }
