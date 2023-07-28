@@ -1,4 +1,4 @@
-import { call, fork, put, take, all, select } from "redux-saga/effects";
+import { call, fork, put, take, all, select, delay } from "redux-saga/effects";
 import { getAndStore } from "../../../api";
 import { getLocalForage, setLocalForage } from "../../../api/funcs";
 import { alertClear, alertError, alertLoading } from "../../features/sliceAlerts";
@@ -13,6 +13,9 @@ function* loadData() {
     try {
         //initiating loading icon
         yield put(alertLoading("Loading"));
+
+        //checking download time:
+        const startTime = Date.now();
 
         /**
          * For showing the post list it is necessary to have both data: the data of users and the data of posts...
@@ -31,6 +34,8 @@ function* loadData() {
         yield put(setPosts(dataPosts.posts));
         yield put(setUsers(dataUsers.users));
 
+        //if the download time lest than 500ms then to imitate loading with delay(1000)
+        if ((Date.now() - startTime) < 500) yield delay(1000);
         //removing alert loading
         yield put(alertClear());
 

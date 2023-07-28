@@ -6,7 +6,7 @@ import "./AlertBlock.scss";
 export default function AlertBlock({ stateAlerts }) {
     const { alertType, alertContent } = stateAlerts;
 
-    const alertElement = useMemo(() => {
+    return useMemo(() => {
         if (!alertType) return null;
 
         //only two options for now
@@ -34,8 +34,6 @@ export default function AlertBlock({ stateAlerts }) {
             </div>
         );
     }, [alertType, alertContent]);
-
-    return alertElement;
 }
 
 AlertBlock.propTypes = {

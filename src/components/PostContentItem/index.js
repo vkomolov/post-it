@@ -15,9 +15,6 @@ import "./PostContentItem.scss";
 const PostContentItem = ({ postActive }) => {
     const { title, body, firstName, lastName, image } = postActive;
 
-    log(image, "image: ");
-    log(firstName, "firstName: ");
-
     return (
         <div className="post-content-item-wrapper">
             <div className="user-details-wrapper">
@@ -37,7 +34,7 @@ const PostContentItem = ({ postActive }) => {
 export default PostContentItem;
 
 PostContentItem.propTypes = {
-    data: PropTypes.shape({
+    postActive: PropTypes.shape({
         id: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.number
