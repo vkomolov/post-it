@@ -5,7 +5,6 @@
 
 .post-content-item-wrapper {
   max-width: 30em;
-  flex-grow: 1;
   padding: 0.5em;
   border: 0.15em solid $foxy;
   border-radius: 0.5em;
@@ -35,7 +34,7 @@
       color: $foxy;
       letter-spacing: 0.05em;
 
-      @include init-font(1.5em, 600);
+      @include init-font(1.2em, 600);
       @include text-shadow(0.03em, 0.08em);
     }
   }
@@ -44,7 +43,7 @@
     color: $foxy;
     margin-bottom: 0.5em;
 
-    @include init-font(1.2em, 600);
+    @include init-font(1.1em, 600);
   }
 
   .post-body {

@@ -59,7 +59,7 @@ export function useSortingData() {
  * It modifies the array of users to the object with properties as ids of the posts, for quick turns to the posts` data;
  * It modifies the array of the posts with the data of the users for showing in the list of PostItem Components;
  * It sorts the modified array of the posts with the active sorting filters, stored in the stateSort reducer;
- * @returns {{postsSorted: []}}
+ * @returns {{postsSorted: (*|Object[])}}
  */
 export function usePosts() {
     const { posts } = useSelector((state) => state.statePosts);
@@ -113,7 +113,7 @@ export function usePosts() {
  */
 export function usePostActive() {
     const dispatch = useDispatch();
-    const { postActive, viewed } = useSelector(state => state.stateActivePost);
+    const { postActive, viewed, comments } = useSelector(state => state.stateActivePost);
 
     /** It dispatches the data of the clicked post to sagasPosts, where it stores the id of the clicked post to the
      * localStorage as the array of already viewed posts, then it dispatches the data of the active (clicked) post
@@ -129,6 +129,7 @@ export function usePostActive() {
     return {
         postActive,
         viewed,
+        comments,
         setPostActive
     };
 }

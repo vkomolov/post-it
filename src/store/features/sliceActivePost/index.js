@@ -6,8 +6,12 @@ const initialState = {
         userId: null,
         title: null,
         body: null,
+        firstName: null,
+        lastName: null,
+        image: null,
     },
     viewed: [],
+    comments: []
 };
 
 const sliceActivePost = createSlice({
@@ -19,9 +23,12 @@ const sliceActivePost = createSlice({
         },
         addViewed: (state, { payload }) => {
             state.viewed = payload;
+        },
+        addComments: (state, { payload }) => {
+            state.comments = payload;
         }
     }
 });
 
-export const { setPostActive, addViewed } = sliceActivePost.actions;
+export const { setPostActive, addViewed, addComments } = sliceActivePost.actions;
 export default sliceActivePost.reducer;

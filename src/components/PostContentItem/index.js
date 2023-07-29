@@ -1,6 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./PostContentItem.scss";
+import PropTypes from "prop-types";
 
 /*const temp = {
   "id": 8,
@@ -12,8 +12,12 @@ import "./PostContentItem.scss";
   "image": "https://robohash.org/rerumfugiatamet.png"
 };*/
 
+//re-rendering PostContentItem on changing only postActive props
 const PostContentItem = ({ postActive }) => {
-    const { title, body, firstName, lastName, image } = postActive;
+    log("PostContentItem renders...");
+
+    //TODO: userId for checking login userId...
+    const { userId, title, body, firstName, lastName, image } = postActive;
 
     return (
         <div className="post-content-item-wrapper">
@@ -31,14 +35,11 @@ const PostContentItem = ({ postActive }) => {
     );
 };
 
-export default PostContentItem;
+//avoiding re-rendering on changing comments at PostContent
+export default React.memo(PostContentItem);
 
 PostContentItem.propTypes = {
     postActive: PropTypes.shape({
-        id: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.number
-        ]),
         title: PropTypes.string,
         body: PropTypes.string,
         userId: PropTypes.oneOfType([
@@ -48,7 +49,7 @@ PostContentItem.propTypes = {
         firstName: PropTypes.string,
         lastName: PropTypes.string,
         image: PropTypes.string,
-    })
+    }),
 };
 
 ///////////////// dev

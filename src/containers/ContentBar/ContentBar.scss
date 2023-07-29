@@ -6,12 +6,15 @@
 @import '../../styles/global_styles/_fonts.scss';
 
 .content-bar {
-  padding: 0.5em 0.3em;
-  border: 1px solid darkblue;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: stretch;
   flex-grow: 1;
   height: 100%;
+  padding: 0.5em 0.3em;
 
-  @include flex-box($flex-box-row-top-wrap...);
+  //@include scroll-init(0.3em, $foxy, $white);
 
   .default-content-wrapper {
     width: 100%;

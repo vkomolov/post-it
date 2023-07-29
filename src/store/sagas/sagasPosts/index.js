@@ -4,7 +4,7 @@ import { getLocalForage, setLocalForage } from "../../../api/funcs";
 import { alertClear, alertError, alertLoading } from "../../features/sliceAlerts";
 import { setPosts } from "../../features/slicePosts";
 import { setUsers } from "../../features/sliceUsers"
-import { setPostActive, addViewed } from "../../features/sliceActivePost";
+import { setPostActive, addViewed, addComments } from "../../features/sliceActivePost";
 
 const baseUrl = "https://dummyjson.com";
 const patternSelectUsers = ["image", "firstName", "lastName", "username", "password"];
@@ -45,14 +45,14 @@ function* loadData() {
     }
 }
 
-
 function* watchPostActivate() {
     //for checking the last activation of the post
     let lastId = null;
 
     /**
-     * before the while cycles of taking the action "SET_POST_ACTIVE", to initialize or create the localforage store,
-     * then to update activePostReducer with the latest data...
+     * Creating cash of the post ids, which were viewed before.
+     * Before the while cycles of taking the action "SET_POST_ACTIVE", to initialize or create the localforage store,
+     * then to update activePostReducer with the latest viewed array...
      * Turning to localforage will only be on mounting the App in order to initially update activePostReducer.
      * Further, the new data will be added to the existing localforage and synchronized with activePostReducer.
      */
@@ -73,24 +73,49 @@ function* watchPostActivate() {
         if (payload.id !== lastId) {
             lastId = payload.id;
 
-            //checking if the post is already viewed:
-            // if not viewed then to add to localforage and to update activePostReducer
+            /**
+             * checking if the post is already viewed:
+             * if not viewed then to add to localforage and to update activePostReducer
+             */
             const { viewed } = yield select(state => state.stateActivePost);
 
+            /**
+             * if (!viewed.includes(lastId)), the action addViewed(auxViewed.data) will be dispatched
+             * with the following dispatching action: setPostActive(payload), which makes the change of
+             * the activePostReducer state at one time, with one re-render of the components with the dependency.
+             */
             if (!viewed.includes(lastId)) {
                 const viewedUpdated = [
                     ...viewed,
                     lastId
                 ];
 
+                //locking effect for storing data, then dispatching action addViewed(auxViewed.data)
                 const auxViewed = yield call(setLocalForage, "postsViewed", viewedUpdated);
 
                 //updating activePostReducer with the array of ids of the posts viewed
                 yield put(addViewed(auxViewed.data));
             }
 
-            //dispatching the data of the post to activePostReducer
+            //setPostActive(payload) dispatches the data of the post to activePostReducer
             yield put(setPostActive(payload));
+
+            /**
+             * fetching and storing the data of comments connected to the clicked post id;
+             */
+            try {
+                const { comments } = yield call(
+                    getAndStore,
+                    `${ baseUrl }/posts/${ lastId }/comments?limit=0`,
+                    `comments${ lastId }`,
+                    1
+                );
+                yield put(addComments(comments));
+
+            } catch(e) {
+                yield put(alertError(e.message));
+                console.error(e.stack);
+            }
         }
     }
 }
