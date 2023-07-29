@@ -25,18 +25,6 @@
     border-color: transparent $greyDark $greyDark transparent;
   }
 
-  //.post-comment-wrapper:after {
-  //    position: absolute;
-  //    content: "";
-  //    width: 0;
-  //    height: 0;
-  //    left: -1.1em;
-  //    bottom: 0.45em;
-  //    border-width: 0.6em;
-  //    border-style: solid;
-  //    border-color: transparent rgb(115, 249, 113) rgb(115, 249, 113) transparent;
-  //}
-
   &:after {
     position: absolute;
     content: "";

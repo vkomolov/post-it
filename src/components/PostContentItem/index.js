@@ -1,26 +1,18 @@
 import React from "react";
 import "./PostContentItem.scss";
 import PropTypes from "prop-types";
+import { useOpacityTransition } from "../../hooks";
 
-/*const temp = {
-  "id": 8,
-  "title": "One can cook on and with an open fire.",
-  "body": "One can cook on and with an open fire. These are some of the ways to cook with fire outside. Cooking meat using a spit is a great way to evenly cook meat. In order to keep meat from burning, it's best to slowly rotate it.",
-  "userId": 31,
-  "firstName": "Luciano",
-  "lastName": "Sauer",
-  "image": "https://robohash.org/rerumfugiatamet.png"
-};*/
-
-//re-rendering PostContentItem on changing only postActive props
+//re-rendering PostContentItem on changing only postActive props with React.memo
 const PostContentItem = ({ postActive }) => {
-    log("PostContentItem renders...");
+    //for animation of the elements with the transition opacity...
+    const postsRef = useOpacityTransition(700);
 
     //TODO: userId for checking login userId...
     const { userId, title, body, firstName, lastName, image } = postActive;
 
     return (
-        <div className="post-content-item-wrapper">
+        <div className="post-content-item-wrapper" ref={ postsRef }>
             <div className="user-details-wrapper">
                 <div className="image-wrapper">
                     <img src={ image } alt="user icon" />

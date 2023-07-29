@@ -19,7 +19,8 @@ const sliceActivePost = createSlice({
     initialState,
     reducers: {
         setPostActive: (state, { payload }) => {
-            state.postActive = payload;
+            state.postActive = payload.postActive;
+            state.comments = payload.comments;
         },
         addViewed: (state, { payload }) => {
             state.viewed = payload;

@@ -97,11 +97,21 @@ function* watchPostActivate() {
                 yield put(addViewed(auxViewed.data));
             }
 
+            /**
+             * to clear comments of the previous post and to dispatch a new post clicked;
+             * further asynchronously a new comments data will be dispatched
+             * @type {{comments: [], postActive: Object}}
+             */
+            const activeData = {
+                postActive: payload,
+                comments: []
+            };
+
             //setPostActive(payload) dispatches the data of the post to activePostReducer
-            yield put(setPostActive(payload));
+            yield put(setPostActive(activeData));
 
             /**
-             * fetching and storing the data of comments connected to the clicked post id;
+             * fetching and storing the data of comments connected to the clicked post by id;
              */
             try {
                 const { comments } = yield call(

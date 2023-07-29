@@ -1,27 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "./PostContentComment.scss";
+import { useOpacityTransition } from "../../hooks";
 
-/*const commentsSample = [
-    {
-        "id": 4,
-        "body": "Wow! You have improved so much!",
-        "postId": 8,
-        "user": {
-            "id": 19,
-            "username": "bleveragei"
-        }
-    },
-];*/
-
+//re-rendering PostContentComment on changing only comment props with React.memo
 const PostContentComment = ({ comment }) => {
-    log("PostContentComment renders...");
-    //log(comment, "comment in PostContentComment: ");
     const { user, body } = comment;
-
+    const commentsRef = useOpacityTransition(700);
 
     return (
-        <div className="post-comment-wrapper">
+        <div className="post-comment-wrapper" ref={ commentsRef }>
             <h3>Author: { user.username }</h3>
             <p>{ body }</p>
         </div>
