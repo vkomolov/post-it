@@ -1,5 +1,6 @@
 import { useCallback, useRef, useLayoutEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
 import { initOpacityAnimation, sortObjectsByTwoParams } from "../api";
 
@@ -113,6 +114,7 @@ export function usePosts() {
  */
 export function usePostActive() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { postActive, viewed, comments } = useSelector(state => state.stateActivePost);
 
     /** It dispatches the data of the clicked post to sagasPosts, where it stores the id of the clicked post to the
@@ -123,6 +125,7 @@ export function usePostActive() {
      * @type {Function}
      */
     const setPostActive = useCallback((postData) => {
+        navigate(`/${postData.id}`);
         dispatch({ type: "SET_POST_ACTIVE", payload: postData });
     }, [dispatch]);
 

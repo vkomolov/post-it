@@ -1,12 +1,19 @@
 import React from "react";
 import "./PostContent.scss";
-import PropTypes from "prop-types";
-import PostContentItem from "../../components/PostContentItem";
-import { nanoid } from "@reduxjs/toolkit";
-import PostContentComment from "../../components/PostContentComment";
+//import PropTypes from "prop-types";
+//import PostContentItem from "../../components/PostContentItem";
+//import { nanoid } from "@reduxjs/toolkit";
+// PostContentComment from "../../components/PostContentComment";
 
-const PostContent = ({ postData }) => {
-    const { postActive, comments } = postData;
+const PostContent = () => {
+
+    return (
+        <div>
+            PostContent
+        </div>
+    );
+
+/*    const { postActive, comments } = postData;
     const commentsList = !comments.length
         ? null
         : comments.map(comment => <PostContentComment  comment={ comment } key={ nanoid() } />);
@@ -20,12 +27,12 @@ const PostContent = ({ postData }) => {
                 { commentsList }
             </div>
         </div>
-    );
+    );*/
 };
 
 export default PostContent;
 
-PostContent.propTypes = {
+/*PostContent.propTypes = {
     postData: PropTypes.shape({
         postActive: PropTypes.shape({
             id: PropTypes.oneOfType([
@@ -44,7 +51,7 @@ PostContent.propTypes = {
         }),
         comments: PropTypes.array,
     })
-};
+};*/
 
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars

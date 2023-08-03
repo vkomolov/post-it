@@ -1,0 +1,22 @@
+@import "../../styles/global_styles/variables";
+@import "../../styles/global_styles/mixins";
+@import "../../styles/global_styles/extends";
+@import "../../styles/global_styles/animations";
+
+.main-wrapper {
+  width: 100%;
+  flex-grow: 1;
+
+  @include flex-box($flex-box-row-top-nowrap...);
+
+  .content-bar {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: stretch;
+    flex-grow: 1;
+    height: 100%;
+    padding: 0.5em 0.3em;
+
+  }
+}

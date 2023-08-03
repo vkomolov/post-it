@@ -1,12 +1,16 @@
 import React, { useMemo } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
+import { useParams } from "react-router-dom";
 import "./PostItem.scss";
 import { usePostActive } from "../../hooks";
 import { limitSentence } from "../../api/funcs";
 
 const PostItem = ({ data, starQnty }) => {
-    const { postActive, viewed, setPostActive } = usePostActive();
+    //getting postId from the url
+    const params = useParams();
+
+    const { viewed, setPostActive } = usePostActive();
     /**
      * creating the postData to dispatch, on click event at one of the post items, to sagasSort with the following
      * dispatching the data to the activePostReducer.
@@ -18,7 +22,7 @@ const PostItem = ({ data, starQnty }) => {
     //if the post is already viewed before then to separately style it...
     const specViewedClass = (viewed.includes(id)) ? "post-wrapper viewed" : "post-wrapper";
     //if the post is active then to separately style it, else to style as specViewedClass
-    const specClass = +id === +postActive.id ? "post-wrapper active" : specViewedClass;
+    const specClass = +id === +params.postId ? "post-wrapper active" : specViewedClass;
 
     //raiting stars of the post
     const stars = useMemo(() => {

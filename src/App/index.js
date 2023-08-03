@@ -1,20 +1,23 @@
 import React from "react";
-import "./App.scss";
-import Header from "../containers/Header";
-import AsideBar from "../containers/AsideBar";
-import ContentBar from "../containers/ContentBar";
-import AlertBlock from "../components/AlertBlock";
+import { Routes, Route } from "react-router-dom";
+import Layout from "../pages/Layout";
+import PostContent from "../containers/PostContent";
+import DefaultContent from "../pages/DefaultContent";
+import LoginContent from "../pages/LoginContent";
+import PostEdit from "../pages/PostEdit";
+
+
 
 export default function App() {
     return (
-        <>
-            <AlertBlock />
-            <Header />
-            <main className="main-wrapper">
-                <AsideBar />
-                <ContentBar />
-            </main>
-        </>
+        <Routes>
+          <Route path="/" element={ <Layout /> } >
+            <Route index element={ <DefaultContent/> }/>
+            <Route path="login" element={ <LoginContent /> } />
+            <Route path=":postId" element={ <PostContent/> } />
+            <Route path=":postId/edit" element={ <PostEdit/> } />
+          </Route>
+        </Routes>
     );
 }
 
