@@ -1,0 +1,21 @@
+@import "../../_styles/global_styles/_variables.scss";
+@import "../../_styles/global_styles/_mixins.scss";
+@import "../../_styles/global_styles/_extends.scss";
+@import "../../_styles/global_styles/_animations.scss";
+
+.posts-wrapper {
+  width: 100%;
+  //giving height: 0 with flex-grow: 1 gives the fixed height for .posts-wrapper within the height of the parent
+  // AsideBar (which has flex-direction: column, align-items: scratch). It gives possibility to scroll .posts-wrapper
+  //without fixing height with the particular value.
+  height: 0;
+  flex-grow: 1;
+  padding-right: 0.5em;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: stretch;
+  align-items: flex-start;
+
+  @include scroll-init(0.3em, $foxy, $white);
+}

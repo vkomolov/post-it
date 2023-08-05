@@ -1,0 +1,24 @@
+@import "../../_styles/global_styles/_variables.scss";
+@import "../../_styles/global_styles/_mixins.scss";
+@import "../../_styles/global_styles/_extends.scss";
+@import "../../_styles/global_styles/_animations.scss";
+
+.aside-bar__controls {
+  width: 100%;
+  min-height: 3.5em;
+  //padding: 0.3em 0;
+
+  @include flex-box($flex-box-row-center-nowrap...);
+
+  &__buttons {
+    padding: 0.3em;
+    flex-grow: 1;
+    gap: 0.6em;
+    @include flex-box($flex-box-row-left-nowrap...);
+  }
+
+  &__handles {
+    height: 3em;
+    padding: 0.3em;
+  }
+}

@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import AlertBlock from "../../components/AlertBlock";
-import Header from "../../containers/Header";
-import AsideBar from "../../containers/AsideBar";
+import AlertBlock from "../../_components/AlertBlock";
+import Header from "../../_containers/Header";
+import AsideBar from "../../_containers/AsideBar";
 
 import "./Layout.scss";
 

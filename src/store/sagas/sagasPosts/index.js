@@ -1,10 +1,9 @@
 import { call, fork, put, take, all, select, delay } from "redux-saga/effects";
-import { getAndStore } from "../../../api";
-import { getLocalForage, setLocalForage } from "../../../api/funcs";
+import { getAndStore, getLocalForage, setLocalForage } from "../../../_helpers";
 import { alertClear, alertError, alertLoading } from "../../features/sliceAlerts";
 import { setPosts } from "../../features/slicePosts";
 import { setUsers } from "../../features/sliceUsers"
-import { setPostActive, addViewed, addComments } from "../../features/sliceActivePost";
+import { setPostActive, setPostComments, addViewed } from "../../features/sliceActivePost";
 
 const baseUrl = "https://dummyjson.com";
 const patternSelectUsers = ["image", "firstName", "lastName", "username", "password"];
@@ -82,7 +81,7 @@ function* watchPostActivate() {
             /**
              * if (!viewed.includes(lastId)), the action addViewed(auxViewed.data) will be dispatched
              * with the following dispatching action: setPostActive(payload), which makes the change of
-             * the activePostReducer state at one time, with one re-render of the components with the dependency.
+             * the activePostReducer state at one time, with one re-render of the _components with the dependency.
              */
             if (!viewed.includes(lastId)) {
                 const viewedUpdated = [
@@ -97,18 +96,8 @@ function* watchPostActivate() {
                 yield put(addViewed(auxViewed.data));
             }
 
-            /**
-             * to clear comments of the previous post and to dispatch a new post clicked;
-             * further asynchronously a new comments data will be dispatched
-             * @type {{comments: [], postActive: Object}}
-             */
-            const activeData = {
-                postActive: payload,
-                comments: []
-            };
-
             //setPostActive(payload) dispatches the data of the post to activePostReducer
-            yield put(setPostActive(activeData));
+            yield put(setPostActive(payload));
 
             /**
              * fetching and storing the data of comments connected to the clicked post by id;
@@ -120,7 +109,7 @@ function* watchPostActivate() {
                     `comments${ lastId }`,
                     1
                 );
-                yield put(addComments(comments));
+                yield put(setPostComments(comments));
 
             } catch(e) {
                 yield put(alertError(e.message));

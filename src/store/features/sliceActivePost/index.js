@@ -19,17 +19,18 @@ const sliceActivePost = createSlice({
     initialState,
     reducers: {
         setPostActive: (state, { payload }) => {
-            state.postActive = payload.postActive;
-            state.comments = payload.comments;
+            state.postActive = payload;
+            //clearing comments for the new active Post
+            state.comments = [];
+        },
+        setPostComments: (state, { payload }) => {
+            state.comments = payload;
         },
         addViewed: (state, { payload }) => {
             state.viewed = payload;
         },
-        addComments: (state, { payload }) => {
-            state.comments = payload;
-        }
     }
 });
 
-export const { setPostActive, addViewed, addComments } = sliceActivePost.actions;
+export const { setPostActive, setPostComments, addViewed } = sliceActivePost.actions;
 export default sliceActivePost.reducer;

@@ -1,0 +1,18 @@
+@import '../../_styles/global_styles/_variables.scss';
+@import '../../_styles/global_styles/_mixins.scss';
+@import '../../_styles/global_styles/_extends.scss';
+@import '../../_styles/global_styles/_animations.scss';
+
+.header__filter-bar {
+  padding: 0.5em;
+  flex-grow: 1;
+
+  @include flex-box($flex-box-row-right-nowrap...);
+  gap: 0.6em;
+
+  &__heading {
+    color: $dark;
+    @include init-font(1.13em, 500);
+    @include text-shadow(0.03em, 0.1em);
+  }
+}

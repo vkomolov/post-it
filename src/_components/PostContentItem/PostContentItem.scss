@@ -1,0 +1,54 @@
+@import "../../_styles/global_styles/variables";
+@import "../../_styles/global_styles/mixins";
+@import "../../_styles/global_styles/extends";
+@import "../../_styles/global_styles/animations";
+
+.post-content-item-wrapper {
+  max-width: 30em;
+  padding: 0.5em;
+  border: 0.15em solid $foxy;
+  border-radius: 0.5em;
+  background-color: $white;
+  @include box-shadow(0.12em, 0.25em);
+
+  .user-details-wrapper {
+    margin-bottom: 1em;
+
+    @include flex-box($flex-box-row-left-wrap...);
+
+    .image-wrapper {
+      width: 3.5em;
+      height: 3.5em;
+      padding: 0.15em;
+      border: 0.15em solid $foxy;
+      border-radius: 0.5em;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .user-name {
+      margin: 0.3em 0.5em;
+      color: $foxy;
+      letter-spacing: 0.05em;
+
+      @include init-font(1.2em, 600);
+      @include text-shadow(0.03em, 0.08em);
+    }
+  }
+
+  .post-title {
+    color: $foxy;
+    margin-bottom: 0.5em;
+
+    @include init-font(1.1em, 600);
+  }
+
+  .post-body {
+    line-height: 1.3em;
+
+    @include init-font(1em, 400);
+  }
+}

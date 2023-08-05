@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+import { combineReducers } from "@reduxjs/toolkit";
 import reducerAlerts from "./sliceAlerts";
 import reducerPosts from "./slicePosts";
 import reducerSort from "./sliceSort";
