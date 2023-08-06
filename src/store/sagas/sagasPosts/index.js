@@ -127,8 +127,7 @@ function* watchPostActive() {
 }
 
 export function* postWatcher() {
-    //initial fetching posts, blocking till it loads...
-    yield call(loadData);
+    yield fork(loadData);
     yield fork(watchPostActive);
 }
 

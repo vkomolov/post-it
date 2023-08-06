@@ -1,45 +1,61 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import "./PostItem.scss";
 import { usePostActive } from "../../hooks";
 import { limitSentence } from "../../_helpers";
 
 const PostItem = ({ data, starQnty }) => {
-  const params = useParams();
+  const navigate = useNavigate();
+  const { postId } = useParams();
   const { viewed, setPostActive } = usePostActive();
+
+  const { id, firstName, lastName, title, reactions, tags } = data;
+
   /**
-   * on click event to create postData to dispatch to sagasSort with the following
-   * dispatching the data to the activePostReducer.
-   * It is necessary for the ContentBar to demonstrate the data of the post clicked (which is currently active)
+   * Motivation for useEffect:
+   * If the post is clicked, then it could be worth to dispatch the data of the clicked post
+   * to activePostReducer directly, like onClick={() => setPostActive(data)}, then to navigate to /:postId
+   * for PostContent to render and to get the data of the active post from activePostReducer
+   * BUT, in case of hard reloading of the page with path/:postId, or
+   * loading the App with a specific path/:postId without clicking a particular post from the list of post,
+   * in this case sagasPosts does not take the action of setPostActive(data) and PostContent does not get
+   * the data of the active post for demonstration.
+   * That is why, it is solved with the following:
+   * - on click event from the particular post it will navigate path to /:postId of the clicked post;
+   * - then, if useParams() gets the property postId, the data of the particular Post, with the same postId,
+   * will be dispatched to sagasPosts for updating activePostReducer and loading comments of the post...
    */
-  const { reactions, tags, ...postData } = data;
-  const { id, firstName, lastName, title } = postData;
+  useEffect(() => {
+    if (postId && +postId === +data.id) {
+      setPostActive(data);
+    }
+  }, [data, postId, setPostActive]);
 
   //if the post is already viewed before then to separately style it...
   const specViewedClass = (viewed.includes(id)) ? "post-wrapper viewed" : "post-wrapper";
+
   //if the post is active then to separately style it, else to style as specViewedClass
-  const specClass = +id === +params["postId"] ? "post-wrapper active" : specViewedClass;
+  const specClass = +id === +postId ? "post-wrapper active" : specViewedClass;
 
   //raiting stars of the post
   const stars = useMemo(() => {
     return new Array(starQnty).fill("").map((e, index) => {
-          const specClass = (index + 1) <= +reactions
-              ? "material-icons icon icon_raiting icon_foxy"
-              : "material-icons icon icon_raiting";
-          return (
-              <i className={specClass} key={nanoid()}>star_rate</i>
-          );
-        });
+      const specClass = (index + 1) <= +reactions
+          ? "material-icons icon icon_raiting icon_foxy"
+          : "material-icons icon icon_raiting";
+      return (
+          <i className={specClass} key={nanoid()}>star_rate</i>
+      );
+    });
       }, [reactions, starQnty]
   );
 
   const titleString = useMemo(() => {
     return limitSentence(title, 55);
   }, [title]);
-
   const tagsString = useMemo(() => {
     return tags.join(", ");
   }, [tags]);
@@ -47,14 +63,14 @@ const PostItem = ({ data, starQnty }) => {
   //as the element is not interactive, to use handling of keyboard events...
   const handleKeyEvent = e => {
     if (e.key === "Enter") {
-      setPostActive(postData);
+      navigate(`/${ id }`);
     }
   };
 
   return (
       <div
           className={ specClass }
-          onClick={() => setPostActive(postData)}
+          onClick={ () => navigate(`/${ id }`) }
           onKeyPress={ handleKeyEvent }
           aria-label="click to open the Post content"
           role="menuitem"

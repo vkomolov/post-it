@@ -8,7 +8,6 @@ import PostContentComment from "../../_components/PostContentComment";
 
 export default PostContent;
 
-//TODO: сделать получение активного поста по урлу
 function PostContent() {
   const { postActive, comments } = usePostActive();
   const commentsList = useMemo(() => {
@@ -16,11 +15,14 @@ function PostContent() {
         ? null
         : comments.map(comment => <PostContentComment comment={ comment } key={ nanoid() } />);
   }, [comments]);
+  const postContent = postActive.id
+      ? <PostContentItem {...{ postActive }} />
+      : null;
 
   return (
       <div className="post-content">
         <div className="content-layer layer-body">
-          <PostContentItem {...{ postActive }} />
+          { postContent }
         </div>
         <div className="content-layer layer-comment">
           { commentsList }

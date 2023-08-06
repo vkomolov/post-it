@@ -1,15 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    postActive: {
-        id: null,
-        userId: null,
-        title: null,
-        body: null,
-        firstName: null,
-        lastName: null,
-        image: null,
-    },
+    postActive: {},
     viewed: [],
     comments: []
 };

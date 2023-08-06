@@ -2,7 +2,7 @@ import { useCallback, useRef, useLayoutEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
 import { initOpacityAnimation, sortObjectsByTwoParams } from "../_helpers";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 /**
  * Custom Hook which returns the state of the alert in redux reducer and the following actions
@@ -130,7 +130,7 @@ export function usePostsSorted() {
  * @returns {{viewed: [], setPostActive: function, postActive: Object}}
  */
 export function usePostActive() {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const dispatch = useDispatch();
   const { postActive, viewed, comments } = useSelector(state => state.stateActivePost);
 
@@ -142,9 +142,9 @@ export function usePostActive() {
    * @type { Function }
    */
   const setPostActive = useCallback((postData) => {
-    navigate(`/${ postData.id }`);
+    //navigate(`/${ postData.id }`);
     dispatch({ type: "SET_POST_ACTIVE", payload: postData });
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   return {
     postActive,
