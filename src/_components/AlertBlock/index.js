@@ -11,26 +11,27 @@ export default function AlertBlock() {
         if (!alertType) return null;
 
         //only two options for now
-        const classNameOut = alertType === "error" ? "alert-error" : "alert-loading";
+        const classNameSpec = alertType === "error" ? "alert-error" : "alert-loading";
         //looking for the alert text content...
-        let contentArr = [];
-        if (alertContent.length) {
-            contentArr = alertContent.map(text => (
-                <span className={ classNameOut } key={nanoid()} >
+        const contentArr = alertContent.length
+            ? alertContent.map(text => (
+                <span className="alert-text" key={nanoid()} >
                     { text }
                 </span>
-            ));
-        }
+            ))
+            : [];
 
         return (
-            <div id="alert-block">
+            <div id="alert-wrapper">
                 <div
-                    className="alert-content-block"
+                    className={ `alert-block ${ classNameSpec }` }
                     role="alert"
                 >
-                    { classNameOut === "alert-loading"
+                    { classNameSpec === "alert-loading"
                     && <span className="loader" /> }
-                    { contentArr }
+                    <div className="alert-content-block">
+                        { contentArr }
+                    </div>
                 </div>
             </div>
         );

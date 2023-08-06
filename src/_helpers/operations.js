@@ -1,5 +1,5 @@
-import { getLocalForage, setLocalForage } from "./localForageApi";
 import axios from "axios";
+import { getLocalForage, setLocalForage } from "./localForageApi";
 
 /**
  *
@@ -18,6 +18,7 @@ export async function initAxios(url, config={}) {
         return resp.data;
 
     } catch (error) {
+        //!!! the error will be caught further
         if (error.response) {
             console.error("The request was made and the server responded with a status code out of the range of 2xx",
                 error.response);
@@ -40,7 +41,6 @@ export async function initAxios(url, config={}) {
  * @returns {Promise} of the fetched data. Catch will be used outside
  */
 export const getAndStore = async ( path, storeName,  timeLimit=1, extension="json" ) => {
-
     let localData = await getLocalForage( storeName, timeLimit );
     if ( localData ) { //it returns obj or false
         return localData.data;
@@ -56,6 +56,7 @@ export const getAndStore = async ( path, storeName,  timeLimit=1, extension="jso
             const storedData = await setLocalForage( storeName, data );
             return storedData.data;
         } );
+    //!!!the error will be caught further
 };
 
 /**

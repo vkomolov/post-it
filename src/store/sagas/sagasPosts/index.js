@@ -8,6 +8,11 @@ import { setPostActive, setPostComments, addViewed } from "../../features/sliceA
 const baseUrl = "https://dummyjson.com";
 const patternSelectUsers = ["image", "firstName", "lastName", "username", "password"];
 
+function* handleError(error) {
+    console.error("error.stack: ", error.stack);
+    yield put(alertError(error.message));
+}
+
 function* loadData() {
     try {
         //initiating loading icon
@@ -19,19 +24,22 @@ function* loadData() {
         /**
          * For showing the post list it is necessary to have both data: the data of users and the data of posts...
          * It will fetch both data, store them to the localforage and update postReducer, usersReducer
+         * It also gets the array of the viewed posts from the localforage and synchronize activePostReducer.
          */
-        const [ dataPosts, dataUsers ] = yield all([
+        const [ dataPosts, dataUsers, postsViewed ] = yield all([
             yield call(getAndStore, `${ baseUrl }/posts?limit=0`, "posts", 1),
             yield call(
                 getAndStore,
                 `${ baseUrl }/users?limit=0&select=${ patternSelectUsers.join(",") }`,
                 "users",
                 1
-            )
+            ),
+            yield call(initViewed),
         ]);
 
         yield put(setPosts(dataPosts.posts));
         yield put(setUsers(dataUsers.users));
+        yield put(addViewed(postsViewed));
 
         //if the download time lest than 500ms then to imitate loading with delay(1000)
         if ((Date.now() - startTime) < 500) yield delay(1000);
@@ -39,15 +47,11 @@ function* loadData() {
         yield put(alertClear());
 
     } catch (e) {
-        yield put(alertError(e.message));
-        console.error(e.stack);
+        yield call(handleError, e);
     }
 }
 
-function* watchPostActivate() {
-    //for checking the last activation of the post
-    let lastId = null;
-
+function* initViewed() {
     /**
      * Creating cash of the post ids, which were viewed before.
      * Before the while cycles of taking the action "SET_POST_ACTIVE", to initialize or create the localforage store,
@@ -56,12 +60,30 @@ function* watchPostActivate() {
      * Further, the new data will be added to the existing localforage and synchronized with activePostReducer.
      */
     const localViewed = yield call(getLocalForage, "postsViewed", 1);
-    const postsViewed = localViewed ? localViewed.data : [];
+    return localViewed ? localViewed.data : [];
+}
 
-    //updating activePostReducer
-    if (postsViewed.length) {
-        yield put(addViewed(postsViewed));
+function* loadComments(postId) {
+    /**
+     * fetching and storing the data of comments connected to the clicked post by id;
+     */
+    try {
+        const { comments } = yield call(
+            getAndStore,
+            `${ baseUrl }/posts/${ postId }/comments?limit=0`,
+            `comments_${ postId }`,
+            1
+        );
+        yield put(setPostComments(comments));
+
+    } catch(e) {
+        yield call(handleError, e);
     }
+}
+
+function* watchPostActive() {
+    //for checking the last activation of the post
+    let lastId = null;
 
     //starting while cycles to take the actions "SET_POST_ACTIVE" which occur at clicking the post to activate
     while(true) {
@@ -99,22 +121,7 @@ function* watchPostActivate() {
             //setPostActive(payload) dispatches the data of the post to activePostReducer
             yield put(setPostActive(payload));
 
-            /**
-             * fetching and storing the data of comments connected to the clicked post by id;
-             */
-            try {
-                const { comments } = yield call(
-                    getAndStore,
-                    `${ baseUrl }/posts/${ lastId }/comments?limit=0`,
-                    `comments${ lastId }`,
-                    1
-                );
-                yield put(setPostComments(comments));
-
-            } catch(e) {
-                yield put(alertError(e.message));
-                console.error(e.stack);
-            }
+            yield fork(loadComments, lastId);
         }
     }
 }
@@ -122,7 +129,7 @@ function* watchPostActivate() {
 export function* postWatcher() {
     //initial fetching posts, blocking till it loads...
     yield call(loadData);
-    yield fork(watchPostActivate);
+    yield fork(watchPostActive);
 }
 
 

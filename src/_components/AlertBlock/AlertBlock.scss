@@ -2,7 +2,7 @@
 @import "../../_styles/global_styles/mixins";
 @import "../../_styles/global_styles/animations";
 
-#alert-block {
+#alert-wrapper {
   position: fixed;
   z-index: 100;
   top: 0;
@@ -14,7 +14,7 @@
 
   @include flex-box($flex-box-row-center-wrap...);
 
-  .alert-content-block {
+  .alert-block {
     max-width: 25em;
     padding: 1.5em;
     opacity: 1;
@@ -22,6 +22,16 @@
 
     @include init-font(1em, 700);
     @include flex-box($flex-box-col-center-wrap...);
+
+    &.alert-loading {
+      color: $blueDark;
+    }
+
+    &.alert-error {
+      color: $red;
+      background-color: $greyLightest;
+      @include box-shadow(0.2em, 0.4em);
+    }
 
     .loader {
       width: 2.5em;
@@ -60,17 +70,13 @@
       }
     }
 
-    .alert-error {
+    .alert-content-block {
       padding: 1em;
-      color: $red;
-      background-color: $greyLightest;
+      @include flex-box($flex-box-col-center-wrap...);
 
-      @include box-shadow(0.2em, 0.4em);
-    }
-
-    .alert-loading {
-      padding: 1em;
-      color: $blueDark;
+      .alert-text {
+        margin-bottom: 0.5em;
+      }
     }
   }
 }

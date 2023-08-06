@@ -10,19 +10,34 @@ const sliceAlerts = createSlice({
     initialState,
     reducers: {
         alertClear: state => {
-            state.alertType = initialState.alertType;
-            state.alertContent = initialState.alertContent;
+            Object.assign(state, initialState);
         },
-        alertLoading: (state, { payload }) => {
-            state.alertType = "loading";
-            state.alertContent.push(payload);
-        },
-        alertError: (state, { payload }) => {
-            state.alertType = "error";
-            state.alertContent.push(payload)
-        }
+        alertLoading: (state, { payload }) => handlePayload(state, payload, "loading"),
+        alertError: (state, { payload }) => handlePayload(state, payload, "error"),
     }
 });
 
 export const { alertClear, alertError, alertLoading } = sliceAlerts.actions;
 export default sliceAlerts.reducer;
+
+function handlePayload(state, payload, alertType) {
+    return state.alertType === alertType
+        ? {
+            ...state,
+            alertContent: [
+                ...state.alertContent,
+                payload
+            ],
+        }
+        : {
+            ...state,
+            alertType,
+            alertContent: [payload],
+        };
+}
+
+///////////////// dev
+// eslint-disable-next-line no-unused-vars
+function log(it, comments = "value: ") {
+    console.log(comments, it);
+}
