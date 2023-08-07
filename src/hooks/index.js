@@ -2,7 +2,6 @@ import { useCallback, useRef, useLayoutEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
 import { initOpacityAnimation, sortObjectsByTwoParams } from "../_helpers";
-//import { useNavigate } from "react-router-dom";
 
 /**
  * Custom Hook which returns the state of the alert in redux reducer and the following actions
@@ -130,7 +129,6 @@ export function usePostsSorted() {
  * @returns {{viewed: [], setPostActive: function, postActive: Object}}
  */
 export function usePostActive() {
-  //const navigate = useNavigate();
   const dispatch = useDispatch();
   const { postActive, viewed, comments } = useSelector(state => state.stateActivePost);
 
@@ -142,7 +140,6 @@ export function usePostActive() {
    * @type { Function }
    */
   const setPostActive = useCallback((postData) => {
-    //navigate(`/${ postData.id }`);
     dispatch({ type: "SET_POST_ACTIVE", payload: postData });
   }, [dispatch]);
 
@@ -160,6 +157,26 @@ export function useUsers() {
   return {
     users
   };
+}
+
+export function useAuth() {
+  const dispatch = useDispatch();
+  const { isGranted, isRejected } = useSelector(state => state.stateAuth);
+
+  const submitLogin = useCallback((loginData) => {
+    dispatch({ type: "SUBMIT_LOGIN", payload: loginData })
+  }, [dispatch]);
+
+  const submitLogOut = useCallback(() => {
+    dispatch({ type: "SUBMIT_LOGOUT" })
+  }, [dispatch]);
+
+  return {
+    isGranted,
+    isRejected,
+    submitLogin,
+    submitLogOut
+  }
 }
 
 /**
@@ -180,6 +197,27 @@ export function useOpacityTransition (duration = 1000) {
 
   return ref;
 }
+
+/**
+ * to animate the component from transform: scale(0) with animation scaleUpZero
+ * useLayoutEffect is used in order to assign transform: scale(0) before rendering the component
+ * @param {number} duration: animation duration in ms
+ * !!! It takes the animations from "../_styles/global_styles/_animations.scss"
+ */
+export function useScaleUpFromZeroAtMount(duration = 300) {
+  const ref = useRef(null);
+
+  useLayoutEffect(() => {
+    const htmlElement = ref.current;
+    htmlElement.style.transform = "scale(0)";
+    const timeOut = setTimeout(() => {
+      htmlElement.style.animation = `scaleUpZero ${ duration }ms ease-in-out forwards`;
+    }, 0);
+  }, []);
+
+  return ref;
+}
+
 
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars

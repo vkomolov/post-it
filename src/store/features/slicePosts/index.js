@@ -5,7 +5,7 @@ const initialState = {
 };
 
 const slicePosts = createSlice({
-    name: "postReducer",
+    name: "reducerPosts",
     initialState,
     reducers: {
         setPosts: (state, { payload }) => {

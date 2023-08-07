@@ -6,16 +6,29 @@ import PostContent from "../_containers/PostContent";
 import DefaultContent from "../pages/DefaultContent";
 import LoginForm from "../pages/LoginForm";
 import PostEdit from "../pages/PostEdit";
+import AddPost from "../pages/AddPost";
+import WithAuth from "../_containers/Hoc/WithAuth";
 
 
 export default function App() {
   return (
       <Routes>
-        <Route path="/" element={<Layout/>}>
-          <Route index element={<DefaultContent/>}/>
-          <Route path="login" element={<LoginForm/>}/>
-          <Route path=":postId" element={<PostContent/>}/>
-          <Route path=":postId/edit" element={<PostEdit/>}/>
+        <Route path="/" element={ <Layout/> } >
+          <Route index element={ <DefaultContent/> } />
+          <Route path="login" element={ <LoginForm/> } />
+          <Route path="/add" element={
+            <WithAuth>
+              <AddPost/>
+            </WithAuth>
+          }
+          />
+          <Route path=":postId" element={ <PostContent/> } />
+          <Route path=":postId/edit" element={
+            <WithAuth>
+              <PostEdit/>
+            </WithAuth>
+          }
+          />
           <Route path=":postId/edit/*" element={ <Navigate to="/" replace={ true } /> } />
         </Route>
       </Routes>

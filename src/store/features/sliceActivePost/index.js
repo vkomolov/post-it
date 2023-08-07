@@ -7,7 +7,7 @@ const initialState = {
 };
 
 const sliceActivePost = createSlice({
-    name: "activePostReducer",
+    name: "reducerActivePost",
     initialState,
     reducers: {
         setPostActive: (state, { payload }) => {

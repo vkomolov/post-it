@@ -1,5 +1,6 @@
 import React from "react";
 import "./AsideBarControls.scss";
+import { Link } from "react-router-dom";
 import { useSortingData } from "../../hooks";
 
 const AsideBarControls = () => {
@@ -34,7 +35,10 @@ const AsideBarControls = () => {
           </button>
         </div>
         <div className="aside-bar__controls__handles">
-          <i className="material-icons icon icon_add" title="Add Post">add</i>
+          <Link to="/add" >
+            <i className="material-icons icon icon_add" title="Add Post">add</i>
+          </Link>
+
           <i className="material-icons icon icon_delete" title="Delete Post">delete</i>
         </div>
       </div>

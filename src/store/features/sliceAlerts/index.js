@@ -6,7 +6,7 @@ const initialState = {
 };
 
 const sliceAlerts = createSlice({
-    name: "alertReducer",
+    name: "reducerAlerts",
     initialState,
     reducers: {
         alertClear: state => {

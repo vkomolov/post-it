@@ -6,7 +6,7 @@ const initialState = {
 };
 
 const sliceSort = createSlice({
-    name: "sortSlice",
+    name: "reducerSort",
     initialState,
     reducers: {
         setSortPrimary: (state, { payload }) => {

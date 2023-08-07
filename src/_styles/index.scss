@@ -48,6 +48,25 @@ body:before {
 .button {
   @extend %button;
 
+  &_disabled {
+    box-shadow: none;
+
+    &:hover {
+      cursor: initial;
+      transform: none;
+      box-shadow: inherit;
+    }
+
+    &:active {
+      background-color: $greyNorm;
+    }
+
+  }
+
+  &_enabled {
+    background-color: $foxy;
+  }
+
   //additional class for active buttons
   &_active {
     background-color: $foxy;
