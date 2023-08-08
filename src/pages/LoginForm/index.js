@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import { regExObj, validateText } from "../../_helpers";
 import { useAuth, useScaleUpFromZeroAtMount } from "../../hooks";
 import "./LoginForm.scss";
 
@@ -8,82 +9,110 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   const { isGranted, isRejected, submitLogin } = useAuth();
-  const [inputs, setInputs] = useState({ login: "", password: "" });
-  const [inputsChecked, setInputsChecked] = useState({ login: "", password: "" });
+
+  //the state of the inputs onChange event, then they will be validated (checked)
+  const [inputs, setInputs] = useState({ username: "", password: "" });
+
+  /**
+   * in order to avoid additional change of the state with the password validation, we use only the
+   * state of the username validation, then we`ll use directly submitForm with the username and
+   * the password validated
+   */
+  const [usernameChecked, setUsernameChecked] = useState(false);
+
+  /**
+   * if regEx test fails then to set state with error message for a particular input
+   */
+  const [inputErrors, setInputErrors] = useState({ username: null, password: null });
+
   const [isPassVisible, setPassVisible] = useState(false);
   const refAnimation = useScaleUpFromZeroAtMount(400);
 
   const fromLocation = location.state?.from?.pathname || "/";
 
-  const isCurrentInputEmpty = useMemo(() => {
-    if (!inputsChecked.login.length) {
-      return !inputs.login.length;
-    } else {
-      return !inputs.password.length;
-    }
-  }, [inputs, inputsChecked]);
+  /**
+   * if username is not validated (!usernameChecked), then checking the input of username to be empty,
+   * if username is validated, the checking the input of password to be empty
+   */
+  const isCurrentInputEmpty = !usernameChecked
+      ? !inputs.username.length
+      : !inputs.password.length;
 
-
-  //log(isLoginEmpty, "isLoginSubmitted: ");
-
-  const submitForm = e => {
-    log("submitting form:");
-    log(inputs, "inputs: ");
-
-  };
-
-  const buttonHandle = e => {
-    e.preventDefault();
-    if (!isCurrentInputEmpty) {
-      if (!inputsChecked.login.length) {
-        log(inputs.login, "checking login: ");
-
-        const loginText = inputs.login.trim();
-        if (loginText.length) {
-          setInputsChecked(state => ({
-            ...state,
-            login: loginText,
-          }));
-        } else {
-          console.error("Error with login");
-        }
-      } else {
-        log(inputs.password, "checking password: ");
-
-        const passwordText = inputs.password.trim();
-        if (passwordText.length) {
-          setInputsChecked(state => ({
-            ...state,
-            password: passwordText,
-          }));
-        } else {
-          console.error("Error with password");
-        }
-      }
-    }
-  };
-
+  /**
+   *
+   * @param {EventTarget} target
+   */
   const inputHandle = ({ target }) => {
     const name = target.name;
     const value = target.value;
-    setInputs(inputs => ({
-      ...inputs,
-      [name]: value,
-    }));
-  };
 
-  const keyDownHandle = (e) => {
-    if (e.key === "Enter") {
-      inputHandle(e);
+    if (validateText(value, name, regExObj, true)) {
+      setInputs(state => ({
+        ...state,
+        [name]: value,
+      }));
+    } else {
+      console.error("error: ", regExObj[name].errorMessage );
+      setInputErrors(state => ({
+        ...state,
+        [name]: regExObj[name].errorMessage
+      }));
     }
   };
 
-  const handleRadio = () => {
+  /**
+   * it validates the current input on submitting event.
+   * if the current input is username, then, if validated, to set the state usernameChecked to be true
+   * if the current input is password, then, if validated, to use custom hook for dispatching action;
+   */
+  const handleSubmit = e => {
+    e.preventDefault();
+    /**
+     * only one input is visible: username is first, then password...
+     * if current input is not empty and if username is not validated (!usernameChecked),
+     * then validating username, otherwise validating password and, if OK, to dispatch action to sagasAuth;
+     */
+    const inputName = !usernameChecked ? "username" : "password";
+    const inputValue = inputs[inputName];
+
+    if (!isCurrentInputEmpty) {
+      if (!usernameChecked) {
+        if (validateText(inputValue, inputName, regExObj, false)) {
+          setUsernameChecked(true);
+        } else {
+          console.error(regExObj[inputName].errorMessage, "error: ");
+          setInputErrors(state => ({
+            ...state,
+            [inputName]: regExObj[inputName].errorMessage
+          }));
+        }
+      } else {
+        //checking password and, if validated, then to dispatch action
+        if (validateText(inputValue, inputName, regExObj, false)) {
+          submitLogin(inputs);
+        } else {
+          console.error(regExObj[inputName].errorMessage, "error: ");
+          setInputErrors(state => ({
+            ...state,
+            [inputName]: regExObj[inputName].errorMessage
+          }));
+        }
+      }
+    } else {
+      console.error(`${ inputName } is empty...`);
+      setInputErrors(state => ({
+        ...state,
+        [inputName]: `${ inputName } is empty...`
+      }));
+    }
+  };
+
+  const handleCheckBox = () => {
     setPassVisible(state => !state);
   };
 
-  const buttonClassName = isCurrentInputEmpty ? "button button_disabled" : "button button_enabled";
-  const buttonText = !inputsChecked.login ? "Further" : "Submit";
+  const classNameActive = isCurrentInputEmpty ? "button button_disabled" : "button button_enabled";
+  const buttonText = !usernameChecked ? "Further" : "Submit";
 
   useEffect(() => {
     isGranted && navigate(fromLocation, { replace: true });
@@ -99,33 +128,36 @@ const LoginForm = () => {
             If logged in, You can add, delete or edit Your posts and comments
           </p>
           <form
-              onSubmit={ submitForm }
               id="login-form"
+              onSubmit={ handleSubmit }
           >
-            { (inputsChecked.login.length === 0) && <input
+            { !usernameChecked
+            && <input
                 type="text"
                 tabIndex={ 0 }
                 aria-label="login name"
-                name="login"
-                className="login__input"
+                name="username"
+                className="login-form__input"
                 required
-                value={ inputs.login }
-                onKeyDown={ keyDownHandle }
+                value={ inputs.username }
                 onChange={ inputHandle }
-            /> }
-            { (inputsChecked.login.length > 0) && <input
+            />
+            }
+            { usernameChecked
+            && <input
                 type={ isPassVisible ? "text" : "password" }
                 tabIndex={ 0 }
                 aria-label="login password"
                 name="password"
-                className="login__input"
+                className="login-form__input"
                 required
                 value={ inputs.password }
-                onKeyDown={ keyDownHandle }
                 onChange={ inputHandle }
-            /> }
+            />
+            }
             <div className="check-layer">
-              { (inputsChecked.login.length > 0) && <div className="check-wrapper">
+              { usernameChecked
+              && <div className="check-wrapper">
                 <input
                     type="checkbox"
                     tabIndex={ 0 }
@@ -133,7 +165,7 @@ const LoginForm = () => {
                     id="check-is-pass-visible"
                     name="passVisible"
                     checked={ isPassVisible }
-                    onChange={ handleRadio }
+                    onChange={ handleCheckBox }
                 />
                 <label
                     htmlFor="check-is-pass-visible"
@@ -141,11 +173,11 @@ const LoginForm = () => {
                 >
                   Show password
                 </label>
-              </div> }
+              </div>
+              }
               <div className="submit-wrapper">
                 <button
-                    className={ buttonClassName }
-                    onClick={ buttonHandle }
+                    className={ classNameActive }
                 >
                   { buttonText }
                 </button>

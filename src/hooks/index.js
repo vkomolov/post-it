@@ -164,6 +164,9 @@ export function useAuth() {
   const { isGranted, isRejected } = useSelector(state => state.stateAuth);
 
   const submitLogin = useCallback((loginData) => {
+    log(loginData, "login data for dispatching action");
+
+
     dispatch({ type: "SUBMIT_LOGIN", payload: loginData })
   }, [dispatch]);
 
