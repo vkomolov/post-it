@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { regExObj, validateText } from "../../_helpers";
 import { useAuth, useScaleUpFromZeroAtMount } from "../../hooks";
@@ -8,10 +8,14 @@ const LoginForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  //for checking inputs on focus and styling the wrappers of inputs
+  const inputRefs = useRef({});
+
   const { isGranted, isRejected, submitLogin } = useAuth();
 
   //the state of the inputs onChange event, then they will be validated (checked)
   const [inputs, setInputs] = useState({ username: "", password: "" });
+
 
   /**
    * in order to avoid additional change of the state with the password validation, we use only the
@@ -43,8 +47,7 @@ const LoginForm = () => {
    * @param {EventTarget} target
    */
   const inputHandle = ({ target }) => {
-    const name = target.name;
-    const value = target.value;
+    const { name, value } = target;
 
     if (validateText(value, name, regExObj, true)) {
       setInputs(state => ({
@@ -114,10 +117,45 @@ const LoginForm = () => {
   const classNameActive = isCurrentInputEmpty ? "button button_disabled" : "button button_enabled";
   const buttonText = !usernameChecked ? "Further" : "Submit";
 
+  //it will effect on logged in
   useEffect(() => {
     isGranted && navigate(fromLocation, { replace: true });
 
   }, [isGranted, fromLocation, navigate]);
+
+  //it will effect on each reload with checking the inputs on focus or not empty for styling their wrappers
+  useEffect(() => {
+    const usernameWrapper = inputRefs.current.usernameWrapper;
+    const passwordWrapper = inputRefs.current.passwordWrapper;
+
+    const handleFocus = ({ target }) => {
+      if (target.name === "username") {
+        usernameWrapper.classList.add("focused");
+      }
+      else if (target.name === "password") {
+        passwordWrapper.classList.add("focused");
+      }
+    };
+
+    const handleBlur = ({ target }) => {
+      //if input is on blur and it is empty
+      if (target.name === "username" && !target.value.length) {
+        usernameWrapper.classList.remove("focused");
+      }
+      else if (target.name === "password" && !target.value.length) {
+        passwordWrapper.classList.remove("focused");
+      }
+    };
+
+    document.addEventListener("focus", handleFocus, true);
+    document.addEventListener("blur", handleBlur, true);
+
+    return () => {
+      document.removeEventListener("focus", handleFocus, true);
+      document.removeEventListener("blur", handleBlur, true);
+    }
+
+  }, [usernameChecked]);
 
 
   return (
@@ -132,28 +170,37 @@ const LoginForm = () => {
               onSubmit={ handleSubmit }
           >
             { !usernameChecked
-            && <input
-                type="text"
-                tabIndex={ 0 }
-                aria-label="login name"
-                name="username"
-                className="login-form__input"
-                required
-                value={ inputs.username }
-                onChange={ inputHandle }
-            />
+            && <div className="input-wrapper"
+                    ref={ elem => inputRefs.current.usernameWrapper = elem }
+            >
+              <input
+                  type="text"
+                  tabIndex={ 0 }
+                  aria-label="username"
+                  name="username"
+                  className="input-wrapper__input"
+                  required
+                  value={ inputs.username }
+                  onChange={ inputHandle }
+              />
+            </div>
             }
             { usernameChecked
-            && <input
-                type={ isPassVisible ? "text" : "password" }
-                tabIndex={ 0 }
-                aria-label="login password"
-                name="password"
-                className="login-form__input"
-                required
-                value={ inputs.password }
-                onChange={ inputHandle }
-            />
+            && <div
+                className="input-wrapper"
+                ref={ elem => inputRefs.current.passwordWrapper = elem }
+            >
+              <input
+                  type={ isPassVisible ? "text" : "password" }
+                  tabIndex={ 0 }
+                  aria-label="password"
+                  name="password"
+                  className="input-wrapper__input"
+                  required
+                  value={ inputs.password }
+                  onChange={ inputHandle }
+              />
+            </div>
             }
             <div className="check-layer">
               { usernameChecked

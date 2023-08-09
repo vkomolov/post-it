@@ -23,11 +23,6 @@ export function validateText(targetValue, inputName, regExObj, bySymbol = false)
   if (inputName in regExObj) {
     const regExProp = bySymbol ? regExObj[inputName]["onChange"] : regExObj[inputName]["onBlur"];
 
-    log(bySymbol, "bySymbol: ");
-    log(regExProp, "regExProp: ");
-    log(targetValue, "targetValue: ");
-    log(regExProp.test(targetValue), "test: ");
-
     return regExProp.test(targetValue);
   }
 
