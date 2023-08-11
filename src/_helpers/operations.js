@@ -41,7 +41,7 @@ export async function initAxios(url, config={}) {
  * @returns {Promise} of the fetched data. Catch will be used outside
  */
 export const getAndStore = async ( path, storeName,  timeLimit=1, extension="json" ) => {
-    let localData = await getLocalForage( storeName, timeLimit );
+    const localData = await getLocalForage( storeName, timeLimit );
     if ( localData ) { //it returns obj or false
         return localData.data;
     }
@@ -56,6 +56,27 @@ export const getAndStore = async ( path, storeName,  timeLimit=1, extension="jso
             const storedData = await setLocalForage( storeName, data );
             return storedData.data;
         } );
+    //!!!the error will be caught further
+};
+
+export const axiosGetAuth = async (path, storeName, timeLimit, credentials) => {
+    const localData = await getLocalForage(storeName, timeLimit);
+    if (localData) {
+        return localData.data;
+    }
+
+    const config = {
+        method: "POST",
+        data: {
+            ...credentials,
+            expiresInMins: 60,
+        }
+    };
+
+    return await initAxios(path, config).then(async data => {
+        const storedData = await setLocalForage( storeName, data );
+        return storedData.data;
+    });
     //!!!the error will be caught further
 };
 

@@ -1,0 +1,55 @@
+@import "../../_styles/global_styles/variables";
+@import "../../_styles/global_styles/mixins";
+@import "../../_styles/global_styles/extends";
+@import "../../_styles/global_styles/animations";
+
+#copy-button-wrapper {
+  display: inline-block;
+
+  .inner-span {
+    color: $foxy;
+    font-weight: 600;
+    padding: 0 0.5em;
+  }
+
+  .copy-button {
+    display: inline-block;
+    @include transition(transform, 70ms);
+
+    &:hover {
+      transform: scale(1.2);
+      font-weight: 700;
+
+      @include text-shadow(0.03em, 0.05em);
+    }
+
+    &.spec {
+      border: none;
+      padding: 0;
+      background-color: unset;
+    }
+
+    &.success {
+      transform: scale(1.2);
+
+      * {
+        color: $greenDarker !important;
+        font-weight: 700;
+
+        @include text-shadow(0.03em, 0.05em);
+      }
+    }
+
+
+    &.error {
+      transform: scale(1.2);
+
+      * {
+        color: $red;
+        font-weight: 700;
+
+        @include text-shadow(0.03em, 0.05em);
+      }
+    }
+  }
+}

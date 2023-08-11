@@ -65,6 +65,11 @@ export function usePostsCombinedUsers() {
   const { posts } = useSelector(state => state.statePosts);
   const { users } = useSelector(state => state.stateUsers);
 
+/*  const credUsers = !users.length
+      ? []
+      : users.map(user => ({ username: user.username, password: user.password }));
+  log(credUsers, "users logins: ");*/
+
   /**
    * To convert the array of users to the object with the keys which equal the id of the users
    * and values which equal the user`s data for the particular id...
@@ -164,9 +169,6 @@ export function useAuth() {
   const { isGranted, isRejected } = useSelector(state => state.stateAuth);
 
   const submitLogin = useCallback((loginData) => {
-    log(loginData, "login data for dispatching action");
-
-
     dispatch({ type: "SUBMIT_LOGIN", payload: loginData })
   }, [dispatch]);
 

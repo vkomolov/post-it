@@ -3,6 +3,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { regExObj, validateText } from "../../_helpers";
 import { useAuth, useScaleUpFromZeroAtMount } from "../../hooks";
 import "./LoginForm.scss";
+import CopyButton from "../../_components/CopyButton";
 
 const LoginForm = () => {
   const location = useLocation();
@@ -30,9 +31,12 @@ const LoginForm = () => {
   const [inputErrors, setInputErrors] = useState({ username: null, password: null });
 
   const [isPassVisible, setPassVisible] = useState(false);
-  const refAnimation = useScaleUpFromZeroAtMount(400);
+  const refAnimation = useScaleUpFromZeroAtMount(450);
 
   const fromLocation = location.state?.from?.pathname || "/";
+
+  const usernameSample = "atuny0";
+  const passwordSample = "9uQFF1Lh";
 
   /**
    * if username is not validated (!usernameChecked), then checking the input of username to be empty,
@@ -42,10 +46,6 @@ const LoginForm = () => {
       ? !inputs.username.length
       : !inputs.password.length;
 
-  /**
-   *
-   * @param {EventTarget} target
-   */
   const inputHandle = ({ target }) => {
     const { name, value } = target;
 
@@ -54,8 +54,14 @@ const LoginForm = () => {
         ...state,
         [name]: value,
       }));
+
+      setInputErrors(state => ({
+        ...state,
+        [name]: null
+      }));
+
     } else {
-      console.error("error: ", regExObj[name].errorMessage );
+      console.error("error: ", regExObj[name].errorMessage);
       setInputErrors(state => ({
         ...state,
         [name]: regExObj[name].errorMessage
@@ -82,8 +88,11 @@ const LoginForm = () => {
       if (!usernameChecked) {
         if (validateText(inputValue, inputName, regExObj, false)) {
           setUsernameChecked(true);
+          setInputErrors(state => ({
+            ...state,
+            [name]: null
+          }));
         } else {
-          console.error(regExObj[inputName].errorMessage, "error: ");
           setInputErrors(state => ({
             ...state,
             [inputName]: regExObj[inputName].errorMessage
@@ -93,8 +102,12 @@ const LoginForm = () => {
         //checking password and, if validated, then to dispatch action
         if (validateText(inputValue, inputName, regExObj, false)) {
           submitLogin(inputs);
+
+          setInputErrors(state => ({
+            ...state,
+            [name]: null
+          }));
         } else {
-          console.error(regExObj[inputName].errorMessage, "error: ");
           setInputErrors(state => ({
             ...state,
             [inputName]: regExObj[inputName].errorMessage
@@ -102,10 +115,9 @@ const LoginForm = () => {
         }
       }
     } else {
-      console.error(`${ inputName } is empty...`);
       setInputErrors(state => ({
         ...state,
-        [inputName]: `${ inputName } is empty...`
+        [inputName]: `${inputName} is empty...`
       }));
     }
   };
@@ -131,8 +143,7 @@ const LoginForm = () => {
     const handleFocus = ({ target }) => {
       if (target.name === "username") {
         usernameWrapper.classList.add("focused");
-      }
-      else if (target.name === "password") {
+      } else if (target.name === "password") {
         passwordWrapper.classList.add("focused");
       }
     };
@@ -141,8 +152,7 @@ const LoginForm = () => {
       //if input is on blur and it is empty
       if (target.name === "username" && !target.value.length) {
         usernameWrapper.classList.remove("focused");
-      }
-      else if (target.name === "password" && !target.value.length) {
+      } else if (target.name === "password" && !target.value.length) {
         passwordWrapper.classList.remove("focused");
       }
     };
@@ -155,64 +165,88 @@ const LoginForm = () => {
       document.removeEventListener("blur", handleBlur, true);
     }
 
+    //deps for usernameChecked is necessary for the actual ref of passwordWrapper which will appear in DOM
+    //only if usernameChecked
   }, [usernameChecked]);
 
-
   return (
-      <div className="login-wrapper" >
-        <div className="login-block" ref={ refAnimation } >
-          <h2 className="login-heading">Log In</h2>
+      <div className="login-wrapper">
+        <div className="login-block" ref={ refAnimation }>
+          <div className="login-sample-wrapper">
+            <div className="login-sample-item">
+              <span>username sample:</span>
+              <CopyButton targetText={ usernameSample }>
+                <i className="material-icons icon-copy small">content_copy</i>
+              </CopyButton>
+            </div>
+            <div className="login-sample-item">
+              <span>password sample:</span>
+              <CopyButton targetText={ passwordSample }>
+                <i className="material-icons icon-copy small">content_copy</i>
+              </CopyButton>
+            </div>
+          </div>
+          <h2 className="login-heading">Authorization</h2>
           <p className="login-text">
             If logged in, You can add, delete or edit Your posts and comments
           </p>
           <form
               id="login-form"
-              onSubmit={ handleSubmit }
+              onSubmit={handleSubmit}
           >
-            { !usernameChecked
-            && <div className="input-wrapper"
-                    ref={ elem => inputRefs.current.usernameWrapper = elem }
+            {!usernameChecked
+            && <div
+                className="input-wrapper"
+                ref={ elem => inputRefs.current.usernameWrapper = elem }
+                data-name="username"
             >
               <input
                   type="text"
-                  tabIndex={ 0 }
+                  tabIndex={0}
                   aria-label="username"
                   name="username"
                   className="input-wrapper__input"
                   required
-                  value={ inputs.username }
-                  onChange={ inputHandle }
+                  value={inputs.username}
+                  onChange={inputHandle}
               />
+              {inputErrors.username
+              && <p className="error-text">{inputErrors.username}</p>
+              }
             </div>
             }
-            { usernameChecked
+            { usernameChecked //passwordWrapper will appear in DOM if usernameChecked
             && <div
                 className="input-wrapper"
-                ref={ elem => inputRefs.current.passwordWrapper = elem }
+                ref={elem => inputRefs.current.passwordWrapper = elem}
+                data-name="password"
             >
               <input
-                  type={ isPassVisible ? "text" : "password" }
-                  tabIndex={ 0 }
+                  type={isPassVisible ? "text" : "password"}
+                  tabIndex={0}
                   aria-label="password"
                   name="password"
                   className="input-wrapper__input"
                   required
-                  value={ inputs.password }
-                  onChange={ inputHandle }
+                  value={inputs.password}
+                  onChange={inputHandle}
               />
+              {inputErrors.password
+              && <p className="error-text">{inputErrors.password}</p>
+              }
             </div>
             }
             <div className="check-layer">
-              { usernameChecked
+              {usernameChecked
               && <div className="check-wrapper">
                 <input
                     type="checkbox"
-                    tabIndex={ 0 }
+                    tabIndex={0}
                     aria-label="to show password"
                     id="check-is-pass-visible"
                     name="passVisible"
-                    checked={ isPassVisible }
-                    onChange={ handleCheckBox }
+                    checked={isPassVisible}
+                    onChange={handleCheckBox}
                 />
                 <label
                     htmlFor="check-is-pass-visible"
@@ -224,16 +258,16 @@ const LoginForm = () => {
               }
               <div className="submit-wrapper">
                 <button
-                    className={ classNameActive }
+                    className={classNameActive}
                 >
-                  { buttonText }
+                  {buttonText}
                 </button>
               </div>
             </div>
           </form>
           <Link
               to="/"
-              replace={ true }
+              replace={true}
               className="link-cancel"
           >
             Cancel Authorization

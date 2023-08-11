@@ -14,7 +14,7 @@ body {
   background-color: $greyLightest;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  user-select: none;
+  //user-select: none;
 
   @include transition();
 }
@@ -93,6 +93,8 @@ body:before {
     color: $greenDarker;
     margin-left: 0.5em;
 
+    @include init-font(2.5em, 500);
+
     &:hover {
       color: white;
       transform: scale(1.1);
@@ -103,6 +105,8 @@ body:before {
     color: $greenDarker;
     font-weight: 600;
 
+    @include init-font(2.2em, 500);
+
     &:hover {
       cursor: pointer;
       color: $foxy;
@@ -112,6 +116,8 @@ body:before {
 
   &_delete {
     color: $greenDarker;
+
+    @include init-font(2.2em, 500);
 
     &:hover {
       cursor: pointer;
@@ -126,6 +132,14 @@ body:before {
     &.icon_foxy {
       color: $foxy;
     }
+  }
+}
+
+.icon-copy {
+  color: $foxy;
+
+  &.small {
+    @include init-font(0.9em, 500);
   }
 }
 

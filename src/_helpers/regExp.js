@@ -2,12 +2,12 @@ export const regExObj = {
   username: {
     onChange: /^(?!_)[a-z0-9_]{0,15}$/i,
     onBlur: /^(?!_)[a-z0-9_]{5,15}$(?<!_)/i,
-    errorMessage: "only latin char, number or underscore (not first or last), max 15 chars",
+    errorMessage: "only latin char, number or underscore (not first or last), min: 5chars, max 15 chars",
   },
   password: {
     onChange: /^(?!_)[a-z0-9_]{0,15}$/i,
     onBlur: /^(?!_)[a-z0-9_]{5,15}$(?<!_)/i,
-    errorMessage: "only latin char, number or underscore (not first or last), max 15 chars",
+    errorMessage: "only latin char, number or underscore (not first or last), min: 5chars, max 15 chars",
   }
 };
 

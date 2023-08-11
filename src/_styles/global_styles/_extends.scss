@@ -31,7 +31,6 @@
 }
 
 %icon {
-  @include init-font(2.5em, 500);
   @include text-shadow(0.03em, 0.1em);
   @include transition();
 
