@@ -1,0 +1,13 @@
+@import "../../_styles/global_styles/variables";
+@import "../../_styles/global_styles/mixins";
+
+.login-sample-wrapper {
+  width: 100%;
+  margin: 1em 0;
+
+  .login-sample-item {
+    margin-bottom: 0.2em;
+
+    @include init-font(0.9em, 400);
+  }
+}

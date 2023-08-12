@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isGranted: false,
+  isAuthGranted: false,
   isRejected: false,
-  loggedId: null,
+  loggedUser: null,
 };
 
 const sliceAuth = createSlice({
@@ -13,7 +13,7 @@ const sliceAuth = createSlice({
     loginSuccess: (state, { payload }) => {
       state.isGranted = true;
       state.isRejected = false;
-      state.loggedId = payload;
+      state.loggedUser = payload;
     },
     loginReject: state => ({
       ...state,

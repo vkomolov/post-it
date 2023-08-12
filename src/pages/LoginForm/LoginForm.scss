@@ -26,22 +26,6 @@
     @include flex-box($flex-box-col-top-wrap...);
     @include box-shadow(0.12em, 0.25em);
 
-    .login-sample-wrapper {
-      width: 100%;
-      margin: 1em 0;
-
-      .login-sample-item {
-        margin-bottom: 0.2em;
-
-        @include init-font(0.9em, 400);
-
-        .target-title {
-
-        }
-
-      }
-    }
-
     .login-heading {
       color: $foxy;
       margin-bottom: 0.8em;

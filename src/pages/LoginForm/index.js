@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { regExObj, validateText } from "../../_helpers";
 import { useAuth, useScaleUpFromZeroAtMount } from "../../hooks";
 import "./LoginForm.scss";
-import CopyButton from "../../_components/CopyButton";
+import LoginSample from "../../_components/LoginSample";
 
 const LoginForm = () => {
   const location = useLocation();
@@ -34,9 +34,6 @@ const LoginForm = () => {
   const refAnimation = useScaleUpFromZeroAtMount(450);
 
   const fromLocation = location.state?.from?.pathname || "/";
-
-  const usernameSample = "atuny0";
-  const passwordSample = "9uQFF1Lh";
 
   /**
    * if username is not validated (!usernameChecked), then checking the input of username to be empty,
@@ -172,20 +169,7 @@ const LoginForm = () => {
   return (
       <div className="login-wrapper">
         <div className="login-block" ref={ refAnimation }>
-          <div className="login-sample-wrapper">
-            <div className="login-sample-item">
-              <span>username sample:</span>
-              <CopyButton targetText={ usernameSample }>
-                <i className="material-icons icon-copy small">content_copy</i>
-              </CopyButton>
-            </div>
-            <div className="login-sample-item">
-              <span>password sample:</span>
-              <CopyButton targetText={ passwordSample }>
-                <i className="material-icons icon-copy small">content_copy</i>
-              </CopyButton>
-            </div>
-          </div>
+          <LoginSample />
           <h2 className="login-heading">Authorization</h2>
           <p className="login-text">
             If logged in, You can add, delete or edit Your posts and comments

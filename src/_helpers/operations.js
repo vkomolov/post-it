@@ -172,6 +172,16 @@ export function limitSentence(sentence, maxCharCount) {
     }
 }
 
+/**
+ *
+ * @param {number} min inclusive
+ * @param {number} max inclusive
+ * @returns {number}
+ */
+export function randomizeInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars
