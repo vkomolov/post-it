@@ -7,8 +7,6 @@ const CopyButton = ({ targetCssSelector, targetText, children }) => {
   const copyResultSuccess = "success";
   const copyResultError = "error";
 
-  log(copyResult, "copyResult: ");
-
   const innerSpan = useMemo(() => {
     return !targetCssSelector && targetText?.length
         ? <span className="inner-span">{ targetText }</span>
@@ -41,9 +39,6 @@ const CopyButton = ({ targetCssSelector, targetText, children }) => {
             ? `${ baseClassName } error`
             : baseClassName;
   }, [copyResult, children]);
-
-  log(buttonClassName, "buttonClassName: ");
-
 
   /**
    *

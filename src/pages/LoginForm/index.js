@@ -12,7 +12,7 @@ const LoginForm = () => {
   //for checking inputs on focus and styling the wrappers of inputs
   const inputRefs = useRef({});
 
-  const { isGranted, isRejected, submitLogin } = useAuth();
+  const { loggedUser, authError, submitLogin } = useAuth();
 
   //the state of the inputs onChange event, then they will be validated (checked)
   const [inputs, setInputs] = useState({ username: "", password: "" });
@@ -43,6 +43,10 @@ const LoginForm = () => {
       ? !inputs.username.length
       : !inputs.password.length;
 
+  /**
+   *
+   * @param {HTMLInputElement} target
+   */
   const inputHandle = ({ target }) => {
     const { name, value } = target;
 
@@ -70,6 +74,7 @@ const LoginForm = () => {
    * it validates the current input on submitting event.
    * if the current input is username, then, if validated, to set the state usernameChecked to be true
    * if the current input is password, then, if validated, to use custom hook for dispatching action;
+   * @param {Event} e:
    */
   const handleSubmit = e => {
     e.preventDefault();
@@ -128,9 +133,9 @@ const LoginForm = () => {
 
   //it will effect on logged in
   useEffect(() => {
-    isGranted && navigate(fromLocation, { replace: true });
+    loggedUser && navigate(fromLocation, { replace: true });
 
-  }, [isGranted, fromLocation, navigate]);
+  }, [loggedUser, fromLocation, navigate]);
 
   //it will effect on each reload with checking the inputs on focus or not empty for styling their wrappers
   useEffect(() => {
@@ -168,8 +173,8 @@ const LoginForm = () => {
 
   return (
       <div className="login-wrapper">
-        <div className="login-block" ref={ refAnimation }>
-          <LoginSample />
+        <div className="login-block" ref={refAnimation}>
+          <LoginSample/>
           <h2 className="login-heading">Authorization</h2>
           <p className="login-text">
             If logged in, You can add, delete or edit Your posts and comments
@@ -181,7 +186,7 @@ const LoginForm = () => {
             {!usernameChecked
             && <div
                 className="input-wrapper"
-                ref={ elem => inputRefs.current.usernameWrapper = elem }
+                ref={elem => inputRefs.current.usernameWrapper = elem}
                 data-name="username"
             >
               <input
@@ -199,7 +204,7 @@ const LoginForm = () => {
               }
             </div>
             }
-            { usernameChecked //passwordWrapper will appear in DOM if usernameChecked
+            {usernameChecked //passwordWrapper will appear in DOM if usernameChecked
             && <div
                 className="input-wrapper"
                 ref={elem => inputRefs.current.passwordWrapper = elem}
@@ -217,6 +222,9 @@ const LoginForm = () => {
               />
               {inputErrors.password
               && <p className="error-text">{inputErrors.password}</p>
+              }
+              {authError?.message
+              && <p className="error-text">{authError.message}</p>
               }
             </div>
             }

@@ -1,5 +1,6 @@
 import { take, put } from "redux-saga/effects";
 import { setSortPrimary, setSortSecondary } from "../../features/sliceSort";
+import { actionTypes } from "../constants";
 
 const sortObj = {
     firstName: () => setSortPrimary("firstName"),
@@ -14,7 +15,7 @@ export function* sortWatcher() {
     let lastTaken = null;
 
     while (true) {
-        const { payload } = yield take("SET_SORTING");
+        const { payload } = yield take(actionTypes.SET_SORTING);
 
         if (lastTaken !== payload && payload in sortObj) {
             lastTaken = payload;

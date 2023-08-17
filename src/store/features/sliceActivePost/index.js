@@ -24,5 +24,6 @@ const sliceActivePost = createSlice({
     }
 });
 
+//TODO: to make methods with dispatch
 export const { setPostActive, setPostComments, addViewed } = sliceActivePost.actions;
 export default sliceActivePost.reducer;

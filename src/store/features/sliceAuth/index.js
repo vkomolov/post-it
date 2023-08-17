@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isAuthGranted: false,
-  isRejected: false,
+  authError: null,
   loggedUser: null,
 };
 
@@ -11,14 +10,13 @@ const sliceAuth = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, { payload }) => {
-      state.isGranted = true;
-      state.isRejected = false;
+      state.authError = null;
       state.loggedUser = payload;
     },
-    loginReject: state => ({
-      ...state,
-      isRejected: true,
-    }),
+    loginReject: (state, { payload }) => {
+      state.authError = payload;
+      state.loggedUser = null;
+    },
     logout: state => {
       Object.assign(state, initialState);
     }

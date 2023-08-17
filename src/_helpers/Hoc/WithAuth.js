@@ -7,9 +7,9 @@ export default WithAuth;
 
 function WithAuth({ children }) {
   const location = useLocation();
-  const { isGranted } = useAuth();
+  const { loggedUser } = useAuth();
 
-  if (!isGranted) {
+  if (!loggedUser) {
     return <Navigate to="/login" state={{ from: location }} />
   }
 

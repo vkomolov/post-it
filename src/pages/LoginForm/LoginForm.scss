@@ -28,7 +28,7 @@
 
     .login-heading {
       color: $foxy;
-      margin-bottom: 0.8em;
+      margin: 0.8em auto;
       letter-spacing: 0.1em;
 
       @include init-font(1.5em, 700);

@@ -1,19 +1,15 @@
 import { call, fork, put, take, all, select, delay } from "redux-saga/effects";
-import { getAndStore, getLocalForage, setLocalForage } from "../../../_helpers";
-import { alertClear, alertError, alertLoading } from "../../features/sliceAlerts";
+import { getFromStoreOrRequestAndStore, localForageSet } from "../../../_helpers";
+import { alertClear, alertLoading } from "../../features/sliceAlerts";
 import { setPosts } from "../../features/slicePosts";
-import { setUsers } from "../../features/sliceUsers"
-import { setPostActive, setPostComments, addViewed } from "../../features/sliceActivePost";
+import { setUsers } from "../../features/sliceUsers";
+import { actionTypes, storageNames, BASE_URL, PATTERN_DATA_USERS } from "../constants";
+import { setPostActive, addViewed } from "../../features/sliceActivePost";
+import { initViewed, loadComments } from "./sagasPosts";
+import { handleError } from "../index";
 
-const baseUrl = "https://dummyjson.com";
-const patternSelectUsers = ["image", "firstName", "lastName", "username", "password"];
 
-function* handleError(error) {
-  console.error("error.stack: ", error.stack);
-  yield put(alertError(error.message));
-}
-
-function* loadData() {
+function* loadInitialData() {
   try {
     //initiating loading icon
     yield put(alertLoading("Loading"));
@@ -27,16 +23,17 @@ function* loadData() {
      * It also gets the array of the viewed posts from the localforage and synchronize activePostReducer.
      */
     const [dataPosts, dataUsers, postsViewed] = yield all([
-      yield call(getAndStore, `${baseUrl}/posts?limit=0`, "posts", 1),
+      yield call(getFromStoreOrRequestAndStore, `${BASE_URL}/posts?limit=0`, storageNames.POSTS),
       yield call(
-          getAndStore,
-          `${baseUrl}/users?limit=0&select=${patternSelectUsers.join(",")}`,
-          "users",
-          1
+          getFromStoreOrRequestAndStore,
+          `${BASE_URL}/users?limit=0&select=${PATTERN_DATA_USERS.join(",")}`,
+          storageNames.USERS
       ),
+      //initiating the cash of the posts viewed
       yield call(initViewed),
     ]);
 
+    //dispatching posts, users and posts viewed to the slice reducer with one param
     yield put(setPosts(dataPosts.posts));
     yield put(setUsers(dataUsers.users));
     yield put(addViewed(postsViewed));
@@ -51,44 +48,14 @@ function* loadData() {
   }
 }
 
-function* initViewed() {
-  /**
-   * Creating cash of the post ids, which were viewed before.
-   * Before the while cycles of taking the action "SET_POST_ACTIVE", to initialize or create the localforage store,
-   * then to update activePostReducer with the latest viewed array...
-   * Turning to localforage will only be on mounting the App in order to initially update activePostReducer.
-   * Further, the new data will be added to the existing localforage and synchronized with activePostReducer.
-   */
-  const localViewed = yield call(getLocalForage, "postsViewed", 1);
-  return localViewed ? localViewed.data : [];
-}
-
-function* loadComments(postId) {
-  /**
-   * fetching and storing the data of comments connected to the clicked post by id;
-   */
-  try {
-    const { comments } = yield call(
-        getAndStore,
-        `${baseUrl}/posts/${postId}/comments?limit=0`,
-        `comments_${postId}`,
-        1
-    );
-    yield put(setPostComments(comments));
-
-  } catch (e) {
-    yield call(handleError, e);
-  }
-}
-
 function* watchPostActive() {
   //for checking the last activation of the post
   let lastId = null;
 
-  //starting while cycles to take the actions "SET_POST_ACTIVE" which occur at clicking the post to activate
+  //starting while cycles to take the constants "SET_POST_ACTIVE" which occur at clicking the post to activate
   while (true) {
     //taking the object data of the post to activate
-    const { payload } = yield take("SET_POST_ACTIVE");
+    const { payload } = yield take(actionTypes.SET_POST_ACTIVE);
 
     //if the clicked post was clicked previously then to omit the action...
     if (payload.id !== lastId) {
@@ -111,11 +78,9 @@ function* watchPostActive() {
           lastId
         ];
 
-        //locking effect for storing data, then dispatching action addViewed(auxViewed.data)
-        const auxViewed = yield call(setLocalForage, "postsViewed", viewedUpdated);
-
         //updating activePostReducer with the array of ids of the posts viewed
-        yield put(addViewed(auxViewed.data));
+        yield fork(localForageSet, storageNames.POSTSVIEWED, viewedUpdated);
+        yield put(addViewed(viewedUpdated));
       }
 
       //setPostActive(payload) dispatches the data of the post to activePostReducer
@@ -127,7 +92,7 @@ function* watchPostActive() {
 }
 
 export function* postWatcher() {
-  yield fork(loadData);
+  yield fork(loadInitialData);
   yield fork(watchPostActive);
 }
 

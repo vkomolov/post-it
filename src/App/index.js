@@ -7,7 +7,7 @@ import DefaultContent from "../pages/DefaultContent";
 import LoginForm from "../pages/LoginForm";
 import PostEdit from "../pages/PostEdit";
 import AddPost from "../pages/AddPost";
-import WithAuth from "../_containers/Hoc/WithAuth";
+import WithAuth from "../_helpers/Hoc/WithAuth";
 
 
 export default function App() {

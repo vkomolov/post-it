@@ -1,10 +1,11 @@
 import { useCallback, useRef, useLayoutEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { actionTypes } from "../store/sagas/constants";
 import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
 import { initOpacityAnimation, sortObjectsByTwoParams } from "../_helpers";
 
 /**
- * Custom Hook which returns the state of the alert in redux reducer and the following actions
+ * Custom Hook which returns the state of the alert in redux reducer and the following constants
  * @returns {{ stateAlerts: *, initAlertClear: *, initAlertError: *, initAlertLoading: * }}
  */
 export function useAlertData() {
@@ -44,7 +45,7 @@ export function useSortingData() {
   const dispatchSorting = useCallback(({ currentTarget }) => {
     if (currentTarget?.dataset?.name) {
       //dispatching to sagas
-      dispatch({ type: "SET_SORTING", payload: currentTarget.dataset.name });
+      dispatch({ type: actionTypes.SET_SORTING, payload: currentTarget.dataset.name });
     } else console.error(`the following button has no property "data-name": ${ currentTarget }`);
   }, [dispatch]);
 
@@ -61,7 +62,7 @@ export function useSortingData() {
  * It modifies the array of the posts with the additional data of the users, who created the particular post;
  */
 export function usePostsCombinedUsers() {
-  //posts and users are fetched and dispatched at one time
+  //posts and users are fetched and dispatched at one time with Promise.all at sagasPosts
   const { posts } = useSelector(state => state.statePosts);
   const { users } = useSelector(state => state.stateUsers);
 
@@ -140,7 +141,7 @@ export function usePostActive() {
    * @type { Function }
    */
   const setPostActive = useCallback((postData) => {
-    dispatch({ type: "SET_POST_ACTIVE", payload: postData });
+    dispatch({ type: actionTypes.SET_POST_ACTIVE, payload: postData });
   }, [dispatch]);
 
   return {
@@ -161,7 +162,7 @@ export function useUsers() {
 
 export function useAuth() {
   const dispatch = useDispatch();
-  const { isGranted, isRejected } = useSelector(state => state.stateAuth);
+  const { authError, loggedUser } = useSelector(state => state.stateAuth);
 
   const submitLogin = useCallback((loginData) => {
     dispatch({ type: "SUBMIT_LOGIN", payload: loginData })
@@ -172,8 +173,8 @@ export function useAuth() {
   }, [dispatch]);
 
   return {
-    isGranted,
-    isRejected,
+    loggedUser,
+    authError,
     submitLogin,
     submitLogOut
   }
@@ -213,7 +214,9 @@ export function useScaleUpFromZeroAtMount(duration = 300) {
     const timeOut = setTimeout(() => {
       htmlElement.style.animation = `scaleUpZero ${ duration }ms ease-in-out forwards`;
     }, 0);
-  }, []);
+
+    return () => clearTimeout(timeOut);
+  }, [duration]);
 
   return ref;
 }
