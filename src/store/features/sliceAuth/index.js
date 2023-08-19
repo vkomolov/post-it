@@ -17,13 +17,16 @@ const sliceAuth = createSlice({
       state.authError = payload;
       state.loggedUser = null;
     },
+    loginReset: state => {
+      Object.assign(state, initialState);
+    },
     logout: state => {
       Object.assign(state, initialState);
     }
   }
 });
 
-export const { loginSuccess, loginReject, logout } = sliceAuth.actions;
+export const { loginSuccess, loginReject, loginReset, logout } = sliceAuth.actions;
 export default sliceAuth.reducer;
 
 ///////////////// dev

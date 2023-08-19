@@ -1,6 +1,6 @@
 import { call, put } from "@redux-saga/core/effects";
 import { getFromStoreOrRequestAndStore, localForageGet  } from "../../../_helpers";
-import { storageNames, BASE_URL } from "../constants";
+import { storageNames, BASE_URL } from "../../../_constants";
 import { setPostComments } from "../../features/sliceActivePost";
 import { handleError } from "../index";
 

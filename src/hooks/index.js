@@ -1,11 +1,11 @@
 import { useCallback, useRef, useLayoutEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { actionTypes } from "../store/sagas/constants";
+import { actionTypes } from "../_constants";
 import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
 import { initOpacityAnimation, sortObjectsByTwoParams } from "../_helpers";
 
 /**
- * Custom Hook which returns the state of the alert in redux reducer and the following constants
+ * Custom Hook which returns the state of the alert in redux reducer and the following _constants
  * @returns {{ stateAlerts: *, initAlertClear: *, initAlertError: *, initAlertLoading: * }}
  */
 export function useAlertData() {
@@ -165,11 +165,15 @@ export function useAuth() {
   const { authError, loggedUser } = useSelector(state => state.stateAuth);
 
   const submitLogin = useCallback((loginData) => {
-    dispatch({ type: "SUBMIT_LOGIN", payload: loginData })
+    dispatch({ type: actionTypes.SUBMIT_LOGIN, payload: loginData })
   }, [dispatch]);
 
   const submitLogOut = useCallback(() => {
-    dispatch({ type: "SUBMIT_LOGOUT" })
+    dispatch({ type: actionTypes.SUBMIT_LOGOUT })
+  }, [dispatch]);
+
+  const clearAuthState = useCallback(() => {
+    dispatch({ type: actionTypes.LOGIN_RESET })
   }, [dispatch]);
 
 
@@ -177,7 +181,8 @@ export function useAuth() {
     loggedUser,
     authError,
     submitLogin,
-    submitLogOut
+    submitLogOut,
+    clearAuthState
   }
 }
 

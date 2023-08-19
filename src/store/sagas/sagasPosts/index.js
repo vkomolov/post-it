@@ -3,7 +3,7 @@ import { getFromStoreOrRequestAndStore, localForageSet } from "../../../_helpers
 import { alertClear, alertLoading } from "../../features/sliceAlerts";
 import { setPosts } from "../../features/slicePosts";
 import { setUsers } from "../../features/sliceUsers";
-import { actionTypes, storageNames, BASE_URL, PATTERN_DATA_USERS } from "../constants";
+import { actionTypes, storageNames, BASE_URL, PATTERN_DATA_USERS } from "../../../_constants";
 import { setPostActive, addViewed } from "../../features/sliceActivePost";
 import { initViewed, loadComments } from "./sagasPosts";
 import { handleError } from "../index";
@@ -52,7 +52,7 @@ function* watchPostActive() {
   //for checking the last activation of the post
   let lastId = null;
 
-  //starting while cycles to take the constants "SET_POST_ACTIVE" which occur at clicking the post to activate
+  //starting while cycles to take the _constants "SET_POST_ACTIVE" which occur at clicking the post to activate
   while (true) {
     //taking the object data of the post to activate
     const { payload } = yield take(actionTypes.SET_POST_ACTIVE);

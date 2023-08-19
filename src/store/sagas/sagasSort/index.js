@@ -1,6 +1,6 @@
 import { take, put } from "redux-saga/effects";
 import { setSortPrimary, setSortSecondary } from "../../features/sliceSort";
-import { actionTypes } from "../constants";
+import { actionTypes } from "../../../_constants";
 
 const sortObj = {
     firstName: () => setSortPrimary("firstName"),

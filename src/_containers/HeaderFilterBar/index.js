@@ -21,6 +21,9 @@ const HeaderFilterBar = () => {
         <button
             className={ specClassObj.firstName }
             data-name="firstName"
+            tabIndex={ 0 }
+            title="Click to sort by Author"
+            aria-label="Click to sort by Author"
             onClick={ dispatchSorting }
         >
           Author
@@ -28,6 +31,9 @@ const HeaderFilterBar = () => {
         <button
             className={ specClassObj.reactions }
             data-name="reactions"
+            tabIndex={ 0 }
+            title="Click to sort by stars"
+            aria-label="Click to sort by stars"
             onClick={ dispatchSorting }
         >
           Raiting

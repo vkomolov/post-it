@@ -11,18 +11,18 @@ import localforage from "localforage";
  * @returns { object | boolean } the data, stored in the LocalStorage... or false,
  * if its not found or expired by time
  * */
-export async function localForageGet(name, timeLimit=86400) {
-    const storage = await localforage.getItem( name );
+export async function localForageGet(name, timeLimit = 86400) {
+  const storage = await localforage.getItem(name);
 
-    if (storage) {
-        const creationDate = storage.creationDate;
-        const currentDate = Date.now();
-        if (((currentDate - creationDate)/1000) > timeLimit) {
-            return false;
-        }
-        return storage;
+  if (storage) {
+    const creationDate = storage.creationDate;
+    const currentDate = Date.now();
+    if (((currentDate - creationDate) / 1000) > timeLimit) {
+      return false;
     }
-    return false;
+    return storage;
+  }
+  return false;
 }
 
 /**@description it receives the data and update it with the current Date
@@ -31,17 +31,17 @@ export async function localForageGet(name, timeLimit=86400) {
  * @param {string} name The name of the LocalStorage to be set
  * @param {Object} data which is fetched
  * */
-export async function localForageSet(name="localData", data) {
-    const dataWithDate = {
-        data,
-        creationDate: Date.now()
-    };
+export async function localForageSet(name = "localData", data) {
+  const dataWithDate = {
+    data,
+    creationDate: Date.now()
+  };
 
-    return await localforage.setItem(name, dataWithDate);
+  return await localforage.setItem(name, dataWithDate);
 }
 
-export async function localForageRemove(name="localData") {
-  const storage = await localforage.getItem( name );
+export async function localForageRemove(name = "localData") {
+  const storage = await localforage.getItem(name);
   if (storage) {
     await localforage.removeItem(name);
   }
@@ -49,6 +49,6 @@ export async function localForageRemove(name="localData") {
 
 ///////////////// dev
 // eslint-disable-next-line no-unused-vars
-function log(it, comments="value: ") {
-    console.log(comments, it);
+function log(it, comments = "value: ") {
+  console.log(comments, it);
 }

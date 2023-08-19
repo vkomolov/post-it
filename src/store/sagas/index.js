@@ -4,7 +4,7 @@ import { postWatcher } from "./sagasPosts";
 import { sortWatcher } from "./sagasSort";
 import { authWatcher } from "./sagasAuth";
 import { localForageRemove } from "../../_helpers";
-import { storageNames } from "./constants";
+import { storageNames } from "../../_constants";
 import { loginReject } from "../features/sliceAuth";
 import { alertError, alertClear } from "../features/sliceAlerts";
 
@@ -17,8 +17,6 @@ export default function* rootSaga() {
 export function* handleError(error) {
   if (error.response) {
     if (error.response.status === 400) {
-      log(error.stack, "status 400: ");
-
       //removing logged user data and token from localforage...
       yield call(localForageRemove, storageNames.LOGGED_USER);
       yield put(loginReject("Given username or password are not correct"));

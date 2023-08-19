@@ -16,6 +16,16 @@
     background-color: $white;
     cursor: pointer;
 
+    &:hover {
+      transform: scale(1.03) translateY(-0.05em);
+      @include box-shadow(0.12em, 0.25em);
+    }
+
+    &:active {
+      transform: initial;
+      box-shadow: none;
+    }
+
     img {
       width: 100%;
     }
@@ -37,13 +47,12 @@
     @include box-shadow(0.12em, 0.25em);
 
     li {
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       color: $violet;
       padding: 0.2em 0;
       cursor: pointer;
 
       @include init-font(0.9em, 600);
-      @include text-shadow(0.05em, 0.08em);
       @include transition();
 
       hr {
@@ -57,7 +66,8 @@
 
       &:hover {
         color: $foxy;
-        transform: scale(1.03);
+        @include text-shadow(0.05em, 0.07em);
+        transform: translateY(-0.2em);
       }
 
       &:hover hr {

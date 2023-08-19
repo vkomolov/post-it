@@ -1,9 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { regExObj, validateText } from "../../_helpers";
 import { useAuth, useScaleUpFromZero } from "../../hooks";
 import "./LoginForm.scss";
 import LoginSample from "../../_components/LoginSample";
+
+const initialStateInputs = {
+  username: "",
+  password: ""
+};
 
 const LoginForm = () => {
   const location = useLocation();
@@ -12,11 +17,10 @@ const LoginForm = () => {
   //for checking inputs on focus and styling the wrappers of inputs
   const inputRefs = useRef({});
 
-  const { loggedUser, authError, submitLogin } = useAuth();
+  const { loggedUser, authError, submitLogin, clearAuthState } = useAuth();
 
   //the state of the inputs onChange event, then they will be validated (checked)
-  const [inputs, setInputs] = useState({ username: "", password: "" });
-
+  const [inputs, setInputs] = useState({ ...initialStateInputs });
 
   /**
    * in order to avoid additional change of the state with the password validation, we use only the
@@ -30,10 +34,27 @@ const LoginForm = () => {
    */
   const [inputErrors, setInputErrors] = useState({ username: null, password: null });
 
+  //it sets the state of the password to visible or masked
   const [isPassVisible, setPassVisible] = useState(false);
+
+  //it makes animation for the form wrapper
   const refAnimation = useScaleUpFromZero(450);
 
   const fromLocation = location.state?.from?.pathname || "/";
+
+  /**
+   * If onSubmit we get authError, then to restore defaults for the next try of filling the form
+   */
+  const restoreDefaults = useCallback(() => {
+    //clearing inputs
+    setInputs({ ...initialStateInputs });
+    //resetting username checking state
+    setUsernameChecked(false);
+    //resetting password chars visibility
+    setPassVisible(false);
+
+
+  }, []);
 
   /**
    * if username is not validated (!usernameChecked), then checking the input of username to be empty,
@@ -62,7 +83,6 @@ const LoginForm = () => {
       }));
 
     } else {
-      console.error("error: ", regExObj[name].errorMessage);
       setInputErrors(state => ({
         ...state,
         [name]: regExObj[name].errorMessage
@@ -124,7 +144,8 @@ const LoginForm = () => {
     }
   };
 
-  const handleCheckBox = () => {
+  //it sets the state of the password to visible or masked
+  const togglePassVisible = () => {
     setPassVisible(state => !state);
   };
 
@@ -171,6 +192,17 @@ const LoginForm = () => {
     //only if usernameChecked
   }, [usernameChecked]);
 
+  //if submit error it will temporally show the alert and restore defaults to the form
+  useEffect(() => {
+    if (authError) {
+      log("authError in useEffect...");
+      restoreDefaults();
+      setTimeout(() => {
+        clearAuthState();
+      }, 3000);
+    }
+  }, [authError, restoreDefaults, clearAuthState]);
+
   return (
       <div className="login-wrapper">
         <div className="login-block" ref={ refAnimation } >
@@ -202,6 +234,9 @@ const LoginForm = () => {
               {inputErrors.username
               && <p className="error-text">{inputErrors.username}</p>
               }
+              {authError
+              && <p className="error-text">{ authError }</p>
+              }
             </div>
             }
             {usernameChecked //passwordWrapper will appear in DOM if usernameChecked
@@ -221,10 +256,7 @@ const LoginForm = () => {
                   onChange={inputHandle}
               />
               {inputErrors.password
-              && <p className="error-text">{inputErrors.password}</p>
-              }
-              {authError?.message
-              && <p className="error-text">{authError.message}</p>
+              && <p className="error-text">{ inputErrors.password }</p>
               }
             </div>
             }
@@ -238,7 +270,7 @@ const LoginForm = () => {
                     id="check-is-pass-visible"
                     name="passVisible"
                     checked={isPassVisible}
-                    onChange={handleCheckBox}
+                    onChange={togglePassVisible}
                 />
                 <label
                     htmlFor="check-is-pass-visible"

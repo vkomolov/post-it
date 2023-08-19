@@ -25,10 +25,10 @@ const LoginButton = () => {
         setMenuShown(state => !state);
 
       } else if (targetName === "logout") {
-
-        log("clicked on logout...");
-
+        setMenuShown(state => !state);
         submitLogOut();
+        //navigating from protected pages and special pages like LoginForm, AddPost, UserProfile
+        navigate("/", { replace: true });
       }
     } else {
       console.error("no dataset name at loginButton...");
@@ -42,7 +42,6 @@ const LoginButton = () => {
   };
 
   if (!loggedUser) {
-
     return (
         <i
             className="material-icons icon icon_login"
@@ -66,7 +65,7 @@ const LoginButton = () => {
                role="button"
                tabIndex={ 0 }
                data-name="profile"
-               title="to open profile menu"
+               title="Click to open profile menu"
                aria-label="to open profile menu"
                onClick={ handleClick }
                onKeyPress={ handleKeyEvent }

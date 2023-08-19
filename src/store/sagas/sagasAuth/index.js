@@ -1,9 +1,9 @@
 import { takeEvery, put, call, fork } from "redux-saga/effects";
-import { initAxios, localForageSet } from "../../../_helpers";
+import { initAxios, localForageSet, localForageRemove } from "../../../_helpers";
 import { handleError } from "../index";
 import { alertClear, alertLoading } from "../../features/sliceAlerts";
-import { actionTypes, BASE_URL, storageNames } from "../constants";
-import { loginSuccess } from "../../features/sliceAuth";
+import { actionTypes, BASE_URL, storageNames } from "../../../_constants";
+import { loginSuccess, loginReset, logout } from "../../features/sliceAuth";
 
 
 function* checkToken(jwtToken) {
@@ -30,35 +30,11 @@ function* submitLogin({ payload }) {
 
     const res = yield call(initAxios, `${BASE_URL}/auth/login`, config);
 
-
-    //success
-    /*    {
-          "id": 22,
-            "username": "froachel",
-            "email": "froachel@howstuffworks.com",
-            "firstName": "Tressa",
-            "lastName": "Weber",
-            "gender": "female",
-            "image": "https://robohash.org/temporarecusandaeest.png",
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsInVzZXJuYW1lIjoiZnJvYWNoZWwiLCJlbWFpbCI6ImZyb2FjaGVsQGhvd3N0dWZmd29ya3MuY29tIiwiZmlyc3ROYW1lIjoiVHJlc3NhIiwibGFzdE5hbWUiOiJXZWJlciIsImdlbmRlciI6ImZlbWFsZSIsImltYWdlIjoiaHR0cHM6Ly9yb2JvaGFzaC5vcmcvdGVtcG9yYXJlY3VzYW5kYWVlc3QucG5nIiwiaWF0IjoxNjkxOTMzMTMzLCJleHAiOjE2OTE5MzY3MzN9.jOqI1nHNNVbKfP-1wGnaj3LmfA7mjFIxEUcrGzvRU1U"
-        }*/
-
-    //token
-/*    {
-      "id": 92,
-        "username": "clambol2j",
-        "email": "clambol2j@bloglovin.com",
-        "firstName": "Emely",
-        "lastName": "Schmitt",
-        "gender": "female",
-        "image": "https://robohash.org/cumqueharumsunt.png",
-        "iat": 1692200722,
-        "exp": 1692200782
-    }*/
-
     const isTokenFresh = yield call(checkToken, res.token);
     log(isTokenFresh.toString(), "is token fresh:");
 
+    //storing usename and password for refetching fresh token, API does not offer refresh token: one token with
+    //limited valid period
     yield fork(localForageSet, storageNames.LOGGED_USER, {
       ...payload,
       token: res.token
@@ -72,9 +48,20 @@ function* submitLogin({ payload }) {
   }
 }
 
+function* submitLogout() {
+  yield call(localForageRemove, storageNames.LOGGED_USER);
+  yield put(logout());
+}
+
+function* resetAuth() {
+  yield call(localForageRemove, storageNames.LOGGED_USER);
+  yield put(loginReset());
+}
+
 export function* authWatcher() {
   yield takeEvery(actionTypes.SUBMIT_LOGIN, submitLogin);
-  yield takeEvery(actionTypes.CHECK_TOKEN, checkToken);
+  yield takeEvery(actionTypes.LOGIN_RESET, resetAuth);
+  yield takeEvery(actionTypes.SUBMIT_LOGOUT, submitLogout);
 }
 
 ///////////////// dev

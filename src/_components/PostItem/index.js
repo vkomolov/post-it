@@ -75,6 +75,7 @@ const PostItem = ({ data, starQnty }) => {
           aria-label="click to open the Post content"
           role="menuitem"
           tabIndex={ 0 }
+          title="Open the Post"
       >
         <div className="ratings-wrapper">
           { stars }
