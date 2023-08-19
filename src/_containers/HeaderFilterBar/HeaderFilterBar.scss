@@ -4,7 +4,7 @@
 @import '../../_styles/global_styles/_animations.scss';
 
 .header__filter-bar {
-  padding: 0.5em;
+  padding: 0.5em 1em;
   flex-grow: 1;
 
   @include flex-box($flex-box-row-right-nowrap...);

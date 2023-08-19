@@ -1,0 +1,77 @@
+@import "../../_styles/global_styles/variables";
+@import "../../_styles/global_styles/mixins";
+@import "../../_styles/global_styles/extends";
+@import "../../_styles/global_styles/animations";
+
+.profile-menu-wrapper {
+  position: relative;
+
+  .profile-icon-wrapper {
+    width: 2.8em;
+    height: 2.8em;
+    padding: 0.15em;
+    border: 0.15em solid $foxy;
+    border-radius: 0.5em;
+    overflow: hidden;
+    background-color: $white;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .profile-menu {
+    position: absolute;
+    top: 4em;
+    right: 0;
+    width: max-content;
+    padding: 1em;
+    background-color: $white;
+    z-index: 100;
+    border: 2px solid $foxy;
+    border-radius: 0.5em;
+    animation: popup 0.2s ease-in-out;
+
+    @include flex-box($flex-box-col-left-wrap...);
+    @include box-shadow(0.12em, 0.25em);
+
+    li {
+      letter-spacing: 0.05em;
+      color: $violet;
+      padding: 0.2em 0;
+      cursor: pointer;
+
+      @include init-font(0.9em, 600);
+      @include text-shadow(0.05em, 0.08em);
+      @include transition();
+
+      hr {
+        width: 0;
+        visibility: hidden;
+        border-color: $foxy;
+        margin: 0.2em auto 0;
+
+        @include transition();
+      }
+
+      &:hover {
+        color: $foxy;
+        transform: scale(1.03);
+      }
+
+      &:hover hr {
+        visibility: visible;
+        width: 100%;
+      }
+    }
+
+    &__link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    &__logout {
+    }
+  }
+}

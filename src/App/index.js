@@ -7,6 +7,7 @@ import DefaultContent from "../pages/DefaultContent";
 import LoginForm from "../pages/LoginForm";
 import PostEdit from "../pages/PostEdit";
 import AddPost from "../pages/AddPost";
+import UserProfile from "../pages/UserProfile";
 import WithAuth from "../_helpers/Hoc/WithAuth";
 
 
@@ -19,6 +20,12 @@ export default function App() {
           <Route path="/add" element={
             <WithAuth>
               <AddPost/>
+            </WithAuth>
+          }
+          />
+          <Route path="/profile" element={
+            <WithAuth>
+              <UserProfile/>
             </WithAuth>
           }
           />

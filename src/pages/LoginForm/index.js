@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { regExObj, validateText } from "../../_helpers";
-import { useAuth, useScaleUpFromZeroAtMount } from "../../hooks";
+import { useAuth, useScaleUpFromZero } from "../../hooks";
 import "./LoginForm.scss";
 import LoginSample from "../../_components/LoginSample";
 
@@ -31,7 +31,7 @@ const LoginForm = () => {
   const [inputErrors, setInputErrors] = useState({ username: null, password: null });
 
   const [isPassVisible, setPassVisible] = useState(false);
-  const refAnimation = useScaleUpFromZeroAtMount(450);
+  const refAnimation = useScaleUpFromZero(450);
 
   const fromLocation = location.state?.from?.pathname || "/";
 
@@ -173,7 +173,7 @@ const LoginForm = () => {
 
   return (
       <div className="login-wrapper">
-        <div className="login-block" ref={refAnimation}>
+        <div className="login-block" ref={ refAnimation } >
           <LoginSample/>
           <h2 className="login-heading">Authorization</h2>
           <p className="login-text">

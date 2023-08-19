@@ -172,6 +172,7 @@ export function useAuth() {
     dispatch({ type: "SUBMIT_LOGOUT" })
   }, [dispatch]);
 
+
   return {
     loggedUser,
     authError,
@@ -205,7 +206,7 @@ export function useOpacityTransition (duration = 1000) {
  * @param {number} duration: animation duration in ms
  * !!! It takes the animations from "../_styles/global_styles/_animations.scss"
  */
-export function useScaleUpFromZeroAtMount(duration = 300) {
+export function useScaleUpFromZero(duration = 300) {
   const ref = useRef(null);
 
   useLayoutEffect(() => {

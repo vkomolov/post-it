@@ -39,7 +39,15 @@ const AsideBarControls = () => {
             <i className="material-icons icon icon_add" title="Add Post">add</i>
           </Link>
 
-          <i className="material-icons icon icon_delete" title="Delete Post">delete</i>
+          <i
+              className="material-icons icon icon_delete"
+              role="button"
+              aria-label="to delete Post"
+              tabIndex={ 0 }
+              title="You need to login"
+          >
+            delete
+          </i>
         </div>
       </div>
   );

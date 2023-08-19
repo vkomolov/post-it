@@ -16,7 +16,6 @@ function* checkToken(jwtToken) {
 }
 
 function* submitLogin({ payload }) {
-  log(payload, "credentials: ");
   try {
     //initiating loading icon
     yield put(alertLoading("Loading"));

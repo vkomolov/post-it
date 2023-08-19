@@ -1,6 +1,7 @@
 import React from "react";
 import "./HeaderFilterBar.scss";
 import { useSortingData } from "../../hooks";
+import LoginButton from "../../_components/LoginButton";
 
 const HeaderFilterBar = () => {
   const { stateSort, dispatchSorting } = useSortingData();
@@ -31,13 +32,7 @@ const HeaderFilterBar = () => {
         >
           Raiting
         </button>
-        <i
-            className="material-icons icon icon_login"
-            title="Login"
-            data-name="login"
-        >
-          login
-        </i>
+        <LoginButton />
       </div>
   );
 };

@@ -3,6 +3,7 @@ import "./Header.scss"
 import HeaderFilterBar from "../HeaderFilterBar";
 
 const Header = () => {
+
   return (
     <header id="header">
       <div className="header__logo-bar">
@@ -14,3 +15,9 @@ const Header = () => {
 };
 
 export default Header;
+
+///////////////// dev
+// eslint-disable-next-line no-unused-vars
+function log(it, comments = "value: ") {
+  console.log(comments, it);
+}
