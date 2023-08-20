@@ -5,7 +5,7 @@ import { setPosts } from "../../features/slicePosts";
 import { setUsers } from "../../features/sliceUsers";
 import { actionTypes, storageNames, BASE_URL, PATTERN_DATA_USERS } from "../../../_constants";
 import { setPostActive, addViewed } from "../../features/sliceActivePost";
-import { initViewed, loadComments } from "./sagasPosts";
+import { initViewed, loadComments } from "./sagasPostsFuncs";
 import { handleError } from "../index";
 
 

@@ -22,11 +22,10 @@ export async function initAxios(url, config = {}) {
  * It makes http request and stores the result in the localStorage/localforage
  * @param {string} path: url to data to be fetched
  * @param {string} storageName: the name of the localStorage
- * @param {number} timeLimit: time limits for storing in localStorage (seconds), day by default
  * @param {Object} config: optional axios configuration
  * @returns {Promise} of the fetched data. Catch will be used outside
  */
-export const requestAndStore = async (path, storageName, timeLimit = 86400, config={}) => {
+export const requestAndStore = async (path, storageName, config={}) => {
   return await initAxios(path, config)
       .then(async data => {
         const storedData = await localForageSet(storageName, data);
@@ -62,6 +61,39 @@ export const checkIsFreshTokenJWT = (tokenJWT) => {
   const tokenData = parseTokenJWT(tokenJWT);
   return !!(tokenData && tokenData.exp > Math.floor(Date.now() / 1000));
 };
+
+export async function generateEncryptionKey() {
+  return await crypto.subtle.generateKey(
+      { name: "AES-GCM", length: 256 }, // or another key length
+      true, // the key can be used for encryption
+      ["encrypt", "decrypt"] // the key can be used for encoding and decoding
+  );
+}
+
+export async function encryptText(plainText) {
+  const encryptionKey = await generateEncryptionKey();
+  const encoder = new TextEncoder();
+  const data = encoder.encode(plainText);
+
+  const iv = crypto.getRandomValues(new Uint8Array(16)); // Генерируем случайный вектор инициализации
+  const encryptedData = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, encryptionKey, data);
+
+  return { encryptedData, encryptionKey };
+}
+
+export async function decryptText(encryptedObject, decryptionKey) {
+  const { encryptedData, iv } = encryptedObject;
+  const decryptedData = await crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv
+      },
+      decryptionKey,
+      encryptedData
+  );
+  const decoder = new TextDecoder();
+  return decoder.decode(decryptedData);
+}
 
 /**
  * @param {HTMLElement} htmlElement to animate opacity from 0 to 1

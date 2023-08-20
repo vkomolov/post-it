@@ -1,4 +1,4 @@
-import { useCallback, useRef, useLayoutEffect, useMemo } from "react";
+import { useCallback, useRef, useLayoutEffect, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { actionTypes } from "../_constants";
 import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
@@ -183,6 +183,31 @@ export function useAuth() {
     submitLogin,
     submitLogOut,
     clearAuthState
+  }
+}
+
+export function useUserProfile() {
+  const dispatch = useDispatch();
+  const { loggedUser } = useSelector(state => state.stateAuth);
+  const { profile } = useSelector(state => state.stateUserProfile);
+
+  /**
+   * if loggedUser is not null in sliceAuth, then to dispatch the id of the logged user to sagasUserProfile
+   * for fetching the user data or for getting the user data from the local storage...
+   * if loggedUser is null (at logging out) then to dispatch the action for resetting the sliceAuth state
+   */
+  useEffect(() => {
+    if (loggedUser) {
+      //dispatching to sagasUserProfile for fetching the logged user data
+      dispatch({
+        type: actionTypes.GET_USER_PROFILE,
+        payload: loggedUser.id
+      });
+    }
+  }, [loggedUser, dispatch]);
+
+  return {
+    profile
   }
 }
 

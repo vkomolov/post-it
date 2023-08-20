@@ -1,5 +1,8 @@
 # App Description
- 
+ - As each User can have a lot of data, the optimal way of fetching all users should be only for several critical
+ information which is used in UI: id, image, firstName, lastName.
+ For the Profile Page it is necessary to make a separate request for all the data, which is used for this page,
+ then to store it in the localStorage for the future turns.
 ## Task: 
 
 ______________________

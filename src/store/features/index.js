@@ -5,6 +5,7 @@ import reducerSort from "./sliceSort";
 import reducerUsers from "./sliceUsers";
 import reducerActivePost from "./sliceActivePost";
 import reducerAuth from "./sliceAuth";
+import reducerUserProfile from "./sliceUserProfile";
 
 const rootReducer = combineReducers({
     stateAlerts: reducerAlerts,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     statePosts: reducerPosts,
     stateUsers: reducerUsers,
     stateActivePost: reducerActivePost,
-    stateAuth: reducerAuth
+    stateAuth: reducerAuth,
+    stateUserProfile: reducerUserProfile,
 });
 
 export default rootReducer;

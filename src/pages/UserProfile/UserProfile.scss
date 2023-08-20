@@ -2,3 +2,18 @@
 @import "../../_styles/global_styles/mixins";
 @import "../../_styles/global_styles/extends";
 @import "../../_styles/global_styles/animations";
+
+.profile-content {
+  width: 100%;
+  height: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: stretch;
+  padding-right: 0.5em;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  border: 2px solid $foxy;
+}
