@@ -20,18 +20,14 @@ const LoginButton = () => {
             from: location
           }
         });
-
-      } else if (targetName === "profile") {
+      } else {
+        if (targetName === "logout") {
+          submitLogOut();
+          //navigating from protected pages and special pages like LoginForm, AddPost, UserProfile
+          navigate("/", { replace: true });
+        }
         setMenuShown(state => !state);
-
-      } else if (targetName === "logout") {
-        setMenuShown(state => !state);
-        submitLogOut();
-        //navigating from protected pages and special pages like LoginForm, AddPost, UserProfile
-        navigate("/", { replace: true });
       }
-    } else {
-      console.error("no dataset name at loginButton...");
     }
   };
 
@@ -46,12 +42,12 @@ const LoginButton = () => {
         <i
             className="material-icons icon icon_login"
             role="button"
-            tabIndex={ 0 }
+            tabIndex={0}
             aria-label="click to log in"
             title="Log in"
             data-name="login"
-            onClick={ handleClick }
-            onKeyPress={ handleKeyEvent }
+            onClick={handleClick}
+            onKeyPress={handleKeyEvent}
         >
           login
         </i>
@@ -63,12 +59,12 @@ const LoginButton = () => {
         <div className="profile-menu-wrapper">
           <div className="profile-icon-wrapper"
                role="button"
-               tabIndex={ 0 }
+               tabIndex={0}
                data-name="profile"
                title="Click to open profile menu"
                aria-label="to open profile menu"
-               onClick={ handleClick }
-               onKeyPress={ handleKeyEvent }
+               onClick={handleClick}
+               onKeyPress={handleKeyEvent}
           >
             {
               image
@@ -82,31 +78,39 @@ const LoginButton = () => {
           </div>
           {
             isMenuShown
-            && <ul className="profile-menu" role="menu" >
-              <li role="menuitem">
+            && <ul className="profile-menu" role="menu">
+              <li
+                  role="menuitem"
+                  aria-label="Click to User Profile details"
+                  tabIndex={0}
+                  data-name="profileLink"
+                  title="Click to User Profile details"
+                  onClick={handleClick}
+                  onKeyPress={handleKeyEvent}
+              >
                 <Link
                     to="/profile"
                     className="profile-menu__link"
-                    title="Click to User Profile details"
-                    aria-label="Click to User Profile details"
                 >
                   User Profile Details
                 </Link>
                 <hr/>
               </li>
-              <li role="menuitem">
-                <span
-                    className="profile-menu__logout"
-                    role="button"
-                    aria-label="to log out"
-                    tabIndex={ 0 }
-                    data-name="logout"
-                    title="Click to log out"
-                    onClick={ handleClick }
-                    onKeyPress={ handleKeyEvent }
-                >
-                Log out
-              </span>
+              <li
+                  role="menuitem"
+                  aria-label="to log out"
+                  tabIndex={0}
+                  data-name="logout"
+                  title="Click to log out"
+                  onClick={handleClick}
+                  onKeyPress={handleKeyEvent}
+              >
+                <span className="profile-menu__logout" >
+                  Log out
+                  <i className="material-icons" >
+                    logout
+                  </i>
+                </span>
                 <hr/>
               </li>
             </ul>

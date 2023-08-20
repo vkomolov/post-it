@@ -97,12 +97,7 @@ body:before {
   }
 
   &_account_circle {
-    color: $greyNorm;
-
-    &:hover {
-      color: white;
-      transform: scale(1.1);
-    }
+    color: $greyLight;
   }
 
   &_add {
