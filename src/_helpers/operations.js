@@ -19,6 +19,25 @@ export async function initAxios(url, config = {}) {
 }
 
 /**
+ * It makes http request and stores the result in the localStorage/localforage
+ * @param {string} path: url to data to be fetched
+ * @param {string} storageName: the name of the localStorage
+ * @param {number} timeLimit: time limits for storing in localStorage (seconds), day by default
+ * @param {Object} config: optional axios configuration
+ * @returns {Promise} of the fetched data. Catch will be used outside
+ */
+export const requestAndStore = async (path, storageName, timeLimit = 86400, config={}) => {
+  return await initAxios(path, config)
+      .then(async data => {
+        const storedData = await localForageSet(storageName, data);
+        return storedData.data;
+      });
+  //!!!the error will be caught further
+};
+
+/**
+ * it checks the storage for the data, validates the data by the storage timeLimit and, if the data does not
+ * pass the check, it makes request for the data from the server, then it stores the refreshed data.
  * @param {string} path: url to data to be fetched
  * @param {string} storageName: the name of the localStorage
  * @param {number} timeLimit: time limits for storing in localStorage (seconds), day by default
@@ -31,12 +50,17 @@ export const getFromStoreOrRequestAndStore = async (path, storageName, timeLimit
     return localData.data;
   }
 
-  return await initAxios(path, config)
-      .then(async data => {
-        const storedData = await localForageSet(storageName, data);
-        return storedData.data;
-      });
+  return requestAndStore(path, storageName, timeLimit, config)
   //!!!the error will be caught further
+};
+
+export const parseTokenJWT = (tokenJWT) => {
+  return JSON.parse(atob(tokenJWT.split(".")[1])) || null;
+};
+
+export const checkIsFreshTokenJWT = (tokenJWT) => {
+  const tokenData = parseTokenJWT(tokenJWT);
+  return !!(tokenData && tokenData.exp > Math.floor(Date.now() / 1000));
 };
 
 /**

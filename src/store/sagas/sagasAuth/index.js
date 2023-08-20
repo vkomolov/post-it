@@ -1,18 +1,57 @@
 import { takeEvery, put, call, fork } from "redux-saga/effects";
-import { initAxios, localForageSet, localForageRemove } from "../../../_helpers";
+import { initAxios, localForageSet, localForageGet, localForageRemove, parseTokenJWT } from "../../../_helpers";
 import { handleError } from "../index";
 import { alertClear, alertLoading } from "../../features/sliceAlerts";
 import { actionTypes, BASE_URL, storageNames } from "../../../_constants";
 import { loginSuccess, loginReset, logout } from "../../features/sliceAuth";
 
+function* checkAndRestoreAuth() {
+  const authDataStored = yield call(localForageGet, storageNames.LOGGED_USER, 86400);
+  //authDataStored.data keys: username, password, token
 
-function* checkToken(jwtToken) {
-  const tokenData = yield JSON.parse(atob(jwtToken.split(".")[1])) || null;
-  if (tokenData.exp > Math.floor(Date.now()/1000)) {
-    log("token is fresh");
-    return true;
+  if (authDataStored) {
+    //receiving data from the token, including user data for dispatching to sliceAuth reducer
+    const tokenData = yield call(parseTokenJWT, authDataStored.data.token);
+/*    {
+      "id": 19,
+        "username": "bleveragei",
+        "email": "bleveragei@so-net.ne.jp",
+        "firstName": "Gust",
+        "lastName": "Purdy",
+        "gender": "male",
+        "image": "https://robohash.org/delenitipraesentiumvoluptatum.png",
+        "iat": 1692486115,
+        "exp": 1692486415
+    }*/
+
+    if (tokenData && tokenData.exp > Math.floor(Date.now() / 1000)) {
+      const {iat, exp, ...loggedUserData} = tokenData;
+      log(tokenData, "tokenData is fresh: ");
+
+      //if the token is fresh then to dispatch the loggedUser data to sliceAuth reducer
+      yield put(loginSuccess({
+        ...loggedUserData,
+        token: authDataStored.data.token
+      }));
+    } else {
+      log("submitting login, token is not fresh...");
+
+      const credentials = {
+        payload: {
+          username: authDataStored.data.username,
+          password: authDataStored.data.password
+        }
+      };
+
+      /**
+       * As the server does not supply refresh token, then to resubmit credentials for getting fresh token
+       */
+      yield call(submitLogin, credentials);
+    }
+
+  } else {
+    return undefined;
   }
-  return false;
 }
 
 function* submitLogin({ payload }) {
@@ -24,14 +63,11 @@ function* submitLogin({ payload }) {
       method: "POST",
       data: {
         ...payload,
-        expiresInMins: 5,
+        expiresInMins: 1,
       }
     };
 
     const res = yield call(initAxios, `${BASE_URL}/auth/login`, config);
-
-    const isTokenFresh = yield call(checkToken, res.token);
-    log(isTokenFresh.toString(), "is token fresh:");
 
     //storing usename and password for refetching fresh token, API does not offer refresh token: one token with
     //limited valid period
@@ -59,6 +95,10 @@ function* resetAuth() {
 }
 
 export function* authWatcher() {
+  //making blocking effect for checking and restoring authenticated user, logged before...
+  yield call(checkAndRestoreAuth);
+
+  //waiting for actions...
   yield takeEvery(actionTypes.SUBMIT_LOGIN, submitLogin);
   yield takeEvery(actionTypes.LOGIN_RESET, resetAuth);
   yield takeEvery(actionTypes.SUBMIT_LOGOUT, submitLogout);
