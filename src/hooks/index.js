@@ -206,8 +206,78 @@ export function useUserProfile() {
     }
   }, [loggedUser, dispatch]);
 
+  const imgSrc = profile?.image || null;
+  const isReadyData = !!profile;
+
+  const personal = useMemo(() => {
+    return profile ?
+        {
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          maidenName: profile.maidenName,
+          email: profile.email,
+          ip: profile.ip,
+        }
+        : null;
+  }, [profile]);
+
+  const appearance = useMemo(() => {
+    return profile ?
+        {
+          height: profile.height,
+          weight: profile.weight,
+          eyeColor: profile.eyeColor,
+          hair: profile.hair,
+        }
+        : null;
+  }, [profile]);
+
+  const genderAndAge = useMemo(() => {
+    return profile ?
+        {
+          gender: profile.gender,
+          age: profile.age,
+          birthDate: profile.birthDate,
+        }
+        : null;
+  }, [profile]);
+
+  const address = useMemo(() => {
+    return profile ?
+        {
+          address: profile.address,
+        }
+        : null;
+  }, [profile]);
+
+  const company = useMemo(() => {
+    return profile ?
+        {
+          company: profile.company,
+        }
+        : null;
+  }, [profile]);
+
+  const bank = useMemo(() => {
+    return profile ?
+        {
+          bank: profile.bank,
+        }
+        : null;
+  }, [profile]);
+
+
   return {
-    profile
+    isReadyData,
+    imgSrc,
+    inputGroups: {
+      personal,
+      appearance,
+      genderAndAge,
+      address,
+      company,
+      bank
+    }
   }
 }
 

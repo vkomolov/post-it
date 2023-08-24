@@ -119,9 +119,7 @@ body:before {
     @include init-font(2.2em, 500);
 
     &:hover {
-      cursor: pointer;
       color: $foxy;
-      @include text-shadow(0.04em, 0.13em);
     }
   }
 
@@ -130,6 +128,15 @@ body:before {
 
     &.icon_foxy {
       color: $foxy;
+    }
+  }
+
+  &_undo {
+    color: $foxy;
+
+    &:hover {
+      color: $red;
+      font-weight: 700;
     }
   }
 }

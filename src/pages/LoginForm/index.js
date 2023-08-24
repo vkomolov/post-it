@@ -214,6 +214,8 @@ const LoginForm = () => {
           </p>
           <form
               id="login-form"
+              name="login-form"
+              action="#"
               onSubmit={handleSubmit}
           >
             {!usernameChecked
@@ -225,7 +227,7 @@ const LoginForm = () => {
               <input
                   type="text"
                   tabIndex={0}
-                  aria-label="username"
+                  aria-label="to enter username"
                   name="username"
                   className="input-wrapper__input"
                   required

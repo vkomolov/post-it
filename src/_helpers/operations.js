@@ -49,7 +49,7 @@ export const getFromStoreOrRequestAndStore = async (path, storageName, timeLimit
     return localData.data;
   }
 
-  return requestAndStore(path, storageName, timeLimit, config)
+  return requestAndStore(path, storageName, timeLimit, config);
   //!!!the error will be caught further
 };
 

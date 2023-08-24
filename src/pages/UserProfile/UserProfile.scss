@@ -11,9 +11,61 @@
   flex-flow: column nowrap;
   align-items: center;
   justify-content: stretch;
-  padding-right: 0.5em;
+  padding: 0.5em;
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
   border: 2px solid $foxy;
+}
+
+#profile-form {
+  align-self: stretch;
+
+  @include flex-box($flex-box-col-top-wrap...);
+
+  .heading-layer {
+    width: 100%;
+
+    @include flex-box($flex-box-row-center-wrap...);
+    gap: 1em;
+
+    .image-wrapper {
+      position: relative;
+      width: 15em;
+      height: 15em;
+      overflow: hidden;
+      padding: 0.5em;
+      border: 2px solid $foxy;
+
+      @include flex-box($flex-box-row-center-wrap...);
+      @include box-shadow(0.2em, 0.3em);
+
+      &:before {
+        position: absolute;
+        content: "";
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: inset -0.8em -0.8em 2em rgba(238, 121, 0, 0.8),
+        inset 0.8em 0.8em 2em rgba(238, 121, 0, 0.8);
+      }
+
+      img {
+        width: 100%;
+      }
+
+      .default-avatar {
+        color: $foxy;
+
+        @include init-font(7em, 700);
+      }
+    }
+
+    .heading-content {
+      flex-grow: 1;
+
+      @include flex-box($flex-box-col-top-wrap...);
+    }
+  }
 }
