@@ -1,0 +1,39 @@
+@import "../../_styles/global_styles/variables";
+@import "../../_styles/global_styles/mixins";
+@import "../../_styles/global_styles/extends";
+@import "../../_styles/global_styles/animations";
+
+.radio-label {
+  position: relative;
+  min-width: 5em;
+  min-height: 2.5em;
+  z-index: 10;
+  border: 0.15em solid $white;
+  border-radius: 0.5em;
+  letter-spacing: 0.03em;
+  background-color: $greyNorm;
+  color: $white;
+
+  @include init-font(1em, 500);
+  @include box-shadow(0.12em, 0.2em);
+  @include flex-box($flex-box-row-center-nowrap...);
+  @include transition(all, 0.08s);
+
+  &:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+    @include box-shadow(0.15em, 0.22em);
+  }
+
+
+  &.checked {
+    background-color: $foxy;
+    box-shadow: none;
+
+    &:hover {
+      cursor: initial;
+      transform: none;
+    }
+  }
+
+}

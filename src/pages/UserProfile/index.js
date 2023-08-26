@@ -38,7 +38,7 @@ const UserProfile = () => {
             action="#"
             onSubmit={ handleSubmit }
         >
-          <div className="heading-layer">
+          <div className="profile-layer">
             <div className="image-wrapper">
               {
                 imgSrc
@@ -48,104 +48,21 @@ const UserProfile = () => {
             </div>
             <div className="heading-content">
               <ProfileInput profileData={ inputGroups.personal } />
-              {/*<div className="grid-wrapper">
-                <label className="input-label" htmlFor="firstName" >
-                  First Name:
-                </label>
-                <input
-                    id="firstName"
-                    type="text"
-                    name="firstName"
-                    tabIndex={0}
-                    aria-label="to edit first name"
-                    title="edit first name"
-                    minLength="3"
-                    maxLength="20"
-                    required
-                    value={ inputs?.firstName || "" }
-                    onChange={ handleChange }
-                />
-                <i
-                    className="material-icons icon icon_undo"
-                >
-                  undo
-                </i>
-                <label className="input-label" htmlFor="lastName" >
-                  Last Name:
-                </label>
-                <input
-                    id="lastName"
-                    type="text"
-                    name="lastName"
-                    tabIndex={0}
-                    aria-label="to edit last name"
-                    title="edit last name"
-                    minLength="3"
-                    maxLength="20"
-                    required
-                    value={ inputs?.lastName || "" }
-                    onChange={ handleChange }
-                />
-                <i
-                    className="material-icons icon icon_undo"
-                >
-                  undo
-                </i>
-                <label className="input-label" htmlFor="maidenName">
-                  Maiden Name:
-                </label>
-                <input
-                    id="maidenName"
-                    type="text"
-                    name="maidenName"
-                    tabIndex={0}
-                    aria-label="to edit maiden name"
-                    title="edit maiden name"
-                    minLength="3"
-                    maxLength="20"
-                    required
-                    value={ inputs?.maidenName || "" }
-                    onChange={ handleChange }
-                />
-                <i
-                    className="material-icons icon icon_undo"
-                >
-                  undo
-                </i>
-                <label className="input-label" htmlFor="email">
-                  Your email:
-                </label>
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    tabIndex={0}
-                    aria-label="to edit email"
-                    title="edit email"
-                    minLength="3"
-                    maxLength="20"
-                    required
-                    value={ inputs?.email || "" }
-                    onChange={ handleChange }
-                />
-                <i
-                    className="material-icons icon icon_undo"
-                >
-                  undo
-                </i>
-                <label className="input-label" htmlFor="ip">
-                  Your IP:
-                </label>
-                <input
-                    id="ip"
-                    type="text"
-                    name="ip"
-                    title="Your IP"
-                    disabled={ true }
-                    value={ inputs?.ip || "" }
-                />
-              </div>*/}
             </div>
+          </div>
+          <h3>Appearance, Gender, Age</h3>
+          <div className="profile-layer">
+            <ProfileInput profileData={ inputGroups.appearance } />
+            <ProfileInput profileData={ inputGroups.genderAndAge } />
+          </div>
+          <h3>Personal Address, Company Details</h3>
+          <div className="profile-layer">
+            <ProfileInput profileData={ inputGroups.address } />
+            <ProfileInput profileData={ inputGroups.company } />
+          </div>
+          <h3>Payment Card Details</h3>
+          <div className="profile-layer">
+            <ProfileInput profileData={ inputGroups.bank } />
           </div>
         </form>
       </div>

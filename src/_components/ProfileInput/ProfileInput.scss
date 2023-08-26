@@ -8,42 +8,4 @@
   grid-template-columns: auto auto 2em;
   justify-items: start;
   align-items: center;
-
-  .input-label {
-    letter-spacing: 0.05em;
-    padding-right: 1em;
-    color: $foxy;
-    cursor: pointer;
-
-    @include init-font(1.05em, 500);
-    @include text-shadow(0.08em, 0.1em);
-  }
-
-  input {
-    color: $foxy;
-    letter-spacing: 0.05em;
-    width: 14em;
-    height: 2em;
-    border: 2px solid transparent;
-    border-radius: 0.4em;
-    margin: 0.5em;
-    padding: 0.2em 0.5em;
-    background-color: $white;
-
-    &:not([name=ip]):hover {
-      border: 2px solid $foxy;
-    }
-
-    &[type=radio] {
-      width: 1.6em;
-    }
-
-    &[type=number] {
-      width: 3em;
-    }
-
-    &[type=date] {
-      width: 6em;
-    }
-  }
 }

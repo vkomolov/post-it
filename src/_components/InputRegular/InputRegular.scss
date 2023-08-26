@@ -1,0 +1,48 @@
+@import "../../_styles/global_styles/variables";
+@import "../../_styles/global_styles/mixins";
+@import "../../_styles/global_styles/extends";
+@import "../../_styles/global_styles/animations";
+
+
+.input-label {
+  letter-spacing: 0.05em;
+  margin-right: 1em;
+  color: $foxy;
+  cursor: pointer;
+
+  @include init-font(1.05em, 500);
+  @include text-shadow(0.08em, 0.1em);
+}
+
+input {
+  color: $foxy;
+  letter-spacing: 0.05em;
+  width: 14em;
+  height: 2em;
+  border: 2px solid transparent;
+  border-radius: 0.4em;
+  margin: 0.5em;
+  padding: 0.2em 0.5em;
+  background-color: $white;
+
+  &:not([name=ip]):hover {
+    border: 2px solid $foxy;
+  }
+
+  &[type=radio] {
+    //hiding radio under label which contains it in relative position
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    visibility: hidden;
+  }
+
+  &[type=number] {
+    width: 6em;
+  }
+
+  &[type=date] {
+    width: 9em;
+  }
+}

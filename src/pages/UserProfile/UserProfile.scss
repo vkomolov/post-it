@@ -12,22 +12,25 @@
   align-items: center;
   justify-content: stretch;
   padding: 0.5em;
-  overflow-x: hidden;
+
+  @include scroll-init(0.3em, $foxy, $white);
+/*  overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
-  border: 2px solid $foxy;
+  border: 2px solid $foxy;*/
 }
 
 #profile-form {
   align-self: stretch;
 
   @include flex-box($flex-box-col-top-wrap...);
+  gap: 2em;
 
-  .heading-layer {
+  .profile-layer {
     width: 100%;
 
-    @include flex-box($flex-box-row-center-wrap...);
-    gap: 1em;
+    @include flex-box($flex-box-row-left-wrap...);
+    gap: 2em;
 
     .image-wrapper {
       position: relative;
