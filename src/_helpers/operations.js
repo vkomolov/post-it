@@ -96,6 +96,115 @@ export async function decryptText(encryptedObject, decryptionKey) {
 }
 
 /**
+ * It receives the object and the array of its nested properties and returns the last nested object with
+ * its last nested property, given in the array of the nested properties
+ * @param {Object} obj: given object with nested properties
+ * @param {string[]} keys: given array of nested keys in the given object
+ * @returns {null|{(Object, string)[]}
+ * @example
+ * //const obj = { one: { two: { three: "some value" } } };
+ * //const keys = ["one", "two", "three"];
+ * //const { lastNestedObject, lastNestedProperty } = getNestedObjectAndProp(obj, keys) returns
+ * the reference to obj.one.two with its last nested property "three"
+ * 1. It gives possibility to get the value of the last nested property obj.one.two.three with:
+ * lastNestedObject[lastNestedProperty]
+ * 2. It gives possibility to change the value of the last nested property of the given object with:
+ * lastNestedObject[lastNestedProperty] = "new value"; obj.one.two.three === "new value" (true)
+ */
+export function getLastNestedObjectAndProp(obj, keys) {
+  let currentObj = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i];
+    if (!(key in currentObj) || typeof currentObj[key] !== "object") {
+      console.error(`no such key ${ key } found in the given object`, Object.keys(obj));
+      return null;
+    }
+    currentObj = currentObj[key];
+  }
+  const lastKey = keys[keys.length - 1];
+  return [currentObj, lastKey ];
+}
+
+/**
+ * It makes deep clone of the given obj
+ * @param {Object} obj: given object
+ * @returns {[]|*}
+ */
+export function deepCopy(obj) {
+  if (obj === null || typeof obj !== "object") {
+    return obj; // Вернуть примитивы или null без изменений
+  }
+
+  if (Array.isArray(obj)) {
+    const copy = [];
+    for (let i = 0; i < obj.length; i++) {
+      copy[i] = deepCopy(obj[i]);
+    }
+    return copy;
+  }
+
+  const copy = {};
+  for (const key of Object.keys(obj)) {
+    copy[key] = deepCopy(obj[key]);
+  }
+  return copy;
+}
+
+/**
+ *
+ * @param {Object} profileSection: given nested object with the profile values
+ * @param {Object} profileParams: params for all inputs
+ * @param {string|null} parent: the position of the property, nested in the given object, concatenated with "_"
+ * //parent: "company_address_postalCode"
+ * @returns {{}|null}
+ */
+export function getInputParams(profileSection, profileParams, parent = null) {
+  if (profileSection && Object.keys(profileSection).length) {
+
+    return Object.keys(profileSection).reduce((acc, dataKey) => {
+      const profileValue = profileSection[dataKey];
+
+      //checking is key of the profile data in profile params
+      if (dataKey in profileParams) {
+        const paramObj = profileParams[dataKey];
+
+        if (typeof profileValue === "string" || typeof profileValue === "number") {
+          //if it is the lowest nesting of profileParams with the params of the input and "editable" property
+          if ("editable" in paramObj) {
+            const inputName = !parent ? dataKey : parent + "_" + dataKey;
+            acc[inputName] = {
+              inputName,
+              paramObj,
+              profileValue
+            };
+            return acc;
+          }
+          else {
+            return acc;
+          }
+        }
+        else if (typeof profileValue === "object" && Object.keys(profileValue).length) {
+          const nestedParent = parent ? `${ parent }_${ dataKey }` : `${ dataKey }`;
+
+          return Object.assign(acc, getInputParams(
+              profileValue,
+              paramObj,
+              nestedParent
+          ));
+        }
+        else {
+          return acc;
+        }
+      } else {
+        return acc;
+      }
+    }, {});
+  }
+
+  return null;
+}
+
+/**
  * @param {HTMLElement} htmlElement to animate opacity from 0 to 1
  * @param {number} duration of the animation
  * @returns {function(): void}

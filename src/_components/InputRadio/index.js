@@ -1,36 +1,38 @@
-import React, { useState } from "react";
+import React from "react";
 import * as PropTypes from "prop-types";
 import { nanoid } from "@reduxjs/toolkit";
 import "./inputRadio.scss";
 
-const InputRadio = ({ inputData, handleChange, handleUndo }) => {
-  const { dataKey, paramObj, profileValue, parent } = inputData;
-
-  const [radioChecked, setRadioChecked] = useState(profileValue);
-
+const InputRadio = React.memo(({ paramObj, profileValue, handleChange, handleUndo }) => {
   const handleRadio = ({ target }) => {
-    setRadioChecked(target.value);
+    handleChange("gender", target.value);
   };
 
-  const undoRadio = () => {
-    setRadioChecked(profileValue);
+  const handleKeyPress = e => {
+    if (e.key === "Enter") {
+      handleUndo(e);
+    }
   };
 
   const radios = Object.keys(paramObj).map(innerProp => {
+    const { name, label, type, title, editable } = paramObj[innerProp];
+    const isChecked = innerProp === profileValue;
+
     return (
         <label
-            className={ innerProp === radioChecked ? "radio-label checked" : "radio-label"}
+            className={ isChecked ? "radio-label checked" : "radio-label"}
             key={ nanoid() }
-            title={ paramObj[innerProp].title }
+            title={ title }
         >
           <input
-              type={ paramObj[innerProp].type }
-              name={ !parent ? dataKey : parent + "_" + dataKey }
+              type={ type }
+              name={ name }
               value={ innerProp }
-              checked={ innerProp === radioChecked }
+              checked={ isChecked }
               onChange={ handleRadio }
+              disabled={ !editable }
           />
-          { paramObj[innerProp].label }
+          { label }
         </label>
     );
   });
@@ -40,22 +42,25 @@ const InputRadio = ({ inputData, handleChange, handleUndo }) => {
         { radios }
         <i
             className="material-icons icon icon_undo"
+            data-name="gender"
             role="button"
             tabIndex={ 0 }
             aria-label="to undo changes"
             title="to undo changes"
-            onClick={ undoRadio }
+            onClick={ handleUndo }
+            onKeyPress={ handleKeyPress }
         >
           undo
         </i>
       </>
   );
-};
+});
 
 export default InputRadio;
 
 InputRadio.propTypes = {
-  inputData: PropTypes.object,
+  paramObj: PropTypes.object,
+  profileValue: PropTypes.string,
   handleChange: PropTypes.func,
   handleUndo: PropTypes.func
 };
