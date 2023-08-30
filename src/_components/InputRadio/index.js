@@ -58,6 +58,8 @@ const InputRadio = React.memo(({ paramObj, profileValue, handleChange, handleUnd
 
 export default InputRadio;
 
+InputRadio.displayName = "InputRadio";
+
 InputRadio.propTypes = {
   paramObj: PropTypes.object,
   profileValue: PropTypes.string,

@@ -206,8 +206,13 @@ export function useUserProfile() {
     }
   }, [loggedUser, dispatch]);
 
+  const putProfileData= useCallback(updatedObj => {
+    log(updatedObj, "updatedObj ready to dispatch");
+  }, []);
+
   return {
-    profile
+    profile,
+    putProfileData
   }
 }
 

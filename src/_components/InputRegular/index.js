@@ -58,12 +58,14 @@ const InputRegular = React.memo(({ paramObj, profileValue, handleChange, handleU
 
 export default InputRegular;
 
+InputRegular.displayName = "InputRegular";
+
 InputRegular.propTypes = {
   paramObj: PropTypes.object,
   profileValue: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.instanceOf(Date)
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.instanceOf(Date)
   ]),
   handleChange: PropTypes.func,
   handleUndo: PropTypes.func

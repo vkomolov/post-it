@@ -1,53 +1,53 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./UserProfile.scss";
 import { useUserProfile } from "../../hooks";
 import { deepCopy, getLastNestedObjectAndProp } from "../../_helpers";
 import { PROFILE_PARAMS } from "../../_constants";
 import InputRegular from "../../_components/InputRegular";
 import InputRadio from "../../_components/InputRadio";
+import { updatedDiff } from "deep-object-diff";
 
 const UserProfile = () => {
-  const { profile } = useUserProfile();
+  const { profile, putProfileData } = useUserProfile();
 
   //the state for the inputs, dynamically created from the nested object of values
   const [profileData, setProfileData] = useState(null);
 
+  //the state of the properties, which have been changed
   const [dataChanged, setDataChanged] = useState({});
-
-  log(dataChanged, "dataChanged: ");
-
-  const isDataChanged = useRef(!!Object.keys(dataChanged).length);
 
   //setting the state with the fetched profile data
   useEffect(() => {
     if (profile !== null) {
-      //log(profile, "setting state with profile: ");
       setProfileData({ ...profile });
     }
   }, [profile]);
 
+  //checking for difference between the state (profileData) and initial (profile)
   useEffect(() => {
-    log("dataChanged useEffect: ");
-
-    isDataChanged.current = !!Object.keys(dataChanged).length;
-
-    log(isDataChanged.current, "isDataChanged Ref: ");
-  }, [dataChanged]);
+    //TODO: may have more cheap checking for some properties of profileData which have been changed;
+    setDataChanged(updatedDiff(profile, profileData));
+  }, [profile, profileData]);
 
   const imgSrc = profile?.image || null;
+
+  const isDataChanged = useMemo(() => {
+    if (dataChanged && typeof dataChanged === "object") {
+      return !!Object.keys(dataChanged).length
+    }
+  }, [dataChanged]);
 
   const handleChange = useCallback((name, value) => {
     setProfileData(prevProfileData => {
       const keys = name.split("_");
 
       if (keys.length === 1) {
-        //adding a new property to dataChanged state
-        setDataChanged(prevData => ({
-          ...prevData,
-          [name]: value
+        //returning an updated data:
+        setDataChanged(prevState => ({
+          ...prevState,
+          [name]:true
         }));
 
-        //returning an updated data:
         return {
           ...prevProfileData,
           [name]: value
@@ -63,12 +63,6 @@ const UserProfile = () => {
         //keys are sliced, as the rootProperty has taken keys[0]
         const [nestedObj, nestedProp] = getLastNestedObjectAndProp(updatedRoot, keys.slice(1));
         nestedObj[nestedProp] = value;
-
-        //adding a new property to dataChanged state
-        setDataChanged(prevData => ({
-          ...prevData,
-          [rootProperty]: updatedRoot
-        }));
 
         //returning an updated data:
         return {
@@ -87,16 +81,6 @@ const UserProfile = () => {
 
       //if root properties received with no nesting properties:
       if (keys.length === 1) {
-        //removing the property from prevData state
-        setDataChanged(prevData => {
-          //taking out the property from the object of changed properties
-          //const { name, ...newData } = prevData;
-          const auxData = { ...prevData };
-          delete auxData[name];
-
-          return auxData;
-        });
-
         //changing the value of the root property to the object with default values
         return {
           ...prevProfileData,
@@ -115,19 +99,6 @@ const UserProfile = () => {
         const [nestedObjOrigin, nestedPropOrigin] = getLastNestedObjectAndProp(profile, keys);
         nestedObj[nestedProp] = nestedObjOrigin[nestedPropOrigin];
 
-        setDataChanged(prevData => {
-          const rootToUndo = deepCopy(prevData[rootProperty]);
-          const [nestedObj, nestedProp] = getLastNestedObjectAndProp(rootToUndo, keys.slice(1));
-          delete nestedObj[nestedProp];
-          //Reflect.deleteProperty(nestedObj, nestedProp);
-
-          return {
-            ...prevData,
-            [rootProperty]: rootToUndo
-          }
-        });
-
-
         return {
           ...prevProfileData,
           [rootProperty]: updatedRoot
@@ -139,6 +110,16 @@ const UserProfile = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    if (isDataChanged) {
+      putProfileData(dataChanged);
+    } else {
+      const diff = updatedDiff(profile, profileData);
+
+      if (Object.keys(diff).length) {
+        putProfileData(dataChanged);
+      }
+      setDataChanged(diff);
+    }
   };
 
   const defaultAvatar = (
@@ -358,7 +339,7 @@ const UserProfile = () => {
           </div>
           <div className="button-wrapper">
             <button
-                className={ isDataChanged.current
+                className={ isDataChanged
                     ? "button button_enabled"
                     : "button button_disabled" }
             >
