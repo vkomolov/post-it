@@ -113,7 +113,7 @@ const LoginForm = () => {
           setUsernameChecked(true);
           setInputErrors(state => ({
             ...state,
-            [name]: null
+            [inputName]: null
           }));
         } else {
           setInputErrors(state => ({
@@ -128,7 +128,7 @@ const LoginForm = () => {
 
           setInputErrors(state => ({
             ...state,
-            [name]: null
+            [inputName]: null
           }));
         } else {
           setInputErrors(state => ({

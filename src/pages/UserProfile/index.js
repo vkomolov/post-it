@@ -29,6 +29,13 @@ const UserProfile = () => {
     setDataChanged(updatedDiff(profile, profileData));
   }, [profile, profileData]);
 
+  const resetAll = useCallback(() => {
+    //setting the state of data to defaults
+    setProfileData(() => ({
+      ...profile
+    }));
+  }, [profile]);
+
   const imgSrc = profile?.image || null;
 
   const isDataChanged = useMemo(() => {
@@ -38,16 +45,17 @@ const UserProfile = () => {
   }, [dataChanged]);
 
   const handleChange = useCallback((name, value) => {
-    setProfileData(prevProfileData => {
-      const keys = name.split("_");
+    const keys = name.split("_");
 
+    setProfileData(prevProfileData => {
       if (keys.length === 1) {
-        //returning an updated data:
+        //setting the state of the property name, which has been changed
         setDataChanged(prevState => ({
           ...prevState,
-          [name]:true
+          [name]: true
         }));
 
+        //return new copy of the state with the property which has been changed
         return {
           ...prevProfileData,
           [name]: value
@@ -71,6 +79,7 @@ const UserProfile = () => {
         };
       }
     });
+
   }, []);
 
   const handleUndo = useCallback(({ target }) => {
@@ -108,17 +117,36 @@ const UserProfile = () => {
 
   }, [profile]);
 
-  const handleSubmit = e => {
+  const handleSubmit = useCallback(e => {
     e.preventDefault();
+
+    //if profileData is changed
     if (isDataChanged) {
       putProfileData(dataChanged);
     } else {
       const diff = updatedDiff(profile, profileData);
 
+      //not to await for re-rendering and repeated submit
       if (Object.keys(diff).length) {
         putProfileData(dataChanged);
       }
       setDataChanged(diff);
+    }
+  }, [dataChanged, isDataChanged, profile, profileData, putProfileData]);
+
+  const handleButton = e => {
+    const { type } = e.target;
+
+    //styling is separate in jsx
+    if (type === "reset") {
+      if (isDataChanged) {
+        resetAll();
+      }
+    } else if (type === "submit") {
+      if (!isDataChanged) {
+        //preventing from submitting form
+        e.preventDefault();
+      }
     }
   };
 
@@ -207,11 +235,11 @@ const UserProfile = () => {
                   handleUndo={ handleUndo }
               />
               <InputRegular
-                paramObj={ PROFILE_PARAMS.eyeColor }
-                profileValue={ profileData.eyeColor }
-                handleChange={ handleChange }
-                handleUndo={ handleUndo }
-            />
+                  paramObj={ PROFILE_PARAMS.eyeColor }
+                  profileValue={ profileData.eyeColor }
+                  handleChange={ handleChange }
+                  handleUndo={ handleUndo }
+              />
             </div>
             <div className="grid-wrapper">
               <InputRegular
@@ -339,9 +367,19 @@ const UserProfile = () => {
           </div>
           <div className="button-wrapper">
             <button
+                type="reset"
+                className={ isDataChanged
+                    ? "button button_reset button_enabled"
+                    : "button button_disabled" }
+                onClick={ handleButton }
+            >
+              Reset All
+            </button>
+            <button
                 className={ isDataChanged
                     ? "button button_enabled"
                     : "button button_disabled" }
+                onClick={ handleButton }
             >
               Submit
             </button>

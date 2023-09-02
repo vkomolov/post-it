@@ -42,15 +42,13 @@
     }
 
     .image-section {
-
-
       .image-wrapper {
         position: relative;
         width: 15em;
         height: 15em;
         overflow: hidden;
         padding: 0.5em;
-        margin-bottom: 2em;
+        margin-bottom: 1.5em;
         border: 2px solid $foxy;
 
         @include flex-box($flex-box-row-center-wrap...);
@@ -96,6 +94,10 @@
 
   .button-wrapper {
     width: 100%;
+
+    .button {
+      margin: 0.5em;
+    }
   }
 
   .grid-wrapper {

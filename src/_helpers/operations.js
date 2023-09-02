@@ -96,6 +96,35 @@ export async function decryptText(encryptedObject, decryptionKey) {
 }
 
 /**
+ *
+ * @param text
+ * @returns {string|*}
+ */
+export function prepareTextCapitalized (text) {
+  if (text.length) {
+    const textSeparArr = text.split(" ");
+    let lastEmpty = false;
+
+    const modifiedArr = textSeparArr.reduce((acc, word) => {
+      if (word.length) {
+        lastEmpty = false;
+        const capitalized = word[0].toUpperCase() + word.slice(1).toLowerCase();
+        return acc.concat(capitalized);
+        //if onChange of the input the space symbol is given, then, if it is first space, then to omit
+      } else if (!lastEmpty) {
+        lastEmpty = true;
+        return acc.concat("");
+      } else {
+        return acc;
+      }
+    }, []);
+
+    return modifiedArr.join(" ");
+  }
+  return "";
+}
+
+/**
  * It receives the object and the array of its nested properties and returns the last nested object with
  * its last nested property, given in the array of the nested properties
  * @param {Object} obj: given object with nested properties

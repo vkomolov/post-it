@@ -50,6 +50,7 @@ body:before {
 
   &_disabled {
     box-shadow: none;
+    background-color: $greyLight;
 
     &:hover {
       cursor: initial;
@@ -58,13 +59,17 @@ body:before {
     }
 
     &:active {
-      background-color: $greyNorm;
+      background-color: $greyLight;
     }
 
   }
 
   &_enabled {
     background-color: $foxy;
+
+    &.button_reset {
+      background-color: $greyNorm;
+    }
   }
 
   //additional class for active buttons

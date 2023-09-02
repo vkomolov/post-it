@@ -14,6 +14,23 @@
   @include text-shadow(0.08em, 0.1em);
 }
 
+.input-wrapper {
+  position: relative;
+
+  .error-message {
+    position: absolute;
+    padding: 0.5em;
+    z-index: 20;
+    top: -3.5em;
+    left: 0;
+    width: max-content;
+    max-width: 18em;
+    color: $red;
+    background-color: $white;
+
+  }
+}
+
 input {
   color: $foxy;
   letter-spacing: 0.05em;

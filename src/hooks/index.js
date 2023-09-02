@@ -208,7 +208,12 @@ export function useUserProfile() {
 
   const putProfileData= useCallback(updatedObj => {
     log(updatedObj, "updatedObj ready to dispatch");
-  }, []);
+
+    dispatch({
+      type: actionTypes.GET_USER_PROFILE,
+      payload: loggedUser.id
+    });
+  }, [dispatch]);
 
   return {
     profile,
