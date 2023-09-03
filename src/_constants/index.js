@@ -2,10 +2,8 @@ export const actionTypes = {
   SET_POST_ACTIVE: "SET_POST_ACTIVE",
   SET_SORTING: "SET_SORTING",
   SUBMIT_LOGIN: "SUBMIT_LOGIN",
-  SUBMIT_LOGOUT: "SUBMIT_LOGOUT",
   LOGIN_RESET: "LOGIN_RESET",
-  GET_USER_PROFILE: "GET_USER_PROFILE",
-  USER_PROFILE_RESET: "USER_PROFILE_RESET"
+  PUT_USER_PROFILE: "PUT_USER_PROFILE",
 };
 
 export const storageNames = {
@@ -20,7 +18,7 @@ export const storageNames = {
 export const BASE_URL = "https://dummyjson.com";
 export const PATTERN_DATA_USERS = ["image", "firstName", "lastName"];
 export const PATTERN_DATA_USER_LOGGED = [
-  "image", "firstName", "lastName", "maidenName", "gender", "email", "phone", "birthDate", "height",
+  "id", "image", "firstName", "lastName", "maidenName", "gender", "email", "phone", "birthDate", "height",
   "weight", "eyeColor", "hair", "ip", "address", "bank", "company"
 ];
 
@@ -228,6 +226,7 @@ export const PROFILE_PARAMS = {
   }
 };
 
+/*
 const profileSample = {
   "id": 5,
   "image": "https://robohash.org/adverovelit.png",
@@ -278,4 +277,4 @@ const profileSample = {
     "name": "Adams Inc",
     "title": "Web Developer I"
   }
-};
+};*/

@@ -14,7 +14,7 @@ const UserProfile = () => {
   const [profileData, setProfileData] = useState(null);
 
   //the state of the properties, which have been changed
-  const [dataChanged, setDataChanged] = useState({});
+  const [dataUpdated, setDataChanged] = useState({});
 
   //setting the state with the fetched profile data
   useEffect(() => {
@@ -25,8 +25,9 @@ const UserProfile = () => {
 
   //checking for difference between the state (profileData) and initial (profile)
   useEffect(() => {
+    //when profileData changes then to set the difference of the objects to setDataChanged
     //TODO: may have more cheap checking for some properties of profileData which have been changed;
-    setDataChanged(updatedDiff(profile, profileData));
+    setDataChanged(updatedDiff(profile, profileData) || {});
   }, [profile, profileData]);
 
   const resetAll = useCallback(() => {
@@ -39,22 +40,16 @@ const UserProfile = () => {
   const imgSrc = profile?.image || null;
 
   const isDataChanged = useMemo(() => {
-    if (dataChanged && typeof dataChanged === "object") {
-      return !!Object.keys(dataChanged).length
+    if (dataUpdated && typeof dataUpdated === "object") {
+      return !!Object.keys(dataUpdated).length
     }
-  }, [dataChanged]);
+  }, [dataUpdated]);
 
   const handleChange = useCallback((name, value) => {
     const keys = name.split("_");
 
     setProfileData(prevProfileData => {
       if (keys.length === 1) {
-        //setting the state of the property name, which has been changed
-        setDataChanged(prevState => ({
-          ...prevState,
-          [name]: true
-        }));
-
         //return new copy of the state with the property which has been changed
         return {
           ...prevProfileData,
@@ -120,19 +115,22 @@ const UserProfile = () => {
   const handleSubmit = useCallback(e => {
     e.preventDefault();
 
-    //if profileData is changed
+    /**
+     * If profileData is changed, then to dispatch profileData updated and the object of changes;
+     * the object of changes will be PUT to the request for the user data updates at the server;
+     * as the API does not save the changes, it simulates the success of update and returns the partial object
+     * of the updated user.
+     * That is why we use additional total profile data with updates in order to update the stateUserProfile
+     * avoiding updating the stateUserProfile with the success response with partial object from PUT request;
+     */
     if (isDataChanged) {
-      putProfileData(dataChanged);
-    } else {
-      const diff = updatedDiff(profile, profileData);
-
-      //not to await for re-rendering and repeated submit
-      if (Object.keys(diff).length) {
-        putProfileData(dataChanged);
-      }
-      setDataChanged(diff);
+      putProfileData({
+        id: profileData.id,
+        dataUpdated,
+        profileData
+      });
     }
-  }, [dataChanged, isDataChanged, profile, profileData, putProfileData]);
+  }, [dataUpdated, isDataChanged, profile, profileData, putProfileData]);
 
   const handleButton = e => {
     const { type } = e.target;

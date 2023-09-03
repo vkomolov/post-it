@@ -6,7 +6,7 @@ import { useAuth } from "../../hooks";
 const LoginButton = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { loggedUser, submitLogOut } = useAuth();
+  const { loggedUser, clearAuthState } = useAuth();
   const [isMenuShown, setMenuShown] = useState(false);
 
   const handleClick = ({ currentTarget }) => {
@@ -22,7 +22,7 @@ const LoginButton = () => {
         });
       } else {
         if (targetName === "logout") {
-          submitLogOut();
+          clearAuthState();
           //navigating from protected pages and special pages like LoginForm, AddPost, UserProfile
           navigate("/", { replace: true });
         }

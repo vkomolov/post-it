@@ -1,4 +1,4 @@
-import { useCallback, useRef, useLayoutEffect, useMemo, useEffect } from "react";
+import { useCallback, useRef, useLayoutEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { actionTypes } from "../_constants";
 import { alertError, alertClear, alertLoading } from "../store/features/sliceAlerts";
@@ -168,10 +168,6 @@ export function useAuth() {
     dispatch({ type: actionTypes.SUBMIT_LOGIN, payload: loginData })
   }, [dispatch]);
 
-  const submitLogOut = useCallback(() => {
-    dispatch({ type: actionTypes.SUBMIT_LOGOUT })
-  }, [dispatch]);
-
   const clearAuthState = useCallback(() => {
     dispatch({ type: actionTypes.LOGIN_RESET })
   }, [dispatch]);
@@ -181,37 +177,20 @@ export function useAuth() {
     loggedUser,
     authError,
     submitLogin,
-    submitLogOut,
     clearAuthState
   }
 }
 
 export function useUserProfile() {
   const dispatch = useDispatch();
-  const { loggedUser } = useSelector(state => state.stateAuth);
   const { profile } = useSelector(state => state.stateUserProfile);
 
-  /**
-   * if loggedUser is not null in sliceAuth, then to dispatch the id of the logged user to sagasUserProfile
-   * for fetching the user data or for getting the user data from the local storage...
-   * if loggedUser is null (at logging out) then to dispatch the action for resetting the sliceAuth state
-   */
-  useEffect(() => {
-    if (loggedUser) {
-      //dispatching to sagasUserProfile for fetching the logged user data
-      dispatch({
-        type: actionTypes.GET_USER_PROFILE,
-        payload: loggedUser.id
-      });
-    }
-  }, [loggedUser, dispatch]);
-
   const putProfileData= useCallback(updatedObj => {
-    log(updatedObj, "updatedObj ready to dispatch");
+    //log(updatedObj, "updatedObj ready to dispatch:");
 
     dispatch({
-      type: actionTypes.GET_USER_PROFILE,
-      payload: loggedUser.id
+      type: actionTypes.PUT_USER_PROFILE,
+      payload: updatedObj
     });
   }, [dispatch]);
 

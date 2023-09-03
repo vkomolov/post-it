@@ -53,8 +53,6 @@ const LoginForm = () => {
     setUsernameChecked(false);
     //resetting password chars visibility
     setPassVisible(false);
-
-
   }, []);
 
   /**
@@ -196,7 +194,6 @@ const LoginForm = () => {
   //if submit error it will temporally show the alert and restore defaults to the form
   useEffect(() => {
     if (authError) {
-      log("authError in useEffect...");
       restoreDefaults();
       setTimeout(() => {
         clearAuthState();

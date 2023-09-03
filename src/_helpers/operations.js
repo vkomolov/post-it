@@ -124,6 +124,16 @@ export function prepareTextCapitalized (text) {
   return "";
 }
 
+export function selectPropertiesFrom(obj, propsArr) {
+  const auxObj = { ...obj };
+  return propsArr.reduce((acc, prop) => {
+    if (prop in auxObj) {
+      acc[prop] = auxObj[prop];
+    }
+    return acc;
+  }, {});
+}
+
 /**
  * It receives the object and the array of its nested properties and returns the last nested object with
  * its last nested property, given in the array of the nested properties
@@ -152,6 +162,18 @@ export function getLastNestedObjectAndProp(obj, keys) {
   }
   const lastKey = keys[keys.length - 1];
   return [currentObj, lastKey ];
+}
+
+export function deepUpdateObj (targetObj, updateObj) {
+  const updateKeys = Object.keys(updateObj);
+
+  //if a root level of the properties
+  if (updateKeys.length === 1) {
+    log(updateKeys, "updateKeys.length === 1");
+  }
+
+  console.error("updated object is empty at deepUpdateObj...");
+  return targetObj;
 }
 
 /**

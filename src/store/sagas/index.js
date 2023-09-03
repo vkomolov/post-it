@@ -3,7 +3,6 @@ import { call, fork, put } from "redux-saga/effects";
 import { postWatcher } from "./sagasPosts";
 import { sortWatcher } from "./sagasSort";
 import { authWatcher } from "./sagasAuth";
-import { userProfileWatcher } from "./sagasUserProfile";
 import { localForageRemove } from "../../_helpers";
 import { storageNames } from "../../_constants";
 import { loginReject } from "../features/sliceAuth";
@@ -13,7 +12,6 @@ export default function* rootSaga() {
   yield fork(postWatcher);
   yield fork(sortWatcher);
   yield fork(authWatcher);
-  yield fork(userProfileWatcher);
 }
 
 export function* handleError(error) {

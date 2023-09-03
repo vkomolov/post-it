@@ -9,13 +9,12 @@ const sliceUserProfile = createSlice({
   initialState,
   reducers: {
     setUserProfile: (state, { payload }) => {
-      state.profile = payload
+      state.profile = payload;
     },
-    resetUserProfile: state => {
-      Object.assign(state, initialState);
-    }
+    updateUserProfile: (state, { payload }) => Object.assign(state.profile, payload),
+    resetUserProfile: state => Object.assign(state, initialState),
   }
 });
 
-export const { setUserProfile, resetUserProfile } = sliceUserProfile.actions;
+export const { setUserProfile, resetUserProfile, updateUserProfile } = sliceUserProfile.actions;
 export default sliceUserProfile.reducer;
