@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./AsideBarControls.scss";
 import { Link } from "react-router-dom";
 import { useSortingData } from "../../hooks";
@@ -11,6 +11,25 @@ const AsideBarControls = () => {
   const { loggedUser } = useSelector(state => state.stateAuth);
   const userIdLogged = loggedUser?.id || null;
   const userIdImgSrc = loggedUser?.image || null;
+
+  const { postActive } = useSelector(state => state.stateActivePost);
+  log(postActive, "postActive: ");
+
+  const isUserPost = useMemo(() => {
+    if (userIdLogged && postActive?.userId) {
+      return (userIdLogged === postActive?.userId);
+    }
+    return false;
+  }, [userIdLogged, postActive]);
+
+
+  const deleteButtonClass = isUserPost
+      ? "material-icons icon icon_delete"
+      : "material-icons icon icon_delete disabled";
+
+  const addButtonClass = userIdLogged
+      ? "material-icons icon icon_add"
+      : "material-icons icon icon_add disabled";
 
   const specClassObj = sortSecondary === "title" ? {
     latest: "button",
@@ -79,10 +98,10 @@ const AsideBarControls = () => {
               aria-label="click to add Post, need login"
               tabIndex={ 0 }
           >
-            <i className="material-icons icon icon_add" >add</i>
+            <i className={ addButtonClass } >add</i>
           </Link>
           <i
-              className="material-icons icon icon_delete"
+              className={ deleteButtonClass }
               role="button"
               aria-label="click to delete Post, need login"
               tabIndex={ 0 }
