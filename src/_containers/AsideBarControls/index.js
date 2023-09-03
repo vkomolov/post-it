@@ -2,11 +2,15 @@ import React from "react";
 import "./AsideBarControls.scss";
 import { Link } from "react-router-dom";
 import { useSortingData } from "../../hooks";
+import { useSelector } from "react-redux";
 
 const AsideBarControls = () => {
   const { stateSort, dispatchSorting } = useSortingData();
   //false - sorting by latest, true - sorting by raiting
-  const { sortSecondary } = stateSort;
+  const { sortSecondary, filterBy } = stateSort;
+  const { loggedUser } = useSelector(state => state.stateAuth);
+  const userIdLogged = loggedUser?.id || null;
+  const userIdImgSrc = loggedUser?.image || null;
 
   const specClassObj = sortSecondary === "title" ? {
     latest: "button",
@@ -15,6 +19,33 @@ const AsideBarControls = () => {
     latest: "button button_active",
     title: "button"
   };
+
+  const handleKeyEvent = e => {
+    if (e.key === "Enter") {
+      dispatchSorting(e);
+    }
+  };
+
+  const avatarDataName = filterBy  ? "filterReset" : userIdLogged;
+  const avatarClassNameSpec = filterBy ? "avatar-wrapper active" : "avatar-wrapper";
+
+  const avatarButton = userIdLogged
+      ? (
+      <div
+          className={ avatarClassNameSpec }
+          role="button"
+          aria-label="to filter posts by userId"
+          title="to filter posts by userId"
+          tabIndex={ 0 }
+          data-name={ avatarDataName }
+          onClick={ dispatchSorting }
+          onKeyPress={ handleKeyEvent }
+      >
+        <img src={ userIdImgSrc } alt="logged user avatar"/>
+      </div>
+  )
+      : null;
+
 
   return (
       <div className="aside-bar__controls">
@@ -41,6 +72,7 @@ const AsideBarControls = () => {
           </button>
         </div>
         <div className="aside-bar__controls__handles">
+          { avatarButton }
           <Link
               to="/add"
               title="Add Post, need login"

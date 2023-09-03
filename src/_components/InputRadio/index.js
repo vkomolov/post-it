@@ -26,6 +26,7 @@ const InputRadio = React.memo(({ paramObj, profileValue, handleChange, handleUnd
         >
           <input
               type={ type }
+              tabIndex={0}
               name={ name }
               value={ innerProp }
               checked={ isChecked }

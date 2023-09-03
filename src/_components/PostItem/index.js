@@ -6,13 +6,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./PostItem.scss";
 import { usePostActive } from "../../hooks";
 import { limitSentence } from "../../_helpers";
+import { useSelector } from "react-redux";
 
-const PostItem = ({ data, starQnty }) => {
+const PostItem = ({ data, maxStarQnty }) => {
   const navigate = useNavigate();
   const { postId } = useParams();
   const { viewed, setPostActive } = usePostActive();
+  const { loggedUser } = useSelector(state => state.stateAuth);
+  const userIdLogged = loggedUser?.id || null;
 
-  const { id, firstName, lastName, title, reactions, tags } = data;
+  const { id, firstName, lastName, title, reactions, tags, userId, image } = data;
 
   /**
    * Motivation for useEffect:
@@ -42,7 +45,7 @@ const PostItem = ({ data, starQnty }) => {
 
   //raiting stars of the post
   const stars = useMemo(() => {
-    return new Array(starQnty).fill("").map((e, index) => {
+    return new Array(maxStarQnty).fill("").map((e, index) => {
       const specClass = (index + 1) <= +reactions
           ? "material-icons icon icon_raiting icon_foxy"
           : "material-icons icon icon_raiting";
@@ -50,8 +53,15 @@ const PostItem = ({ data, starQnty }) => {
           <i className={specClass} key={nanoid()}>star_rate</i>
       );
     });
-      }, [reactions, starQnty]
+      }, [reactions, maxStarQnty]
   );
+
+  const loggedAvatar = userId === userIdLogged ? (
+      <div className="avatar-wrapper">
+        <img src={ image } alt="logged user avatar"/>
+      </div>
+  ) : null;
+
 
   const titleString = useMemo(() => {
     return limitSentence(title, 55);
@@ -77,6 +87,9 @@ const PostItem = ({ data, starQnty }) => {
           tabIndex={ 0 }
           title="Open the Post"
       >
+        {
+          loggedAvatar
+        }
         <div className="ratings-wrapper">
           { stars }
         </div>
@@ -120,7 +133,7 @@ PostItem.propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string).isRequired,
     body: PropTypes.string.isRequired,
   }),
-  starQnty: PropTypes.oneOfType([
+  maxStarQnty: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number
   ]).isRequired

@@ -109,14 +109,27 @@ export function usePostsSorted() {
   const { stateSort } = useSortingData();
   const { postsCombinedUsers } = usePostsCombinedUsers();
 
-  const { sortPrimary, sortSecondary } = stateSort;
+  const { sortPrimary, sortSecondary, filterBy } = stateSort;
 
   //to sort the array of the posts by the filters set in sortSlice reducer
   const postsSorted = useMemo(() => {
-    return !postsCombinedUsers.length
-        ? []
-        : [...postsCombinedUsers].sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
-  }, [postsCombinedUsers, sortPrimary, sortSecondary]);
+    if (!postsCombinedUsers.length) return [];
+
+    log(postsCombinedUsers, "postsCombinedUsers: ");
+
+    //if filter has userId then to filter the posts by userId, then to proceed sorting
+/*    const auxPosts = filterBy?.length
+        ? postsCombinedUsers.filter(post => post.userId === filterBy)
+        : postsCombinedUsers;*/
+  let auxPosts = [...postsCombinedUsers];
+
+  if (filterBy) {
+    auxPosts = auxPosts.filter(post => +post.userId === +filterBy);
+    log(auxPosts, "auxPosts: ");
+  }
+
+    return auxPosts.sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
+  }, [postsCombinedUsers, sortPrimary, sortSecondary, filterBy]);
 
   return {
     postsSorted

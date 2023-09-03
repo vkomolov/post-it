@@ -4,6 +4,7 @@
 @import "../../_styles/global_styles/_animations.scss";
 
 .post-wrapper {
+  position: relative;
   width: 100%;
   padding: 0.3em;
   margin: 0.3em 0;
@@ -37,6 +38,20 @@
     &:hover {
       cursor: initial;
       transform: none;
+    }
+  }
+
+  .avatar-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3em;
+    overflow: hidden;
+
+    @include flex-box($flex-box-row-center-nowrap...);
+
+    img {
+      width: 100%;
     }
   }
 

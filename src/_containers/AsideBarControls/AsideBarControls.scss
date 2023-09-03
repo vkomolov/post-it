@@ -18,8 +18,34 @@
   }
 
   &__handles {
-    width: 5em;
-    height: 3em;
     padding: 0.3em;
+
+    @include flex-box($flex-box-row-center-nowrap...);
+    gap: 0.5em;
+  }
+
+  .avatar-wrapper {
+    width: 2.5em;
+    padding: 0.15em;
+    border: 2px solid $foxy;
+    border-radius: 0.5em;
+    cursor: pointer;
+
+    @include flex-box($flex-box-row-center-nowrap...);
+    @include box-shadow(0.12em, 0.2em);
+    @include transition();
+
+    &:hover {
+      @include box-shadow(0.2em, 0.2em);
+    }
+
+    &.active {
+      box-shadow: none;
+      background-color: $foxy;
+    }
+
+    img {
+      width: 100%;
+    }
   }
 }

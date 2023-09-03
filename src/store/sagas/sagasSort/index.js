@@ -1,5 +1,5 @@
 import { take, put } from "redux-saga/effects";
-import { setSortPrimary, setSortSecondary } from "../../features/sliceSort";
+import { setSortPrimary, setSortSecondary, setFilterBy, resetFilterBy } from "../../features/sliceSort";
 import { actionTypes } from "../../../_constants";
 
 const sortObj = {
@@ -17,10 +17,20 @@ export function* sortWatcher() {
     while (true) {
         const { payload } = yield take(actionTypes.SET_SORTING);
 
-        if (lastTaken !== payload && payload in sortObj) {
+        if (lastTaken !== payload) {
             lastTaken = payload;
-            yield put(sortObj[payload]());
+
+            if (payload in sortObj) {
+                yield put(sortObj[payload]());
+            } else {
+                if (payload === "filterReset") {
+                    yield put(resetFilterBy());
+                } else {
+                    yield put(setFilterBy(payload));
+                }
+            }
         }
+
     }
 }
 

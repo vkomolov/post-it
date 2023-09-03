@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     sortPrimary: "reactions",
     sortSecondary: "id",
+    filterBy: null,
 };
 
 const sliceSort = createSlice({
@@ -15,10 +16,18 @@ const sliceSort = createSlice({
         setSortSecondary: (state, { payload }) => {
             state.sortSecondary = payload
         },
+        setFilterBy: (state, { payload }) => ({
+            ...state,
+            filterBy: payload
+        }),
+        resetFilterBy: state => ({
+            ...state,
+            filterBy: null,
+        }),
     }
 });
 
-export const { setSortPrimary, setSortSecondary } = sliceSort.actions;
+export const { setSortPrimary, setSortSecondary, setFilterBy, resetFilterBy } = sliceSort.actions;
 export default sliceSort.reducer;
 
 ///////////////// dev

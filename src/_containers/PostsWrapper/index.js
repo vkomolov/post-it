@@ -8,7 +8,7 @@ const PostsWrapper = () => {
   const { postsSorted } = usePostsSorted();
 
   //checking out the maximum number of reactions (raitings):
-  const starQnty = useMemo(() => {
+  const maxStarQnty = useMemo(() => {
     return postsSorted.length ? Math.max(...postsSorted.map(post => post.reactions)) : 0;
   }, [postsSorted]);
 
@@ -23,11 +23,11 @@ const PostsWrapper = () => {
     return postsSorted.map(data => (
         <PostItem
             data={ data }
-            starQnty={ starQnty }
+            maxStarQnty={ maxStarQnty }
             key={ nanoid() }
         />
     ));
-  }, [postsSorted, starQnty]);
+  }, [postsSorted, maxStarQnty]);
 
   return (
       <div
