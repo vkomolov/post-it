@@ -1,27 +1,14 @@
 import React, { useMemo } from "react";
 import "./AsideBarControls.scss";
-import { Link } from "react-router-dom";
-import { useSortingData } from "../../hooks";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { usePostControls } from "../../hooks";
 
 const AsideBarControls = () => {
-  const { stateSort, dispatchSorting } = useSortingData();
-  //false - sorting by latest, true - sorting by raiting
-  const { sortSecondary, filterBy } = stateSort;
-  const { loggedUser } = useSelector(state => state.stateAuth);
-  const userIdLogged = loggedUser?.id || null;
-  const userIdImgSrc = loggedUser?.image || null;
-
-  const { postActive } = useSelector(state => state.stateActivePost);
-  log(postActive, "postActive: ");
-
-  const isUserPost = useMemo(() => {
-    if (userIdLogged && postActive?.userId) {
-      return (userIdLogged === postActive?.userId);
-    }
-    return false;
-  }, [userIdLogged, postActive]);
-
+  const navigate = useNavigate();
+  const {
+    isUserPost, userIdLogged, sortSecondary, postActiveId,
+    dispatchSorting, filterBy, userIdImgSrc, dispatchCreatePost, dispatchDeletePost
+  } = usePostControls();
 
   const deleteButtonClass = isUserPost
       ? "material-icons icon icon_delete"
@@ -45,24 +32,38 @@ const AsideBarControls = () => {
     }
   };
 
-  const avatarDataName = filterBy  ? "filterReset" : userIdLogged;
+  const handleDelete = () => {
+    //if userId of the active post equals the logged user`s id
+    if (isUserPost) {
+      dispatchDeletePost(postActiveId);
+      //on deleting the active post to navigate to the root path
+      navigate("/", { replace: true });
+    }
+  };
+  const handleKeyDelete = e => {
+    if (e.key === "Enter") {
+      handleDelete();
+    }
+  };
+
+  const avatarDataName = filterBy ? "filterReset" : userIdLogged;
   const avatarClassNameSpec = filterBy ? "avatar-wrapper active" : "avatar-wrapper";
 
   const avatarButton = userIdLogged
       ? (
-      <div
-          className={ avatarClassNameSpec }
-          role="button"
-          aria-label="to filter posts by userId"
-          title="to filter posts by userId"
-          tabIndex={ 0 }
-          data-name={ avatarDataName }
-          onClick={ dispatchSorting }
-          onKeyPress={ handleKeyEvent }
-      >
-        <img src={ userIdImgSrc } alt="logged user avatar"/>
-      </div>
-  )
+          <div
+              className={ avatarClassNameSpec }
+              role="button"
+              aria-label="to filter posts by userId"
+              title="to filter posts by userId"
+              tabIndex={ 0 }
+              data-name={ avatarDataName }
+              onClick={ dispatchSorting }
+              onKeyPress={ handleKeyEvent }
+          >
+            <img src={ userIdImgSrc } alt="logged user avatar"/>
+          </div>
+      )
       : null;
 
 
@@ -98,7 +99,7 @@ const AsideBarControls = () => {
               aria-label="click to add Post, need login"
               tabIndex={ 0 }
           >
-            <i className={ addButtonClass } >add</i>
+            <i className={ addButtonClass }>add</i>
           </Link>
           <i
               className={ deleteButtonClass }
@@ -106,6 +107,8 @@ const AsideBarControls = () => {
               aria-label="click to delete Post, need login"
               tabIndex={ 0 }
               title="Delete Post, need login"
+              onClick={ handleDelete }
+              onKeyPress={ handleKeyDelete }
           >
             delete
           </i>

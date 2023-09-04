@@ -71,7 +71,7 @@ function* getUserProfileData(id) {
 function* submitLogin({ payload }) {
   try {
     //initiating loading icon
-    yield put(alertLoading("Loading"));
+    yield put(alertLoading("Logging in"));
 
     const config = {
       method: "POST",
@@ -120,7 +120,7 @@ function* resetAuth() {
 function* putUserProfile({ payload }) {
   try {
     //initiating loading icon
-    yield put(alertLoading("Loading"));
+    yield put(alertLoading("Updating Profile"));
     const { id, dataUpdated, profileData } = payload;
 
     const config = {
@@ -128,8 +128,6 @@ function* putUserProfile({ payload }) {
       headers: { "Content-Type": "application/json" },
       data: dataUpdated,
     };
-
-    log(config, "config: ");
 
     /**
      * As the API does not save the changes of the user data, just simulates the PUT success and returns

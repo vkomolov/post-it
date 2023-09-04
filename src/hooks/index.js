@@ -106,7 +106,8 @@ export function usePostsCombinedUsers() {
  * It sorts the modified array of the posts with the active sorting filters, stored in the stateSort reducer;
  */
 export function usePostsSorted() {
-  const { stateSort } = useSortingData();
+  const stateSort = useSelector(state => state.stateSort);
+
   const { postsCombinedUsers } = usePostsCombinedUsers();
 
   const { sortPrimary, sortSecondary, filterBy } = stateSort;
@@ -115,18 +116,12 @@ export function usePostsSorted() {
   const postsSorted = useMemo(() => {
     if (!postsCombinedUsers.length) return [];
 
-    log(postsCombinedUsers, "postsCombinedUsers: ");
-
     //if filter has userId then to filter the posts by userId, then to proceed sorting
-/*    const auxPosts = filterBy?.length
-        ? postsCombinedUsers.filter(post => post.userId === filterBy)
-        : postsCombinedUsers;*/
-  let auxPosts = [...postsCombinedUsers];
+    let auxPosts = [...postsCombinedUsers];
 
-  if (filterBy) {
-    auxPosts = auxPosts.filter(post => +post.userId === +filterBy);
-    log(auxPosts, "auxPosts: ");
-  }
+    if (filterBy) {
+      auxPosts = auxPosts.filter(post => +post.userId === +filterBy);
+    }
 
     return auxPosts.sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
   }, [postsCombinedUsers, sortPrimary, sortSecondary, filterBy]);
@@ -165,6 +160,47 @@ export function usePostActive() {
   }
 }
 
+export function usePostControls() {
+  const dispatch = useDispatch();
+  const { stateSort, dispatchSorting } = useSortingData();
+  const { sortSecondary, filterBy } = stateSort;
+
+  const { loggedUser } = useSelector(state => state.stateAuth);
+  const userIdLogged = loggedUser?.id || null;
+  const userIdImgSrc = loggedUser?.image || null;
+
+  const { postActive } = useSelector(state => state.stateActivePost);
+  const { id } = postActive;
+
+  const isUserPost = useMemo(() => {
+    if (userIdLogged && postActive?.userId) {
+      return (userIdLogged === postActive?.userId);
+    }
+    return false;
+  }, [userIdLogged, postActive]);
+
+  const dispatchCreatePost = useCallback(postData => {
+    dispatch({ type: actionTypes.CREATE_POST, postData });
+  }, [dispatch]);
+
+  const dispatchDeletePost = useCallback(postId => {
+    dispatch({ type: actionTypes.DELETE_POST, postId });
+  }, [dispatch]);
+
+  return {
+    isUserPost,
+    postActiveId: id,
+    userIdLogged,
+    userIdImgSrc,
+    filterBy,
+    sortSecondary,
+    dispatchSorting,
+    dispatchDeletePost,
+    dispatchCreatePost
+  }
+}
+
+
 export function useUsers() {
   const { users } = useSelector(state => state.stateUsers);
 
@@ -198,7 +234,7 @@ export function useUserProfile() {
   const dispatch = useDispatch();
   const { profile } = useSelector(state => state.stateUserProfile);
 
-  const putProfileData= useCallback(updatedObj => {
+  const putProfileData = useCallback(updatedObj => {
     //log(updatedObj, "updatedObj ready to dispatch:");
 
     dispatch({
@@ -218,7 +254,7 @@ export function useUserProfile() {
  * @param {number} duration of the animation
  * @returns {React.MutableRefObject<null>}
  */
-export function useOpacityTransition (duration = 1000) {
+export function useOpacityTransition(duration = 1000) {
   const ref = useRef(null);
 
   //to change _styles before display refreshing

@@ -1,10 +1,10 @@
 import { call, fork, put, take, all, select, delay } from "redux-saga/effects";
-import { getFromStoreOrRequestAndStore, localForageSet } from "../../../_helpers";
+import { getFromStoreOrRequestAndStore, initAxios, localForageSet } from "../../../_helpers";
 import { alertClear, alertLoading } from "../../features/sliceAlerts";
 import { setPosts } from "../../features/slicePosts";
 import { setUsers } from "../../features/sliceUsers";
 import { actionTypes, storageNames, BASE_URL, PATTERN_DATA_USERS } from "../../../_constants";
-import { setPostActive, addViewed } from "../../features/sliceActivePost";
+import { setPostActive, addViewed, resetPostActive } from "../../features/sliceActivePost";
 import { initViewed, loadComments } from "./sagasPostsFuncs";
 import { handleError } from "../index";
 
@@ -48,7 +48,7 @@ function* loadInitialData() {
   }
 }
 
-function* watchPostActive() {
+function* watchSetPostActive() {
   //for checking the last activation of the post
   let lastId = null;
 
@@ -91,9 +91,56 @@ function* watchPostActive() {
   }
 }
 
+function* watchPostDelete() {
+  let isBusy = false;
+
+  while (true) {
+    const { postId } = yield take(actionTypes.DELETE_POST);
+    if (!isBusy) {
+      try {
+        yield put(alertLoading("deleting Post"));
+        isBusy = true;
+        const config = {
+          method: "DELETE",
+        };
+
+        const { id } = yield call(initAxios, `${BASE_URL}/posts/${ postId }`, config);
+        /**
+         * As the server does not really deletes the post, and just simulates the return of the deleted post
+         * then to receive the id of the deleted post, to synchronize the statePosts with deleting the post by id,
+         * to re-save the post list to the localforage, to reset stateActivePost to initials, as the active post
+         * was deleted
+         */
+        const { posts } = yield select(state => state.statePosts);
+        const postsUpdated = posts.filter(post => post.id !== id);
+
+        yield fork(localForageSet, storageNames.POSTS, { posts: postsUpdated });
+        yield put(setPosts(postsUpdated));
+        yield put(resetPostActive());
+        yield put(alertClear());
+        isBusy = false;
+      } catch (e) {
+        yield call(handleError, e);
+      }
+    }
+  }
+}
+
+function* watchPostCreate() {
+  let isBusy = false;
+
+  while (true) {
+    const { postData } = yield take(actionTypes.CREATE_POST);
+
+    log(postData, "saga CREATE_POST postData: ");
+  }
+}
+
 export function* postWatcher() {
-  yield fork(loadInitialData);
-  yield fork(watchPostActive);
+  yield call(loadInitialData);
+  yield fork(watchSetPostActive);
+  yield fork(watchPostDelete);
+  yield fork(watchPostCreate)
 }
 
 
