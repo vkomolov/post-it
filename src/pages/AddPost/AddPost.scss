@@ -3,3 +3,69 @@
 @import "../../_styles/global_styles/extends";
 @import "../../_styles/global_styles/animations";
 
+.add-post-wrapper {
+  width: 100%;
+  max-width: 40em;
+  padding: 1em;
+  border: 0.15em solid $foxy;
+  border-radius: 0.5em;
+  background-color: $white;
+
+
+  @include flex-box($flex-box-col-top-wrap...);
+  @include box-shadow(0.12em, 0.25em);
+
+  .form-heading {
+    width: 100%;
+    color: $foxy;
+    text-align: center;
+    margin-bottom: 0.5em;
+
+    @include init-font(2em, 600);
+    @include text-shadow(0.03em, 0.08em);
+
+    &.subheading {
+      text-align: left;
+
+      @include init-font(1.2em, 600);
+    }
+  }
+
+  form {
+    width: 100%;
+    max-width: 35em;
+    margin-bottom: 1em;
+
+    @include flex-box($flex-box-col-center-wrap...);
+
+    .text-area {
+      width: 100%;
+      padding: 0.5em;
+      margin-bottom: 1em;
+      border: 2px solid $foxy;
+      border-radius: 0.5em;
+      background-color: rgba(238, 121, 0, 0.1);
+
+
+      color: $greyNorm;
+
+      &.text-area_body {
+        height: 10em;
+      }
+    }
+
+    .buttons-wrapper {
+      width: 100%;
+      margin-bottom: 1em;
+
+      @include flex-box($flex-box-row-left-wrap...);
+      gap: 0.5em;
+    }
+  }
+
+  .link-cancel {
+    align-self: flex-start;
+    @include init-font(1em, 600);
+  }
+}
+

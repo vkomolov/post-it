@@ -1,6 +1,7 @@
 import React from "react";
 import "./PostContentItem.scss";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
+import UserHeader from "./../UserHeader";
 import { useOpacityTransition } from "../../hooks";
 
 //re-rendering PostContentItem on changing only postActive props with React.memo
@@ -9,18 +10,15 @@ const PostContentItem = ({ postActive }) => {
     const postsRef = useOpacityTransition(700);
 
     //TODO: userId for checking login userId...
-    const { userId, title, body, firstName, lastName, image } = postActive;
+    const { title, body, firstName, lastName, image } = postActive;
 
     return (
         <div className="post-content-item-wrapper" ref={ postsRef }>
-            <div className="user-details-wrapper">
-                <div className="image-wrapper">
-                    <img src={ image } alt="user icon" />
-                </div>
-                <p className="user-name">
-                    { firstName } {lastName}
-                </p>
-            </div>
+            <UserHeader
+                firstName={ firstName }
+                lastName={ lastName }
+                imgSrc={ image }
+            />
             <h1 className="post-title">{ title }</h1>
             <p className="post-body">{ body }</p>
         </div>

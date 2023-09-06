@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { nanoid } from "@reduxjs/toolkit";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { useParams, useNavigate } from "react-router-dom";
 
 import "./PostItem.scss";

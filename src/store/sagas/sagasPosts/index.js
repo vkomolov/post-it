@@ -1,13 +1,13 @@
 import { call, fork, put, take, all, select, delay } from "redux-saga/effects";
-import { getFromStoreOrRequestAndStore, initAxios, localForageSet } from "../../../_helpers";
+import { getFromStoreOrRequestAndStore, localForageSet } from "../../../_helpers";
 import { alertClear, alertLoading } from "../../features/sliceAlerts";
 import { setPosts } from "../../features/slicePosts";
 import { setUsers } from "../../features/sliceUsers";
 import { actionTypes, storageNames, BASE_URL, PATTERN_DATA_USERS } from "../../../_constants";
 import { setPostActive, addViewed, resetPostActive } from "../../features/sliceActivePost";
-import { initViewed, loadComments } from "./sagasPostsFuncs";
+import { initViewed, loadComments, initCreatePost, initDeletePost } from "./sagasPostsFuncs";
 import { handleError } from "../index";
-
+////////////
 
 function* loadInitialData() {
   try {
@@ -86,6 +86,7 @@ function* watchSetPostActive() {
       //setPostActive(payload) dispatches the data of the post to activePostReducer
       yield put(setPostActive(payload));
 
+      //getting the comments of the active post from the server
       yield fork(loadComments, lastId);
     }
   }
@@ -100,21 +101,16 @@ function* watchPostDelete() {
       try {
         yield put(alertLoading("deleting Post"));
         isBusy = true;
-        const config = {
-          method: "DELETE",
-        };
 
-        const { id } = yield call(initAxios, `${BASE_URL}/posts/${ postId }`, config);
         /**
          * As the server does not really deletes the post, and just simulates the return of the deleted post
-         * then to receive the id of the deleted post, to synchronize the statePosts with deleting the post by id,
-         * to re-save the post list to the localforage, to reset stateActivePost to initials, as the active post
-         * was deleted
+         * then:
+         * - to send the delete request if the deleted post is not a newly created, otherwise to avoid request;
+         * - to synchronize the state of statePosts with deleting the post by id,
+         * - to reset stateActivePost to initials, as the active post was deleted
          */
-        const { posts } = yield select(state => state.statePosts);
-        const postsUpdated = posts.filter(post => post.id !== id);
+        const postsUpdated = yield call(initDeletePost, postId);
 
-        yield fork(localForageSet, storageNames.POSTS, { posts: postsUpdated });
         yield put(setPosts(postsUpdated));
         yield put(resetPostActive());
         yield put(alertClear());
@@ -131,8 +127,29 @@ function* watchPostCreate() {
 
   while (true) {
     const { postData } = yield take(actionTypes.CREATE_POST);
+    if (!isBusy) {
+      try {
+        isBusy = true;
+        yield put(alertLoading("saving Post"));
 
-    log(postData, "saga CREATE_POST postData: ");
+        /**
+         * As the server does not really saves the post, and just simulates the return of the added post with
+         * one and the same post id, then:
+         * 1. to init a fake request with a new post data;
+         * 2. to save the list of the new posts` ids to localforage in order to avoid the requests for comments
+         * on not existent posts, to avoid the requests on deleting, updating of not existent posts in the API.
+         * 3. to synchronize the state of statePosts with the new added post,
+         * 4. to re-save the updated post list to the localforage
+         * */
+        const postsUpdated = yield call(initCreatePost, postData, true);
+        yield put(setPosts(postsUpdated));
+
+        isBusy = false;
+        yield put(alertClear());
+      } catch (e) {
+        yield call(handleError, e);
+      }
+    }
   }
 }
 

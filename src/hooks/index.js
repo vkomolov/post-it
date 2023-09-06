@@ -179,10 +179,6 @@ export function usePostControls() {
     return false;
   }, [userIdLogged, postActive]);
 
-  const dispatchCreatePost = useCallback(postData => {
-    dispatch({ type: actionTypes.CREATE_POST, postData });
-  }, [dispatch]);
-
   const dispatchDeletePost = useCallback(postId => {
     dispatch({ type: actionTypes.DELETE_POST, postId });
   }, [dispatch]);
@@ -196,10 +192,23 @@ export function usePostControls() {
     sortSecondary,
     dispatchSorting,
     dispatchDeletePost,
-    dispatchCreatePost
   }
 }
 
+export function useAddPost() {
+  const dispatch = useDispatch();
+
+  const { profile } = useSelector(state => state.stateUserProfile);
+
+  const dispatchCreatePost = useCallback(postData => {
+    dispatch({ type: actionTypes.CREATE_POST, postData });
+  }, [dispatch]);
+
+  return {
+    profile,
+    dispatchCreatePost
+  }
+}
 
 export function useUsers() {
   const { users } = useSelector(state => state.stateUsers);

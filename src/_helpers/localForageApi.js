@@ -20,7 +20,7 @@ export async function localForageGet(name, timeLimit = 86400) {
     if (((currentDate - creationDate) / 1000) > timeLimit) {
       return false;
     }
-    return storage;
+    return storage.data;
   }
   return false;
 }
@@ -37,7 +37,8 @@ export async function localForageSet(name = "localData", data) {
     creationDate: Date.now()
   };
 
-  return await localforage.setItem(name, dataWithDate);
+  const res = await localforage.setItem(name, dataWithDate);
+  return res.data;
 }
 
 export async function localForageRemove(name = "localData") {

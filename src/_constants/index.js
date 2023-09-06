@@ -10,6 +10,7 @@ export const actionTypes = {
 
 export const storageNames = {
   POSTS: "POSTS",
+  NEW_POST_IDS: "NEW_POST_IDS",
   USERS: "USERS",
   POSTSVIEWED: "POSTSVIEWED",
   COMMENTS_SET_ID: postId => `comments_${ postId }`,

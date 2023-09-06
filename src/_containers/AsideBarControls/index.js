@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import "./AsideBarControls.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { usePostControls } from "../../hooks";
@@ -7,7 +7,7 @@ const AsideBarControls = () => {
   const navigate = useNavigate();
   const {
     isUserPost, userIdLogged, sortSecondary, postActiveId,
-    dispatchSorting, filterBy, userIdImgSrc, dispatchCreatePost, dispatchDeletePost
+    dispatchSorting, filterBy, userIdImgSrc, dispatchDeletePost
   } = usePostControls();
 
   const deleteButtonClass = isUserPost

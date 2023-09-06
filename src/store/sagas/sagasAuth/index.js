@@ -19,7 +19,7 @@ function* checkAndRestoreAuth() {
 
   if (authDataStored) {
     //receiving data from the token, including user data for dispatching to sliceAuth reducer
-    const tokenData = yield call(parseTokenJWT, authDataStored.data.token);
+    const tokenData = yield call(parseTokenJWT, authDataStored.token);
 
     if (tokenData && tokenData.exp > Math.floor(Date.now() / 1000)) {
       const { id, image } = tokenData;
@@ -28,7 +28,7 @@ function* checkAndRestoreAuth() {
       yield put(loginSuccess({
         id,
         image,
-        token: authDataStored.data.token
+        token: authDataStored.token
       }));
 
       //with the renewal of validated and stored before user to login, to renew the user`s profile data
@@ -37,8 +37,8 @@ function* checkAndRestoreAuth() {
     } else {
       const credentials = {
         payload: {
-          username: authDataStored.data.username,
-          password: authDataStored.data.password
+          username: authDataStored.username,
+          password: authDataStored.password
         }
       };
 
@@ -48,8 +48,6 @@ function* checkAndRestoreAuth() {
        */
       yield call(submitLogin, credentials);
     }
-  } else {
-    return undefined;
   }
 }
 

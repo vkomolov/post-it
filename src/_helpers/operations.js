@@ -28,8 +28,7 @@ export async function initAxios(url, config = {}) {
 export const requestAndStore = async (path, storageName, config={}) => {
   return await initAxios(path, config)
       .then(async data => {
-        const storedData = await localForageSet(storageName, data);
-        return storedData.data;
+        return await localForageSet(storageName, data);
       });
   //!!!the error will be caught further
 };
@@ -45,11 +44,10 @@ export const requestAndStore = async (path, storageName, config={}) => {
  */
 export const getFromStoreOrRequestAndStore = async (path, storageName, timeLimit = 86400, config={}) => {
   const localData = await localForageGet(storageName, timeLimit);
-  if (localData) { //it returns obj or false
-    return localData.data;
-  }
 
-  return requestAndStore(path, storageName, timeLimit, config);
+  return localData || await requestAndStore(path, storageName, config);
+
+  //return localData ?? await requestAndStore(path, storageName, timeLimit, config);
   //!!!the error will be caught further
 };
 
@@ -124,16 +122,6 @@ export function prepareTextCapitalized (text) {
   return "";
 }
 
-export function selectPropertiesFrom(obj, propsArr) {
-  const auxObj = { ...obj };
-  return propsArr.reduce((acc, prop) => {
-    if (prop in auxObj) {
-      acc[prop] = auxObj[prop];
-    }
-    return acc;
-  }, {});
-}
-
 /**
  * It receives the object and the array of its nested properties and returns the last nested object with
  * its last nested property, given in the array of the nested properties
@@ -162,18 +150,6 @@ export function getLastNestedObjectAndProp(obj, keys) {
   }
   const lastKey = keys[keys.length - 1];
   return [currentObj, lastKey ];
-}
-
-export function deepUpdateObj (targetObj, updateObj) {
-  const updateKeys = Object.keys(updateObj);
-
-  //if a root level of the properties
-  if (updateKeys.length === 1) {
-    log(updateKeys, "updateKeys.length === 1");
-  }
-
-  console.error("updated object is empty at deepUpdateObj...");
-  return targetObj;
 }
 
 /**

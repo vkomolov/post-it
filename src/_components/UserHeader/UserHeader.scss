@@ -1,0 +1,38 @@
+@import "../../_styles/global_styles/variables";
+@import "../../_styles/global_styles/mixins";
+@import "../../_styles/global_styles/extends";
+@import "../../_styles/global_styles/animations";
+
+.user-details-wrapper {
+  width: 100%;
+  margin-bottom: 1em;
+
+  @include flex-box($flex-box-row-left-nowrap...);
+
+  .image-wrapper {
+    width: 3.5em;
+    height: 3.5em;
+    padding: 0.15em;
+    border: 0.15em solid $foxy;
+    border-radius: 0.5em;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+
+    i {
+      @include init-font(2.2em, 500);
+      color: $greyLight;
+    }
+  }
+
+  .user-name {
+    margin: 0.3em 0.5em;
+    color: $foxy;
+    letter-spacing: 0.05em;
+
+    @include init-font(1.2em, 600);
+    @include text-shadow(0.03em, 0.08em);
+  }
+}
