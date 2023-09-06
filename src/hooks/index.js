@@ -126,8 +126,16 @@ export function usePostsSorted() {
     return auxPosts.sort(sortObjectsByTwoParams(sortPrimary, sortSecondary));
   }, [postsCombinedUsers, sortPrimary, sortSecondary, filterBy]);
 
+  //checking out the maximum number of reactions (raitings):
+  const maxStarQnty = useMemo(() => {
+    return postsCombinedUsers.length
+        ? Math.max(...postsCombinedUsers.map(post => post.reactions))
+        : 0;
+  }, [postsCombinedUsers]);
+
   return {
-    postsSorted
+    postsSorted,
+    maxStarQnty
   };
 }
 

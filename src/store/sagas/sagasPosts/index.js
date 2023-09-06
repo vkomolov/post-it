@@ -101,6 +101,8 @@ function* watchPostDelete() {
       try {
         yield put(alertLoading("deleting Post"));
         isBusy = true;
+        //checking download time:
+        const startTime = Date.now();
 
         /**
          * As the server does not really deletes the post, and just simulates the return of the deleted post
@@ -113,6 +115,10 @@ function* watchPostDelete() {
 
         yield put(setPosts(postsUpdated));
         yield put(resetPostActive());
+
+        //if the download time lest than 500ms then to imitate loading with delay(1000)
+        if ((Date.now() - startTime) < 500) yield delay(1000);
+        //removing alert loading
         yield put(alertClear());
         isBusy = false;
       } catch (e) {
@@ -131,6 +137,8 @@ function* watchPostCreate() {
       try {
         isBusy = true;
         yield put(alertLoading("saving Post"));
+        //checking download time:
+        const startTime = Date.now();
 
         /**
          * As the server does not really saves the post, and just simulates the return of the added post with
@@ -145,6 +153,10 @@ function* watchPostCreate() {
         yield put(setPosts(postsUpdated));
 
         isBusy = false;
+
+        //if the download time lest than 500ms then to imitate loading with delay(1000)
+        if ((Date.now() - startTime) < 500) yield delay(1000);
+        //removing alert loading
         yield put(alertClear());
       } catch (e) {
         yield call(handleError, e);

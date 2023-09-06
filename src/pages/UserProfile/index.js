@@ -130,7 +130,7 @@ const UserProfile = () => {
         profileData
       });
     }
-  }, [dataUpdated, isDataChanged, profile, profileData, putProfileData]);
+  }, [dataUpdated, isDataChanged, profileData, putProfileData]);
 
   const handleButton = e => {
     const { type } = e.target;

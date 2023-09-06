@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import PropTypes from "prop-types";
+import React from "react";
+import * as PropTypes from "prop-types";
 import "./PostContentComment.scss";
 import { useOpacityTransition, useUsers } from "../../hooks";
 

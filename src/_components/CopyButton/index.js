@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import * as PropTypes from "prop-types";
 import "./CopyButton.scss";
 
@@ -18,14 +18,14 @@ const CopyButton = ({ targetCssSelector, targetText, children }) => {
    * @type {string}
    */
   const buttonContent = useMemo(() => {
-  return children
-      ? children
-      : copyResult === copyResultSuccess
-          ? "copied!"
-          : copyResult === copyResultError
-              ? "error"
-              : "copy";
-}, [children, copyResult]);
+    return children
+        ? children
+        : copyResult === copyResultSuccess
+            ? "copied!"
+            : copyResult === copyResultError
+                ? "error"
+                : "copy";
+  }, [children, copyResult]);
 
   /**
    *
