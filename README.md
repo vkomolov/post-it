@@ -1,10 +1,30 @@
-# App Description
- - As each User can have a lot of data, the optimal way of fetching all users should be only for several critical
- information which is used in UI: id, image, firstName, lastName.
- For the Profile Page it is necessary to make a separate request for all the data, which is used for this page,
- then to store it in the localStorage for the future turns.
+# "POST IT" App  
+ The React App **POST IT** demonstrates the posts and the comments of the registered users.
+ 
+ For the users and posts` example data the following API is taken: 
+ [https://dummyjson.com](https://dummyjson.com)  
+ In order to create Your own posts or delete own posts You have to log in under one of the registered users.  
+ For convenience the login and password of one of the users are shown at login page.  
+ When You are logged in, the profile page is also achievable and can be updated.  
+ 
 ## Task: 
-
+- the API does not really saves, updates or delete the messages, users or comments;
+- To implement "react-router-dom" for the pages navigation;
+- To implement "react-redux", "redux toolkit" for the App state management;
+- To implement "redux-saga" for the dispatched actions handling, avoiding thunk;
+- To realise Alert messaging on loading, changing, saving, error;
+- The shown list of the posts can be sorted by Author, by Raiting (the number of stars), by the title of the post 
+and by creation time;
+- The shown list of the posts can also be filtered by the logged user; 
+If the user is logged in, he can add or delete the posts;
+- To fetch the posts, users and comments to the localforage for the future turns;
+- As each User can have a lot of data, the optimal way of fetching all the users should be only for several critical
+ information which is used in UI: id, image, firstName, lastName.  
+ For the Profile Page of the logged user it is necessary to make a separate request for all the data, which is used 
+ for this page, then to store it in the localforage for the future turns.
+ - To realize authorization of the user when logging in with the future renewal of JWT token;  
+ As the API does not supply the refresh token, to renew the access token at the end of the validation period;
+ - As the API does not save the updated user`s data, then to temporally save the updated profile data to localforage;
 ______________________
 
 ## Getting Started with Create React App

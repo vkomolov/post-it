@@ -5,7 +5,6 @@ import Layout from "../pages/Layout";
 import PostContent from "../_containers/PostContent";
 import DefaultContent from "../pages/DefaultContent";
 import LoginForm from "../pages/LoginForm";
-import PostEdit from "../pages/PostEdit";
 import AddPost from "../pages/AddPost";
 import UserProfile from "../pages/UserProfile";
 import WithAuth from "../_helpers/Hoc/WithAuth";
@@ -30,13 +29,7 @@ export default function App() {
           }
           />
           <Route path=":postId" element={ <PostContent/> } />
-          <Route path=":postId/edit" element={
-            <WithAuth>
-              <PostEdit/>
-            </WithAuth>
-          }
-          />
-          <Route path=":postId/edit/*" element={ <Navigate to="/" replace={ true } /> } />
+          <Route path=":postId/*" element={ <Navigate to="/" replace={ true } /> } />
         </Route>
       </Routes>
   );
