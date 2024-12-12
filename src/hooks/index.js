@@ -127,6 +127,7 @@ export function usePostsSorted() {
   }, [postsCombinedUsers, sortPrimary, sortSecondary, filterBy]);
 
   //checking out the maximum number of reactions (raitings):
+
   const maxStarQnty = useMemo(() => {
     return postsCombinedUsers.length
         ? Math.max(...postsCombinedUsers.map(post => post.reactions))
@@ -288,7 +289,7 @@ export function useOpacityTransition(duration = 1000) {
 /**
  * to animate the component from transform: scale(0) with animation scaleUpZero
  * useLayoutEffect is used in order to assign transform: scale(0) before rendering the component
- * @param {number} duration: animation duration in ms
+ * @param {number} duration animation duration in ms
  * !!! It takes the animations from "../_styles/global_styles/_animations.scss"
  */
 export function useScaleUpFromZero(duration = 300) {

@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.ac73f358.css",
-    "main.js": "/static/js/main.83c04119.js",
+    "main.css": "/static/css/main.7671c9ad.css",
+    "main.js": "/static/js/main.54bedcca.js",
     "static/media/HelveticaNeue.ttf": "/static/media/HelveticaNeue.9dbbc9db793f1cc4fc13.ttf",
     "static/media/StardosStencil-Regular.ttf": "/static/media/StardosStencil-Regular.a8ba62292119331ed9c2.ttf",
     "index.html": "/index.html",
-    "main.ac73f358.css.map": "/static/css/main.ac73f358.css.map",
-    "main.83c04119.js.map": "/static/js/main.83c04119.js.map"
+    "main.7671c9ad.css.map": "/static/css/main.7671c9ad.css.map",
+    "main.54bedcca.js.map": "/static/js/main.54bedcca.js.map"
   },
   "entrypoints": [
-    "static/css/main.ac73f358.css",
-    "static/js/main.83c04119.js"
+    "static/css/main.7671c9ad.css",
+    "static/js/main.54bedcca.js"
   ]
 }
