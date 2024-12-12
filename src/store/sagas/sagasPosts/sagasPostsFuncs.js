@@ -27,8 +27,8 @@ export function* initViewed() {
  * It operates with a new post data, saves it to the local storage and returns back a complete new post object;
  * As the server does not really saves the post, and just simulates the return of the added post with one
  * and the same post id, then: to make a fake request for adding a new post and returning a new post data;
- * @param {Object} postData: new post data
- * @param {boolean} isFake: if true, then to imitate request with creating the final new post without API
+ * @param {Object} postData - new post data
+ * @param {boolean} isFake - if true, then to imitate request with creating the final new post without API
  * @returns {IterableIterator<any>}
  */
 export function* initCreatePost(postData, isFake=false) {

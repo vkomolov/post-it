@@ -1,5 +1,5 @@
 import { call, fork, put, take, all, select, delay } from "redux-saga/effects";
-import { getFromStoreOrRequestAndStore, localForageSet } from "../../../_helpers";
+import { getFromStoreOrRequestAndStore, localForageSet, modifyObjReactions } from "../../../_helpers";
 import { alertClear, alertLoading } from "../../features/sliceAlerts";
 import { setPosts } from "../../features/slicePosts";
 import { setUsers } from "../../features/sliceUsers";
@@ -7,6 +7,7 @@ import { actionTypes, storageNames, BASE_URL, PATTERN_DATA_USERS } from "../../.
 import { setPostActive, addViewed, resetPostActive } from "../../features/sliceActivePost";
 import { initViewed, loadComments, initCreatePost, initDeletePost } from "./sagasPostsFuncs";
 import { handleError } from "../index";
+
 ////////////
 
 function* loadInitialData() {
@@ -33,8 +34,10 @@ function* loadInitialData() {
       yield call(initViewed),
     ]);
 
+    const modifiedPosts = modifyObjReactions(dataPosts.posts, 5);
+
     //dispatching posts, users and posts viewed to the slice reducer with one param
-    yield put(setPosts(dataPosts.posts));
+    yield put(setPosts(modifiedPosts));
     yield put(setUsers(dataUsers.users));
     yield put(addViewed(postsViewed));
 
