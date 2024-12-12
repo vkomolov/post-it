@@ -3,6 +3,9 @@
         "browser": true,
         "es2021": true
     },
+    "globals": {
+        "process": "readonly"
+    },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
@@ -17,7 +20,7 @@
       "ecmaFeatures": {
         "jsx": true
       },
-      "ecmaVersion": 2019,
+      "ecmaVersion": 2023,
         "sourceType": "module"
     },
     "plugins": [
