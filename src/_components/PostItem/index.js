@@ -45,7 +45,8 @@ const PostItem = ({ data, maxStarQnty }) => {
 
   //raiting stars of the post
   const stars = useMemo(() => {
-    return new Array(maxStarQnty).fill("").map((e, index) => {
+    const validMaxStarQnty = Math.max(0, +maxStarQnty); // converting it to a number and check that it is not negative.
+    return new Array(validMaxStarQnty).fill("").map((e, index) => {
       const specClass = (index + 1) <= +reactions
           ? "material-icons icon icon_raiting icon_foxy"
           : "material-icons icon icon_raiting";

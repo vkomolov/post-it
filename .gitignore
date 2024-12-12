@@ -2,16 +2,14 @@
 
 # dependencies
 /node_modules
-.pnp
-.pnp.js
 .idea
 
 # testing
 /coverage
 
 # production
-# build will need for the gitPages
-#/build
+/build
+/dist
 
 # misc
 .DS_Store
